@@ -1,16 +1,11 @@
 import type { NextConfig } from "next";
 
+/** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  // @ts-ignore
+  // @ts-ignore - Ignore type errors to ensure Cloudflare success if types are outdated
   eslint: {
     ignoreDuringBuilds: true,
   },
