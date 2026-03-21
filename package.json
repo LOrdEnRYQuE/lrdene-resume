@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx @cloudflare/next-on-pages",
+    "build": "next build",
+    "pages:build": "npx @cloudflare/next-on-pages",
     "start": "next start",
     "lint": "next lint",
-    "pages:deploy": "npm run build && npx wrangler pages deploy .vercel/output"
+    "pages:deploy": "npm run pages:build && npx wrangler pages deploy .vercel/output"
   },
   "dependencies": {
     "convex": "^1.34.0",
