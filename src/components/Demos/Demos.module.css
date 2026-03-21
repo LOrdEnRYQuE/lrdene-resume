@@ -1,0 +1,133 @@
+.demos {
+  padding: var(--section-padding) 0;
+  background: var(--bg-dark);
+}
+
+.header {
+  margin-bottom: 5rem;
+  max-width: 800px;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+}
+
+.tagline {
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 2.5rem;
+}
+
+.card {
+  background: #111;
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.5s ease;
+  position: relative;
+}
+
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.imageArea {
+  height: 240px;
+  background: #1a1a1a;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.imagePlaceholder {
+  color: #333;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.cardContent {
+  padding: 2rem;
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.badge {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.6rem;
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--accent-gold);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.cardDesc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.openBtn {
+  flex: 1;
+  padding: 0.75rem;
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+  border-radius: 4px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.openBtn:hover {
+  background: #eee;
+}
+
+.requestBtn {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--glass-border);
+  color: #fff;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.requestBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

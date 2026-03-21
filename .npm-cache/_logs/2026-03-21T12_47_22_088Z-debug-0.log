@@ -1,0 +1,485 @@
+0 verbose cli /Users/leads/.local/share/fnm/node-versions/v22.22.0/installation/bin/node /Users/leads/.local/state/fnm_multishells/8650_1774094953185/bin/npm
+1 info using npm@11.11.0
+2 info using node@v22.22.0
+3 silly config load:file:/Users/leads/.local/share/fnm/node-versions/v22.22.0/installation/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/leads/dev/Porfolio/lrdene-portfolio/.npmrc
+5 silly config load:file:/Users/leads/.npmrc
+6 silly config load:file:/Users/leads/.local/share/fnm/node-versions/v22.22.0/installation/etc/npmrc
+7 verbose title npm install
+8 verbose argv "install" "--cache" "./.npm-cache"
+9 verbose logfile logs-max:10 dir:/Users/leads/dev/Porfolio/lrdene-portfolio/.npm-cache/_logs/2026-03-21T12_47_22_088Z-
+10 verbose logfile /Users/leads/dev/Porfolio/lrdene-portfolio/.npm-cache/_logs/2026-03-21T12_47_22_088Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+13 verbose shrinkwrap failed to load node_modules/.package-lock.json EPERM: operation not permitted, stat '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules'
+14 silly idealTree buildDeps
+15 silly reify moves {}
+16 silly audit bulk request {
+16 silly audit   '@emnapi/runtime': [ '1.9.1' ],
+16 silly audit   '@img/colour': [ '1.1.0' ],
+16 silly audit   '@img/sharp-darwin-arm64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-darwin-x64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-libvips-darwin-arm64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-darwin-x64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linux-arm': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linux-arm64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linux-ppc64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linux-riscv64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linux-s390x': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linux-x64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linuxmusl-arm64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linuxmusl-x64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-linux-arm': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linux-arm64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linux-ppc64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linux-riscv64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linux-s390x': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linux-x64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linuxmusl-arm64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linuxmusl-x64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-wasm32': [ '0.34.5' ],
+16 silly audit   '@img/sharp-win32-arm64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-win32-ia32': [ '0.34.5' ],
+16 silly audit   '@img/sharp-win32-x64': [ '0.34.5' ],
+16 silly audit   '@next/env': [ '15.5.14' ],
+16 silly audit   '@next/swc-darwin-arm64': [ '15.5.14' ],
+16 silly audit   '@next/swc-darwin-x64': [ '15.5.14' ],
+16 silly audit   '@next/swc-linux-arm64-gnu': [ '15.5.14' ],
+16 silly audit   '@next/swc-linux-arm64-musl': [ '15.5.14' ],
+16 silly audit   '@next/swc-linux-x64-gnu': [ '15.5.14' ],
+16 silly audit   '@next/swc-linux-x64-musl': [ '15.5.14' ],
+16 silly audit   '@next/swc-win32-arm64-msvc': [ '15.5.14' ],
+16 silly audit   '@next/swc-win32-x64-msvc': [ '15.5.14' ],
+16 silly audit   '@swc/helpers': [ '0.5.15' ],
+16 silly audit   '@types/node': [ '25.5.0' ],
+16 silly audit   '@types/react': [ '19.2.14' ],
+16 silly audit   '@types/react-dom': [ '19.2.3' ],
+16 silly audit   'caniuse-lite': [ '1.0.30001780' ],
+16 silly audit   'client-only': [ '0.0.1' ],
+16 silly audit   clsx: [ '2.1.1' ],
+16 silly audit   csstype: [ '3.2.3' ],
+16 silly audit   'detect-libc': [ '2.1.2' ],
+16 silly audit   'framer-motion': [ '12.38.0' ],
+16 silly audit   'lucide-react': [ '0.577.0' ],
+16 silly audit   'motion-dom': [ '12.38.0' ],
+16 silly audit   'motion-utils': [ '12.36.0' ],
+16 silly audit   nanoid: [ '3.3.11' ],
+16 silly audit   next: [ '15.5.14' ],
+16 silly audit   picocolors: [ '1.1.1' ],
+16 silly audit   postcss: [ '8.4.31' ],
+16 silly audit   react: [ '19.2.4' ],
+16 silly audit   'react-dom': [ '19.2.4' ],
+16 silly audit   scheduler: [ '0.27.0' ],
+16 silly audit   semver: [ '7.7.4' ],
+16 silly audit   sharp: [ '0.34.5' ],
+16 silly audit   'source-map-js': [ '1.2.1' ],
+16 silly audit   'styled-jsx': [ '5.1.6' ],
+16 silly audit   'tailwind-merge': [ '3.5.0' ],
+16 silly audit   tslib: [ '2.8.1' ],
+16 silly audit   typescript: [ '5.9.3' ],
+16 silly audit   'undici-types': [ '7.18.2' ]
+16 silly audit }
+17 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/sharp
+18 silly reify mark deleted [ '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/sharp' ]
+19 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/colour
+20 silly reify mark deleted [
+20 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/colour'
+20 silly reify ]
+21 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/detect-libc
+22 silly reify mark deleted [
+22 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/detect-libc'
+22 silly reify ]
+23 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/semver
+24 silly reify mark deleted [
+24 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/semver',
+24 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/.bin/semver'
+24 silly reify ]
+25 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-darwin-arm64
+26 silly reify mark deleted [
+26 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-darwin-arm64'
+26 silly reify ]
+27 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-darwin-x64
+28 silly reify mark deleted [
+28 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-darwin-x64'
+28 silly reify ]
+29 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-darwin-arm64
+30 silly reify mark deleted [
+30 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-darwin-arm64'
+30 silly reify ]
+31 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-darwin-x64
+32 silly reify mark deleted [
+32 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-darwin-x64'
+32 silly reify ]
+33 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-arm
+34 silly reify mark deleted [
+34 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-arm'
+34 silly reify ]
+35 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-arm64
+36 silly reify mark deleted [
+36 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-arm64'
+36 silly reify ]
+37 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-ppc64
+38 silly reify mark deleted [
+38 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-ppc64'
+38 silly reify ]
+39 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-riscv64
+40 silly reify mark deleted [
+40 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-riscv64'
+40 silly reify ]
+41 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-s390x
+42 silly reify mark deleted [
+42 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-s390x'
+42 silly reify ]
+43 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-x64
+44 silly reify mark deleted [
+44 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-x64'
+44 silly reify ]
+45 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linuxmusl-arm64
+46 silly reify mark deleted [
+46 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linuxmusl-arm64'
+46 silly reify ]
+47 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linuxmusl-x64
+48 silly reify mark deleted [
+48 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linuxmusl-x64'
+48 silly reify ]
+49 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-arm
+50 silly reify mark deleted [
+50 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-arm'
+50 silly reify ]
+51 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-arm64
+52 silly reify mark deleted [
+52 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-arm64'
+52 silly reify ]
+53 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-ppc64
+54 silly reify mark deleted [
+54 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-ppc64'
+54 silly reify ]
+55 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-riscv64
+56 silly reify mark deleted [
+56 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-riscv64'
+56 silly reify ]
+57 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-s390x
+58 silly reify mark deleted [
+58 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-s390x'
+58 silly reify ]
+59 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-x64
+60 silly reify mark deleted [
+60 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-x64'
+60 silly reify ]
+61 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linuxmusl-arm64
+62 silly reify mark deleted [
+62 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linuxmusl-arm64'
+62 silly reify ]
+63 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linuxmusl-x64
+64 silly reify mark deleted [
+64 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linuxmusl-x64'
+64 silly reify ]
+65 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-wasm32
+66 silly reify mark deleted [
+66 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-wasm32'
+66 silly reify ]
+67 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-arm64
+68 silly reify mark deleted [
+68 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-arm64'
+68 silly reify ]
+69 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-ia32
+70 silly reify mark deleted [
+70 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-ia32'
+70 silly reify ]
+71 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-x64
+72 silly reify mark deleted [
+72 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-x64'
+72 silly reify ]
+73 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@emnapi/runtime
+74 silly reify mark deleted [
+74 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@emnapi/runtime'
+74 silly reify ]
+75 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/semver
+76 silly reify mark deleted [
+76 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/semver',
+76 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/.bin/semver'
+76 silly reify ]
+77 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/sharp
+78 silly reify mark deleted [ '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/sharp' ]
+79 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/colour
+80 silly reify mark deleted [
+80 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/colour'
+80 silly reify ]
+81 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/detect-libc
+82 silly reify mark deleted [
+82 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/detect-libc'
+82 silly reify ]
+83 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-darwin-arm64
+84 silly reify mark deleted [
+84 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-darwin-arm64'
+84 silly reify ]
+85 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-darwin-x64
+86 silly reify mark deleted [
+86 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-darwin-x64'
+86 silly reify ]
+87 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-darwin-arm64
+88 silly reify mark deleted [
+88 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-darwin-arm64'
+88 silly reify ]
+89 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-darwin-x64
+90 silly reify mark deleted [
+90 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-darwin-x64'
+90 silly reify ]
+91 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-arm
+92 silly reify mark deleted [
+92 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-arm'
+92 silly reify ]
+93 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-arm64
+94 silly reify mark deleted [
+94 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-arm64'
+94 silly reify ]
+95 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-ppc64
+96 silly reify mark deleted [
+96 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-ppc64'
+96 silly reify ]
+97 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-riscv64
+98 silly reify mark deleted [
+98 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-riscv64'
+98 silly reify ]
+99 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-s390x
+100 silly reify mark deleted [
+100 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-s390x'
+100 silly reify ]
+101 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-x64
+102 silly reify mark deleted [
+102 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-x64'
+102 silly reify ]
+103 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linuxmusl-arm64
+104 silly reify mark deleted [
+104 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linuxmusl-arm64'
+104 silly reify ]
+105 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linuxmusl-x64
+106 silly reify mark deleted [
+106 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linuxmusl-x64'
+106 silly reify ]
+107 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-arm
+108 silly reify mark deleted [
+108 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-arm'
+108 silly reify ]
+109 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-arm64
+110 silly reify mark deleted [
+110 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-arm64'
+110 silly reify ]
+111 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-ppc64
+112 silly reify mark deleted [
+112 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-ppc64'
+112 silly reify ]
+113 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-riscv64
+114 silly reify mark deleted [
+114 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-riscv64'
+114 silly reify ]
+115 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-s390x
+116 silly reify mark deleted [
+116 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-s390x'
+116 silly reify ]
+117 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-x64
+118 silly reify mark deleted [
+118 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-x64'
+118 silly reify ]
+119 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linuxmusl-arm64
+120 silly reify mark deleted [
+120 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linuxmusl-arm64'
+120 silly reify ]
+121 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linuxmusl-x64
+122 silly reify mark deleted [
+122 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linuxmusl-x64'
+122 silly reify ]
+123 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-wasm32
+124 silly reify mark deleted [
+124 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-wasm32'
+124 silly reify ]
+125 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-arm64
+126 silly reify mark deleted [
+126 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-arm64'
+126 silly reify ]
+127 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-ia32
+128 silly reify mark deleted [
+128 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-ia32'
+128 silly reify ]
+129 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-x64
+130 silly reify mark deleted [
+130 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-x64'
+130 silly reify ]
+131 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@emnapi/runtime
+132 silly reify mark deleted [
+132 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@emnapi/runtime'
+132 silly reify ]
+133 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/detect-libc
+134 silly reify mark deleted [
+134 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/detect-libc'
+134 silly reify ]
+135 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/sharp
+136 silly reify mark deleted [ '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/sharp' ]
+137 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/colour
+138 silly reify mark deleted [
+138 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/colour'
+138 silly reify ]
+139 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/semver
+140 silly reify mark deleted [
+140 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/semver',
+140 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/.bin/semver'
+140 silly reify ]
+141 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-darwin-arm64
+142 silly reify mark deleted [
+142 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-darwin-arm64'
+142 silly reify ]
+143 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-darwin-x64
+144 silly reify mark deleted [
+144 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-darwin-x64'
+144 silly reify ]
+145 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-darwin-arm64
+146 silly reify mark deleted [
+146 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-darwin-arm64'
+146 silly reify ]
+147 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-darwin-x64
+148 silly reify mark deleted [
+148 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-darwin-x64'
+148 silly reify ]
+149 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-arm
+150 silly reify mark deleted [
+150 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-arm'
+150 silly reify ]
+151 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-arm64
+152 silly reify mark deleted [
+152 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-arm64'
+152 silly reify ]
+153 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-ppc64
+154 silly reify mark deleted [
+154 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-ppc64'
+154 silly reify ]
+155 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-riscv64
+156 silly reify mark deleted [
+156 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-riscv64'
+156 silly reify ]
+157 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-s390x
+158 silly reify mark deleted [
+158 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-s390x'
+158 silly reify ]
+159 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-x64
+160 silly reify mark deleted [
+160 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linux-x64'
+160 silly reify ]
+161 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linuxmusl-arm64
+162 silly reify mark deleted [
+162 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linuxmusl-arm64'
+162 silly reify ]
+163 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linuxmusl-x64
+164 silly reify mark deleted [
+164 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-libvips-linuxmusl-x64'
+164 silly reify ]
+165 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-arm
+166 silly reify mark deleted [
+166 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-arm'
+166 silly reify ]
+167 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-arm64
+168 silly reify mark deleted [
+168 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-arm64'
+168 silly reify ]
+169 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-ppc64
+170 silly reify mark deleted [
+170 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-ppc64'
+170 silly reify ]
+171 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-riscv64
+172 silly reify mark deleted [
+172 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-riscv64'
+172 silly reify ]
+173 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-s390x
+174 silly reify mark deleted [
+174 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-s390x'
+174 silly reify ]
+175 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-x64
+176 silly reify mark deleted [
+176 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linux-x64'
+176 silly reify ]
+177 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linuxmusl-arm64
+178 silly reify mark deleted [
+178 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linuxmusl-arm64'
+178 silly reify ]
+179 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linuxmusl-x64
+180 silly reify mark deleted [
+180 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-linuxmusl-x64'
+180 silly reify ]
+181 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-wasm32
+182 silly reify mark deleted [
+182 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-wasm32'
+182 silly reify ]
+183 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-arm64
+184 silly reify mark deleted [
+184 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-arm64'
+184 silly reify ]
+185 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-ia32
+186 silly reify mark deleted [
+186 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-ia32'
+186 silly reify ]
+187 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-x64
+188 silly reify mark deleted [
+188 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@img/sharp-win32-x64'
+188 silly reify ]
+189 verbose reify failed optional dependency /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@emnapi/runtime
+190 silly reify mark deleted [
+190 silly reify   '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/@emnapi/runtime'
+190 silly reify ]
+191 http cache undici-types@https://registry.npmjs.org/undici-types/-/undici-types-7.18.2.tgz 1ms (cache hit)
+192 http cache picocolors@https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz 0ms (cache hit)
+193 http cache client-only@https://registry.npmjs.org/client-only/-/client-only-0.0.1.tgz 0ms (cache hit)
+194 http cache csstype@https://registry.npmjs.org/csstype/-/csstype-3.2.3.tgz 0ms (cache hit)
+195 http cache @img/colour@https://registry.npmjs.org/@img/colour/-/colour-1.1.0.tgz 0ms (cache hit)
+196 http cache @next/swc-darwin-x64@https://registry.npmjs.org/@next/swc-darwin-x64/-/swc-darwin-x64-15.5.14.tgz 0ms (cache hit)
+197 http cache react@https://registry.npmjs.org/react/-/react-19.2.4.tgz 0ms (cache hit)
+198 http cache @types/react@https://registry.npmjs.org/@types/react/-/react-19.2.14.tgz 1ms (cache hit)
+199 http cache @types/react-dom@https://registry.npmjs.org/@types/react-dom/-/react-dom-19.2.3.tgz 0ms (cache hit)
+200 http cache @img/sharp-darwin-x64@https://registry.npmjs.org/@img/sharp-darwin-x64/-/sharp-darwin-x64-0.34.5.tgz 0ms (cache hit)
+201 http cache @next/env@https://registry.npmjs.org/@next/env/-/env-15.5.14.tgz 0ms (cache hit)
+202 http cache @types/node@https://registry.npmjs.org/@types/node/-/node-25.5.0.tgz 0ms (cache hit)
+203 http cache @swc/helpers@https://registry.npmjs.org/@swc/helpers/-/helpers-0.5.15.tgz 0ms (cache hit)
+204 http cache @img/sharp-libvips-darwin-x64@https://registry.npmjs.org/@img/sharp-libvips-darwin-x64/-/sharp-libvips-darwin-x64-1.2.4.tgz 0ms (cache hit)
+205 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 814ms
+206 silly audit report {}
+207 verbose stack Error: EPERM: operation not permitted, lstat '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/typescript/.DS_Store'
+208 error code EPERM
+209 error syscall lstat
+210 error path /Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/typescript/.DS_Store
+211 error errno -1
+212 error [Error: EPERM: operation not permitted, lstat '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/typescript/.DS_Store'] {
+212 error   errno: -1,
+212 error   code: 'EPERM',
+212 error   syscall: 'lstat',
+212 error   path: '/Users/leads/dev/Porfolio/lrdene-portfolio/node_modules/typescript/.DS_Store'
+212 error }
+213 error
+213 error The operation was rejected by your operating system.
+213 error It is likely you do not have the permissions to access this file as the current user
+213 error
+213 error If you believe this might be a permissions issue, please double-check the
+213 error permissions of the file and its containing directories, or try running
+213 error the command again as root/Administrator.
+214 silly unfinished npm timer reify 1774097242366
+215 silly unfinished npm timer reify:unpack 1774097242409
+216 silly unfinished npm timer reifyNode:node_modules/typescript 1774097242409
+217 silly unfinished npm timer reifyNode:node_modules/tslib 1774097242409
+218 silly unfinished npm timer reifyNode:node_modules/tailwind-merge 1774097242409
+219 silly unfinished npm timer reifyNode:node_modules/styled-jsx 1774097242409
+220 silly unfinished npm timer reifyNode:node_modules/source-map-js 1774097242409
+221 silly unfinished npm timer reifyNode:node_modules/scheduler 1774097242410
+222 silly unfinished npm timer reifyNode:node_modules/react-dom 1774097242410
+223 silly unfinished npm timer reifyNode:node_modules/postcss 1774097242410
+224 silly unfinished npm timer reifyNode:node_modules/next 1774097242410
+225 silly unfinished npm timer reifyNode:node_modules/nanoid 1774097242410
+226 silly unfinished npm timer reifyNode:node_modules/motion-utils 1774097242410
+227 silly unfinished npm timer reifyNode:node_modules/motion-dom 1774097242410
+228 silly unfinished npm timer reifyNode:node_modules/lucide-react 1774097242410
+229 silly unfinished npm timer reifyNode:node_modules/framer-motion 1774097242410
+230 silly unfinished npm timer reifyNode:node_modules/clsx 1774097242410
+231 silly unfinished npm timer reifyNode:node_modules/caniuse-lite 1774097242410
+232 verbose cwd /Users/leads/dev/Porfolio/lrdene-portfolio
+233 verbose os Darwin 25.4.0
+234 verbose node v22.22.0
+235 verbose npm  v11.11.0
+236 verbose exit -1
+237 verbose code -1
+238 error A complete log of this run can be found in: /Users/leads/dev/Porfolio/lrdene-portfolio/.npm-cache/_logs/2026-03-21T12_47_22_088Z-debug-0.log

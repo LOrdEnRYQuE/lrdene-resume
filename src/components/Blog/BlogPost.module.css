@@ -1,0 +1,154 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+}
+
+.hero {
+  margin-bottom: 4rem;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 4rem;
+  transition: color 0.3s ease;
+}
+
+.backLink:hover {
+  color: var(--accent-gold);
+}
+
+.header {
+  max-width: 900px;
+  margin-bottom: 4rem;
+}
+
+.category {
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 4.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+}
+
+.meta {
+  display: flex;
+  gap: 2.5rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.imageBox {
+  width: 100%;
+  aspect-ratio: 21/9;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.imageBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.articleLayout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 6rem;
+  margin-top: 6rem;
+}
+
+.sidebar {
+  position: sticky;
+  top: 120px;
+  height: max-content;
+}
+
+.authorCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.authorAvatar {
+  width: 48px;
+  height: 48px;
+  background: var(--accent-gold);
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 800;
+}
+
+.authorCard h4 {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.authorCard p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.content {
+  max-width: 800px;
+}
+
+.excerpt {
+  font-size: 1.6rem;
+  line-height: 1.5;
+  color: var(--accent-silver);
+  font-weight: 500;
+  margin-bottom: 4rem;
+}
+
+.body h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 4rem 0 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.body h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 3rem 0 1rem;
+}
+
+.body p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .articleLayout { grid-template-columns: 1fr; gap: 4rem; }
+  .sidebar { position: static; }
+  .header h1 { font-size: 3rem; }
+}

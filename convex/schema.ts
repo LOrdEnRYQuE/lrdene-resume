@@ -1,0 +1,70 @@
+import { defineSchema, defineTable } from "convex/server";
+import { v } from "convex/values";
+
+export default defineSchema({
+  leads: defineTable({
+    name: v.string(),
+    email: v.string(),
+    company: v.optional(v.string()), 
+    projectType: v.string(),
+    budget: v.string(),
+    timeline: v.optional(v.string()), 
+    message: v.string(),
+    status: v.string(), 
+    notes: v.optional(v.array(v.object({
+      body: v.string(),
+      timestamp: v.number(),
+    }))),
+    createdAt: v.optional(v.number()),
+  }).index("by_status", ["status"]),
+  posts: defineTable({
+    title: v.string(),
+    slug: v.string(),
+    category: v.string(),
+    excerpt: v.string(),
+    content: v.string(),
+    coverImage: v.string(),
+    author: v.string(),
+    published: v.boolean(),
+    readTime: v.string(),
+    date: v.number(),
+    tags: v.optional(v.array(v.string())),
+  }).index("by_slug", ["slug"]).index("by_category", ["category"]),
+  projects: defineTable({
+    title: v.string(),
+    slug: v.string(),
+    summary: v.string(),
+    description: v.string(),
+    challenge: v.optional(v.string()),
+    solution: v.optional(v.string()),
+    role: v.string(),
+    stack: v.array(v.string()),
+    category: v.string(), 
+    featured: v.boolean(),
+    status: v.string(),
+    liveUrl: v.optional(v.string()),
+    githubUrl: v.optional(v.string()),
+    coverImage: v.string(),
+  }).index("by_slug", ["slug"]).index("by_category", ["category"]),
+  siteMetadata: defineTable({
+    route: v.string(), 
+    title: v.string(),
+    description: v.string(),
+    keywords: v.optional(v.string()),
+    ogImage: v.optional(v.string()),
+  }).index("by_route", ["route"]),
+  settings: defineTable({
+    siteName: v.string(),
+    siteDescription: v.string(),
+    gaId: v.optional(v.string()),
+    gtmId: v.optional(v.string()),
+    socialLinks: v.optional(v.object({
+      github: v.optional(v.string()),
+      twitter: v.optional(v.string()),
+      linkedin: v.optional(v.string()),
+    })),
+    emailConfig: v.optional(v.object({
+      receiver: v.string(),
+    })),
+  }),
+});

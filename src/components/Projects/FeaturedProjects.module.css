@@ -1,0 +1,142 @@
+.projects {
+  padding: var(--section-padding) 0;
+  background: var(--bg-dark);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 5rem;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.viewAll {
+  color: var(--accent-gold);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: gap 0.2s;
+}
+
+.viewAll:hover {
+  gap: 0.75rem;
+}
+
+.projectList {
+  display: flex;
+  flex-direction: column;
+  gap: 8rem;
+}
+
+.projectCard {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.projectCard:nth-child(even) {
+  grid-template-columns: 1fr 1.2fr;
+}
+
+.projectCard:nth-child(even) .projectInfo {
+  order: 2;
+}
+
+.projectImage {
+  aspect-ratio: 16/10;
+  background: #111;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  transition: border-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #222;
+}
+
+.projectCard:hover .projectImage {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.projectInfo {
+  padding: 1rem 0;
+}
+
+.projectNum {
+  font-family: serif;
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--accent-gold);
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+.projectTitle {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+}
+
+.projectValue {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.projectMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.tag {
+  font-size: 0.8rem;
+  padding: 0.4rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 100px;
+  color: #eee;
+}
+
+.caseStudyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  font-weight: 700;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.caseStudyBtn:hover {
+  background: var(--accent-gold);
+  color: #000;
+}
+
+@media (max-width: 1024px) {
+  .projectCard, .projectCard:nth-child(even) {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .projectInfo {
+    order: 2 !important;
+  }
+}

@@ -1,0 +1,45 @@
+.wrapper {
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg-darker);
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 1rem 0;
+  display: flex;
+  white-space: nowrap;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  animation: scroll 30s linear infinite;
+  flex-shrink: 0;
+}
+
+.item {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 2rem;
+  font-weight: 500;
+}
+
+.separator {
+  color: var(--accent-gold);
+  font-size: 1.2rem;
+  opacity: 0.6;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.wrapper:hover .container {
+  animation-play-state: paused;
+}
