@@ -5,8 +5,9 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 import { notFound } from "next/navigation";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const project = await fetchQuery(api.projects.getBySlug, { slug: params.slug });
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const project = await fetchQuery(api.projects.getBySlug, { slug });
   if (!project) return {};
 
   return {
@@ -18,13 +19,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function ProjectPage({ params }: { params: { slug: string } }) {
-  const project = await fetchQuery(api.projects.getBySlug, { slug: params.slug });
+export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const project = await fetchQuery(api.projects.getBySlug, { slug });
   if (!project) notFound();
 
   return (
     <main style={{ marginTop: "80px" }}>
-      <ProjectDetail slug={params.slug} />
+      <ProjectDetail slug={slug} />
       <Footer />
     </main>
   );

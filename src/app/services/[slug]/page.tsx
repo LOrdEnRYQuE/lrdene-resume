@@ -63,8 +63,9 @@ const SERVICES_DATA: Record<string, any> = {
   }
 };
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const service = SERVICES_DATA[params.slug];
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const service = SERVICES_DATA[slug];
   if (!service) return {};
 
   return {
@@ -73,8 +74,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function ServicePage({ params }: { params: { slug: string } }) {
-  const service = SERVICES_DATA[params.slug];
+export default async function ServicePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const service = SERVICES_DATA[slug];
   
   if (!service) {
     notFound();

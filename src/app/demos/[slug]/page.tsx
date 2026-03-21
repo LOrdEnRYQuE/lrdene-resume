@@ -47,8 +47,9 @@ const DEMOS_DATA: Record<string, any> = {
   }
 };
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const demo = DEMOS_DATA[params.slug];
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const demo = DEMOS_DATA[slug];
   if (!demo) return {};
 
   return {
@@ -57,8 +58,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function DemoPage({ params }: { params: { slug: string } }) {
-  const demo = DEMOS_DATA[params.slug];
+export default async function DemoPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const demo = DEMOS_DATA[slug];
   
   if (!demo) {
     notFound();

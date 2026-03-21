@@ -4,8 +4,9 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 import { notFound } from "next/navigation";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = await fetchQuery(api.posts.getBySlug, { slug: params.slug });
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = await fetchQuery(api.posts.getBySlug, { slug });
   if (!post) return {};
 
   return {
@@ -17,8 +18,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = await fetchQuery(api.posts.getBySlug, { slug: params.slug });
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = await fetchQuery(api.posts.getBySlug, { slug });
   if (!post) notFound();
 
   return (
