@@ -1,0 +1,62 @@
+# Task Checklist
+
+- [x] Phase 1: Core Foundation [/]
+    - [x] Initialize Next.js project and Convex backend
+    - [x] Implement glassmorphism and matte design system
+    - [x] Navbar with centered logo and split links
+- [x] Phase 2: Premium OS Features [/]
+    - [x] Home Page Expansion (Trust Strip, Services Grid, Process)
+    - [x] Interactive Demo Branches (Niche MVP cards)
+    - [x] Project Archive & Case Studies (`/projects`, dynamic slug pages)
+    - [x] About Me refresh (Design Evolution Timeline)
+    - [x] Contact Form expansion (Budget, Timeline, Company fields)
+- [x] Phase 3: Advanced Admin & SEO [/]
+    - [x] Admin Dashboard Shell
+    - [x] SEO Command Center (GUI for metadata/OG image management)
+    - [x] Project Manager (CRUD for case studies)
+    - [x] Lead Pipeline (Status tracking and follow-up notes)
+- [x] Phase 4: Verification & Polish [/]
+    - [x] Micro-animations and transitions
+    - [x] SEO/GEO initial optimization
+    - [x] Performance audit (LCP, CLS)
+- [x] Phase 5: Content & Service Expansion [/]
+    - [x] Blog System (Listing, detail pages, and admin manager)
+    - [x] Dedicated Service Pages (`/services/*`)
+    - [x] Interactive Demo Branch details (`/demos/*`)
+    - [x] Media Library (Admin asset management)
+- [x] Phase 6: Final Polish & Optimization [x]
+    - [x] Comprehensive SEO Audit (Dynamic Metadata)
+    - [x] Dynamic Sitemap Generation (`/sitemap.xml`)
+    - [x] Robots.txt Configuration (`/robots.txt`)
+    - [x] Final UI/UX Refinement (Premium Footer & Navbar)
+    - [x] Documentation for Admin Handover
+- [x] Phase 7: Dynamic Contact & SEO [x]
+    - [x] Fixed: 'Search' undefined error in Sidebar
+    - [x] Fixed: `useQuery` parameter mismatches (passed `{}`)
+    - [x] Feature: Universal Footer across all static and dynamic subpages
+    - [x] SEO: Dynamic Metadata for Demos and Services
+
+- [x] Phase 9: GitHub Repository Deployment
+    - [x] Refine .gitignore (Excluding AI metadata)
+    - [x] Initialize & Commit Source Code
+    - [x] Create Public Repo `portfolio-lrdene` via GH CLI
+    - [x] Push to Primary Branch (`main`)
+
+- [x] Phase 10: Cloudflare Pages Deployment
+    - [x] Configure `next-on-pages` scripts in `package.json`
+    - [x] Add `wrangler.jsonc` configuration
+    - [x] Setup `env.d.ts` for Cloudflare types
+    - [x] Refine .gitignore (Excluding .npm-cache)
+    - [x] Sync changes to GitHub for deployment
+    - [x] Fix: Correct Build/Deploy Commands for Pages
+    - [x] Fix: Add .npmrc to resolve ERESOLVE conflicts
+    - [x] Fix: Downgrade Next.js to v15 (Official Cloudflare Support)
+    - [x] Fix: Delete package-lock.json to force clean install
+
+- [x] Phase 8: Project Portfolio & Archive Refinement [x]
+    - [x] Interactive Project Archive (List/Grid Toggle)
+    - [x] Advanced Taxonomy Filters & Search
+    - [x] Editorial Case Study Layouts
+    - [x] Magnetic Hover Interactions
+    - [x] Dynamic Project Screenshots & Video Support (Convex Storage) Control Center Interface
+    - [x] Mobile Admin Responsive Optimization (Basic)
