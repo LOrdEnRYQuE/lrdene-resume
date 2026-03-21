@@ -92,10 +92,3 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
   );
 }
 
-export function generateStaticParams() {
-  return [
-    { slug: "web-development" },
-    { slug: "ai-integration" },
-    { slug: "ui-ux-design" }
-  ];
-}

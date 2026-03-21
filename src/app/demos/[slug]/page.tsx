@@ -76,10 +76,3 @@ export default async function DemoPage({ params }: { params: Promise<{ slug: str
   );
 }
 
-export function generateStaticParams() {
-  return [
-    { slug: "saas-engine" },
-    { slug: "ai-assistant" },
-    { slug: "e-com-ultra" }
-  ];
-}
