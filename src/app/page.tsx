@@ -1,4 +1,5 @@
 export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 import { Hero } from "@/components/Hero/Hero";
 import { FeaturedProjects } from "@/components/Projects/FeaturedProjects";
