@@ -69,3 +69,4 @@ next-env.d.ts
 brain/
 .gemini/
 .antigravity/
+.npm-cache/
