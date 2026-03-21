@@ -2,6 +2,8 @@ import { DemoDetail } from "../../../components/Demos/DemoDetail";
 import { Footer } from "../../../components/Footer/Footer";
 import { notFound } from "next/navigation";
 
+export const runtime = "edge";
+
 const DEMOS_DATA: Record<string, any> = {
   "saas-engine": {
     title: "Engine",

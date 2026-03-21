@@ -1,4 +1,6 @@
 import { MetadataRoute } from "next";
+
+export const runtime = "edge";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
 

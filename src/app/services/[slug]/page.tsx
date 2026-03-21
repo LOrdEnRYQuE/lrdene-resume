@@ -3,6 +3,8 @@ import { Footer } from "../../../components/Footer/Footer";
 import { Globe, Cpu, Layout, MessageSquare, Zap } from "lucide-react";
 import { notFound } from "next/navigation";
 
+export const runtime = "edge";
+
 const SERVICES_DATA: Record<string, any> = {
   "web-development": {
     title: "Premium Web",
