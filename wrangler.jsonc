@@ -4,5 +4,8 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
+  "assets": {
+    "directory": ".vercel/output"
+  },
   "pages_build_output_dir": ".vercel/output"
 }
