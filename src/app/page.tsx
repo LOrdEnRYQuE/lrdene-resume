@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import { Hero } from "@/components/Hero/Hero";
 import { FeaturedProjects } from "@/components/Projects/FeaturedProjects";
 import { About } from "@/components/About/About";
