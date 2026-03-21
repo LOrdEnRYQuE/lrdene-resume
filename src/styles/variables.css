@@ -1,0 +1,29 @@
+:root {
+  /* Colors */
+  --bg-dark: #0a0a0a;
+  --bg-matte: #121212;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  
+  --accent-gold: #d4af37;
+  --accent-gold-muted: #b8860b;
+  --accent-silver: #c0c0c0;
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: blur(12px);
+  
+  /* Spacing */
+  --section-padding: 8rem;
+  --container-max-width: 1200px;
+  
+  /* Typography */
+  --font-serif: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-dark: #050505;
+  }
+}
