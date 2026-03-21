@@ -1,5 +1,6 @@
 import React from "react";
 import { ProjectArchive } from "@/components/Projects/ProjectArchive";
+import { Footer } from "@/components/Footer/Footer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,6 +12,7 @@ export default function ProjectsPage() {
   return (
     <main style={{ marginTop: "80px" }}>
       <ProjectArchive />
+      <Footer />
     </main>
   );
 }

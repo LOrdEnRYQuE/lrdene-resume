@@ -1,4 +1,5 @@
 import { BlogArchive } from "../../components/Blog/BlogArchive";
+import { Footer } from "../../components/Footer/Footer";
 
 export const metadata = {
   title: "Journal | LOrdEnRYQuE",
@@ -9,6 +10,7 @@ export default function BlogPage() {
   return (
     <main>
       <BlogArchive />
+      <Footer />
     </main>
   );
 }

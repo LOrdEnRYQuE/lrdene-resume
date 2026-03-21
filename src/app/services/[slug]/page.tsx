@@ -1,4 +1,5 @@
 import { ServiceDetail } from "../../../components/Services/ServiceDetail";
+import { Footer } from "../../../components/Footer/Footer";
 import { Globe, Cpu, Layout, MessageSquare, Zap } from "lucide-react";
 import { notFound } from "next/navigation";
 
@@ -62,6 +63,16 @@ const SERVICES_DATA: Record<string, any> = {
   }
 };
 
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const service = SERVICES_DATA[params.slug];
+  if (!service) return {};
+
+  return {
+    title: `${service.title} | Service`,
+    description: service.description,
+  };
+}
+
 export default function ServicePage({ params }: { params: { slug: string } }) {
   const service = SERVICES_DATA[params.slug];
   
@@ -72,6 +83,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
   return (
     <main>
       <ServiceDetail {...service} />
+      <Footer />
     </main>
   );
 }

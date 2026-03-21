@@ -1,5 +1,6 @@
 import React from "react";
 import { About } from "@/components/About/About";
+import { Footer } from "@/components/Footer/Footer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,6 +12,7 @@ export default function AboutPage() {
   return (
     <main style={{ marginTop: "80px" }}>
       <About />
+      <Footer />
     </main>
   );
 }

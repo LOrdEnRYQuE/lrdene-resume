@@ -1,4 +1,5 @@
 import { BlogPost } from "../../../components/Blog/BlogPost";
+import { Footer } from "../../../components/Footer/Footer";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 import { notFound } from "next/navigation";
@@ -23,6 +24,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   return (
     <main>
       <BlogPost post={post} />
+      <Footer />
     </main>
   );
 }

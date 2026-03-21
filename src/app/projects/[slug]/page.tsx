@@ -1,5 +1,6 @@
 import React from "react";
 import { ProjectDetail } from "@/components/Projects/ProjectDetail";
+import { Footer } from "@/components/Footer/Footer";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 import { notFound } from "next/navigation";
@@ -24,6 +25,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
   return (
     <main style={{ marginTop: "80px" }}>
       <ProjectDetail slug={params.slug} />
+      <Footer />
     </main>
   );
 }

@@ -1,19 +1,20 @@
 import { DemoDetail } from "../../../components/Demos/DemoDetail";
+import { Footer } from "../../../components/Footer/Footer";
 import { notFound } from "next/navigation";
 
 const DEMOS_DATA: Record<string, any> = {
   "saas-engine": {
-    title: "SaaS",
-    tagline: "The foundation for high-scale software platforms.",
-    niche: "Enterprise",
-    techStack: ["Next.js", "Convex", "Stripe", "Clerk", "Tailwind"],
+    title: "Engine",
+    tagline: "The backbone of modern digital scale.",
+    niche: "Infrastructure",
+    techStack: ["Node.js", "Postgres", "Redis", "Docker", "AWS"],
     features: [
       "Multi-tenant Architecture",
-      "Dynamic Subscription Middleware",
-      "Real-time Analytics Dashboard",
-      "Advanced RBAC System"
+      "Dynamic Resource Allocation",
+      "Real-time Analytics Pipeline",
+      "Zero-downtime Deployment System"
     ],
-    description: "A complete blueprint for modern SaaS applications. Includes out-of-the-box support for workspace management, nested routing, and high-performance data patterns.",
+    description: "Saas Engine is a battle-tested foundation for subscription-based products. It handles authentication, billing, and resource isolation with elastic scalability.",
     previewImage: "/demos/saas-preview.jpg"
   },
   "ai-assistant": {
@@ -46,6 +47,16 @@ const DEMOS_DATA: Record<string, any> = {
   }
 };
 
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const demo = DEMOS_DATA[params.slug];
+  if (!demo) return {};
+
+  return {
+    title: `${demo.title} | Demo`,
+    description: demo.tagline,
+  };
+}
+
 export default function DemoPage({ params }: { params: { slug: string } }) {
   const demo = DEMOS_DATA[params.slug];
   
@@ -56,6 +67,7 @@ export default function DemoPage({ params }: { params: { slug: string } }) {
   return (
     <main>
       <DemoDetail {...demo} />
+      <Footer />
     </main>
   );
 }
