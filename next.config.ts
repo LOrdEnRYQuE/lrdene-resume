@@ -5,7 +5,6 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },
-  trailingSlash: true,
   // @ts-ignore - Ignore type errors to ensure Cloudflare success if types are outdated
   eslint: {
     ignoreDuringBuilds: true,
