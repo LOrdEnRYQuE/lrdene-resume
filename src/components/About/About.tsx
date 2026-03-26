@@ -1039,7 +1039,7 @@ export const About = () => {
 
             <div className={styles.ctaRow}>
               <a
-                href="/assets/Attila_Lazar_Resume_Portfolio.pdf"
+                href="/assets/Attila_Lazar_CV_EN.pdf"
                 className={styles.resumeBtn}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -1080,7 +1080,7 @@ export const About = () => {
                     <div className={styles.cardTopRow}>
                       <span className={styles.period}>{stage.period}</span>
                     </div>
-                    <h4>{stage.title}</h4>
+                    <h3>{stage.title}</h3>
                     <p>{stage.desc}</p>
 
                     <div className={styles.techList}>
@@ -1148,7 +1148,7 @@ export const About = () => {
             <div className={styles.trianglePillarGrid}>
               {copy.trianglePillars.map((pillar) => (
                 <div key={pillar.title} className={styles.trianglePillarCard}>
-                  <h4>{pillar.title}</h4>
+                  <h3>{pillar.title}</h3>
                   <p>{pillar.desc}</p>
                 </div>
               ))}
@@ -1162,7 +1162,7 @@ export const About = () => {
               ))}
             </div>
             <div className={styles.triangleFlowBlock}>
-              <h4>{copy.triangleFlowTitle}</h4>
+              <h3>{copy.triangleFlowTitle}</h3>
               <div className={styles.triangleFlowGrid}>
                 {copy.triangleFlow.map((flow) => (
                   <article key={flow.step} className={styles.triangleFlowItem}>
@@ -1174,7 +1174,7 @@ export const About = () => {
             </div>
             <div className={styles.triangleSupportGrid}>
               <article className={styles.triangleSupportCard}>
-                <h4>{copy.engagementTitle}</h4>
+                <h3>{copy.engagementTitle}</h3>
                 <ul className={styles.profileList}>
                   {copy.engagementModes.map((mode) => (
                     <li key={mode}>
@@ -1185,7 +1185,7 @@ export const About = () => {
                 </ul>
               </article>
               <article className={styles.triangleSupportCard}>
-                <h4>{copy.guaranteesTitle}</h4>
+                <h3>{copy.guaranteesTitle}</h3>
                 <ul className={styles.profileList}>
                   {copy.guarantees.map((item) => (
                     <li key={item}>
@@ -1197,7 +1197,7 @@ export const About = () => {
               </article>
             </div>
             <div className={styles.proofStrip}>
-              <h4>{copy.proofTitle}</h4>
+              <h3>{copy.proofTitle}</h3>
               <div className={styles.proofGrid}>
                 {copy.proofMetrics.map((metric) => (
                   <div key={metric.label} className={styles.proofCard}>
@@ -1214,7 +1214,7 @@ export const About = () => {
                   className={styles.skillCard}
                 >
                   <div className={styles.skillIcon}>{IconMap[s.icon as string] || <Code2 size={20} />}</div>
-                  <h5>{s.title}</h5>
+                  <h4>{s.title}</h4>
                   <p>{s.skills}</p>
                 </div>
               ))}
@@ -1237,7 +1237,7 @@ export const About = () => {
                 <div className={styles.valueIconWrap}>
                   {IconMap[v.icon as string] || <Target size={28} />}
                 </div>
-                <h4>{v.title}</h4>
+                <h3>{v.title}</h3>
                 <p>{v.desc}</p>
               </div>
             ))}
