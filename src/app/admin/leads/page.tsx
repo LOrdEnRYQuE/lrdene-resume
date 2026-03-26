@@ -1,17 +1,15 @@
+import type { Metadata } from "next";
+import AdminPage from "@/components/Admin/AdminPage";
 import { LeadPipeline } from "../../../components/Admin/LeadPipeline";
 
-export const metadata = {
-  title: "Admin | Lead Pipeline",
-  robots: {
-    index: false,
-    follow: false,
-  },
+export const metadata: Metadata = {
+  title: "Leads",
 };
 
 export default function AdminLeadsPage() {
   return (
-    <main className="admin-page">
+    <AdminPage>
       <LeadPipeline />
-    </main>
+    </AdminPage>
   );
 }

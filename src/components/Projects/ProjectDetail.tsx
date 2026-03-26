@@ -6,25 +6,55 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { motion } from "framer-motion";
 import { ArrowLeft, ExternalLink, Github, Code2, Trophy, Target, Calendar, Briefcase } from "lucide-react";
-import Link from "next/link";
+import LocaleLink from "@/components/I18n/LocaleLink";
 import { notFound } from "next/navigation";
-import { Magnetic } from "../Common/Magnetic";
+import { useLocale } from "@/lib/i18n/useLocale";
+
 
 export const ProjectDetail = ({ slug }: { slug: string }) => {
+  const locale = useLocale();
   const project = useQuery(api.projects.getBySlug, { slug });
+  const copy =
+    locale === "de"
+      ? {
+          loading: "Case Study wird geladen...",
+          back: "Zurück zum Archiv",
+          live: "Live Projekt",
+          source: "Quellcode",
+          challenge: "Die Herausforderung",
+          solution: "Die Lösung",
+          execution: "Technische Umsetzung",
+          myRole: "Meine Rolle",
+          status: "Status",
+          year: "Jahr",
+          stack: "Stack & Tools",
+        }
+      : {
+          loading: "Loading case study...",
+          back: "Back to Archive",
+          live: "Live Project",
+          source: "Source Code",
+          challenge: "The Challenge",
+          solution: "The Solution",
+          execution: "Technical Execution",
+          myRole: "My Role",
+          status: "Status",
+          year: "Year",
+          stack: "Stack & Tools",
+        };
 
-  if (project === undefined) return <div className={styles.loading}>Loading case study...</div>;
+  if (project === undefined) return <div className={styles.loading}>{copy.loading}</div>;
   if (project === null) notFound();
 
   return (
     <article className={styles.detail}>
       <div className={styles.heroSection}>
         <div className="container">
-          <Link href="/projects" className={styles.backBtn}>
-            <Magnetic strength={0.3} className={styles.backInner}>
-              <ArrowLeft size={16} /> <span>Back to Archive</span>
-            </Magnetic>
-          </Link>
+          <LocaleLink href="/projects" className={styles.backBtn}>
+            <div className={styles.backInner}>
+              <ArrowLeft size={16} /> <span>{copy.back}</span>
+            </div>
+          </LocaleLink>
           
           <div className={styles.heroContent}>
             <motion.div
@@ -41,18 +71,14 @@ export const ProjectDetail = ({ slug }: { slug: string }) => {
               
               <div className={styles.heroLinks}>
                 {project.liveUrl && (
-                  <Magnetic strength={0.2}>
-                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className={styles.cta}>
-                      Live Project <ExternalLink size={16} />
-                    </a>
-                  </Magnetic>
+                  <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className={styles.cta}>
+                    {copy.live} <ExternalLink size={16} />
+                  </a>
                 )}
                 {project.githubUrl && (
-                  <Magnetic strength={0.2}>
-                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className={styles.secondaryLink}>
-                      Source Code <Github size={16} />
-                    </a>
-                  </Magnetic>
+                  <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className={styles.secondaryLink}>
+                    {copy.source} <Github size={16} />
+                  </a>
                 )}
               </div>
             </motion.div>
@@ -72,7 +98,7 @@ export const ProjectDetail = ({ slug }: { slug: string }) => {
             <div className={styles.block}>
               <div className={styles.blockHeader}>
                 <Target size={24} className="gold-text" />
-                <h2>The Challenge</h2>
+                <h2>{copy.challenge}</h2>
               </div>
               <p className={styles.blockText}>{project.challenge}</p>
             </div>
@@ -80,7 +106,7 @@ export const ProjectDetail = ({ slug }: { slug: string }) => {
             <div className={styles.block}>
               <div className={styles.blockHeader}>
                 <Trophy size={24} className="gold-text" />
-                <h2>The Solution</h2>
+                <h2>{copy.solution}</h2>
               </div>
               <p className={styles.blockText}>{project.solution}</p>
             </div>
@@ -88,7 +114,7 @@ export const ProjectDetail = ({ slug }: { slug: string }) => {
             <div className={styles.block}>
               <div className={styles.blockHeader}>
                 <Code2 size={24} className="gold-text" />
-                <h2>Technical Execution</h2>
+                <h2>{copy.execution}</h2>
               </div>
               <p className={styles.blockText}>{project.description}</p>
             </div>
@@ -98,14 +124,14 @@ export const ProjectDetail = ({ slug }: { slug: string }) => {
             <div className={styles.sidebarSticky}>
               <div className={styles.sidebarSection}>
                 <div className={styles.sidebarLabel}>
-                  <Briefcase size={14} /> My Role
+                  <Briefcase size={14} /> {copy.myRole}
                 </div>
                 <div className={styles.sidebarValue}>{project.role}</div>
               </div>
 
               <div className={styles.sidebarSection}>
                 <div className={styles.sidebarLabel}>
-                  <Target size={14} /> Status
+                  <Target size={14} /> {copy.status}
                 </div>
                 <div className={styles.sidebarValue}>
                   <span className={styles.statusBadge}>{project.status}</span>
@@ -114,13 +140,13 @@ export const ProjectDetail = ({ slug }: { slug: string }) => {
 
               <div className={styles.sidebarSection}>
                 <div className={styles.sidebarLabel}>
-                  <Calendar size={14} /> Year
+                  <Calendar size={14} /> {copy.year}
                 </div>
-                <div className={styles.sidebarValue}>2024</div>
+                <div className={styles.sidebarValue}>{project.year || "2024"}</div>
               </div>
 
               <div className={styles.sidebarSection}>
-                <div className={styles.sidebarLabel}>Stack & Tools</div>
+                <div className={styles.sidebarLabel}>{copy.stack}</div>
                 <div className={styles.stackGrid}>
                   {project.stack.map(tag => (
                     <span key={tag} className={styles.tag}>{tag}</span>

@@ -3,17 +3,48 @@
 import React from "react";
 import styles from "./ServiceDetail.module.css";
 import { motion } from "framer-motion";
-import { CheckCircle2, ArrowRight, Zap, Shield, Target } from "lucide-react";
+import { CheckCircle2, ArrowRight, Zap, Shield, Target, Globe, Cpu, Layout } from "lucide-react";
+import { useLocale } from "@/lib/i18n/useLocale";
+import { localizeHref } from "@/lib/i18n/path";
 
 interface ServiceProps {
   title: string;
   description: string;
   features: string[];
   process: { step: string; desc: string }[];
-  icon: React.ReactNode;
+  iconName: string;
 }
 
-export const ServiceDetail = ({ title, description, features, process, icon }: ServiceProps) => {
+const ICON_MAP: Record<string, React.ReactNode> = {
+  Globe: <Globe size={40} />,
+  Cpu: <Cpu size={40} />,
+  Layout: <Layout size={40} />,
+  Zap: <Zap size={40} />,
+  Shield: <Shield size={40} />,
+  Target: <Target size={40} />,
+};
+
+export const ServiceDetail = ({ title, description, features, process, iconName }: ServiceProps) => {
+  const locale = useLocale();
+  const icon = ICON_MAP[iconName] || <Zap size={40} />;
+  const copy =
+    locale === "de"
+      ? {
+          solutions: "Lösungen",
+          capabilities: "Kernfähigkeiten",
+          protocol: "Ablauf",
+          ctaTitle: "Bereit, deine digitale Präsenz weiterzuentwickeln?",
+          ctaSubtitle: "Lass uns eine Lösung mit messbarem Wachstumseffekt bauen.",
+          cta: "Beratung Starten",
+        }
+      : {
+          solutions: "Solutions",
+          capabilities: "Key Capabilities",
+          protocol: "The Protocol",
+          ctaTitle: "Ready to evolve your digital presence?",
+          ctaSubtitle: "Let's architect a solution that drives measurable growth.",
+          cta: "Initiate Consultation",
+        };
   return (
     <div className={styles.servicePage}>
       <header className={styles.hero}>
@@ -29,7 +60,7 @@ export const ServiceDetail = ({ title, description, features, process, icon }: S
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          {title} <span className="gold-text">Solutions</span>
+          {title} <span className="gold-text">{copy.solutions}</span>
         </motion.h1>
         <motion.p 
           className={styles.description}
@@ -45,7 +76,7 @@ export const ServiceDetail = ({ title, description, features, process, icon }: S
         <div className="container">
           <div className={styles.grid}>
             <div className={styles.features}>
-              <h2 className="gold-text">Key Capabilities</h2>
+              <h2 className="gold-text">{copy.capabilities}</h2>
               <ul>
                 {features.map((feature, i) => (
                   <motion.li 
@@ -63,7 +94,7 @@ export const ServiceDetail = ({ title, description, features, process, icon }: S
             </div>
 
             <div className={styles.process}>
-              <h2 className="gold-text">The Protocol</h2>
+              <h2 className="gold-text">{copy.protocol}</h2>
               <div className={styles.steps}>
                 {process.map((step, i) => (
                   <div key={i} className={styles.step}>
@@ -81,15 +112,17 @@ export const ServiceDetail = ({ title, description, features, process, icon }: S
       </section>
 
       <footer className={styles.cta}>
-        <h2>Ready to <span className="gold-text">evolve</span> your digital presence?</h2>
-        <p>Let's architect a solution that drives measurable growth.</p>
+        <h2>{copy.ctaTitle}</h2>
+        <p>{copy.ctaSubtitle}</p>
         <motion.a 
-          href="/contact" 
+          href={localizeHref("/contact", locale)}
           className={styles.ctaBtn}
+          data-track-event="click_cta"
+          data-track-label="Service Detail: Initiate Consultation"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          Initiate Consultation <ArrowRight size={18} />
+          {copy.cta} <ArrowRight size={18} />
         </motion.a>
       </footer>
     </div>

@@ -4,14 +4,40 @@ import React from "react";
 import styles from "./BlogPost.module.css";
 import { motion } from "framer-motion";
 import { Calendar, Clock, User, ChevronLeft } from "lucide-react";
-import Link from "next/link";
+import LocaleLink from "@/components/I18n/LocaleLink";
+import Image from "next/image";
+import { useLocale } from "@/lib/i18n/useLocale";
 
 interface BlogPostProps {
   post: any;
+  relatedPosts?: any[];
+  relatedProjects?: any[];
+  relatedServices?: any[];
 }
 
-export const BlogPost = ({ post }: BlogPostProps) => {
+export const BlogPost = ({
+  post,
+  relatedPosts = [],
+  relatedProjects = [],
+  relatedServices = [],
+}: BlogPostProps) => {
+  const locale = useLocale();
   if (!post) return null;
+  const publishedDate = new Date(post.date).toLocaleDateString(locale === "de" ? "de-DE" : "en-US");
+  const copy =
+    locale === "de"
+      ? {
+          back: "Zurück zum Journal",
+          founder: "Founder, LOrdEnRYQuE",
+          share: "Teilen",
+          related: "Ähnliche Inhalte",
+        }
+      : {
+          back: "Back to Journal",
+          founder: "Founder, LOrdEnRYQuE",
+          share: "Share",
+          related: "Related Content",
+        };
 
   return (
     <div className={styles.container}>
@@ -20,20 +46,26 @@ export const BlogPost = ({ post }: BlogPostProps) => {
         animate={{ opacity: 1 }}
         className={styles.hero}
       >
-        <Link href="/blog" className={styles.backLink}>
-          <ChevronLeft size={16} /> Back to Journal
-        </Link>
+        <LocaleLink href="/blog" className={styles.backLink}>
+          <ChevronLeft size={16} /> {copy.back}
+        </LocaleLink>
         <div className={styles.header}>
           <span className={styles.category}>{post.category}</span>
           <h1>{post.title}</h1>
           <div className={styles.meta}>
             <span><User size={16} /> {post.author}</span>
-            <span><Calendar size={16} /> {new Date(post.date).toLocaleDateString()}</span>
+            <span><Calendar size={16} /> {publishedDate}</span>
             <span><Clock size={16} /> {post.readTime}</span>
           </div>
         </div>
         <div className={styles.imageBox}>
-          <img src={post.coverImage} alt={post.title} />
+          <Image
+            src={post.coverImage}
+            alt={post.title}
+            fill
+            sizes="(max-width: 1024px) 100vw, 1200px"
+            priority
+          />
         </div>
       </motion.div>
 
@@ -43,11 +75,11 @@ export const BlogPost = ({ post }: BlogPostProps) => {
             <div className={styles.authorAvatar}>AL</div>
             <div>
               <h4>{post.author}</h4>
-              <p>Founder, LOrdEnRYQuE</p>
+              <p>{copy.founder}</p>
             </div>
           </div>
           <div className={styles.share}>
-            <span>Share</span>
+            <span>{copy.share}</span>
             <div className={styles.shareButtons}>
               {/* Add sharing icons if needed */}
             </div>
@@ -67,6 +99,47 @@ export const BlogPost = ({ post }: BlogPostProps) => {
                 <p key={i}>{block}</p>
             ))}
           </div>
+
+          {(relatedPosts.length > 0 || relatedProjects.length > 0 || relatedServices.length > 0) && (
+            <section className={styles.relatedSection}>
+              <h3>{copy.related}</h3>
+              <div className={styles.relatedGrid}>
+                {relatedPosts.map((item) => (
+                  <LocaleLink
+                    key={item._id}
+                    href={`/blog/${item.slug}`}
+                    className={styles.relatedItem}
+                    data-track-event="internal_link_click"
+                    data-track-label={`Blog related: ${item.title}`}
+                  >
+                    {item.title}
+                  </LocaleLink>
+                ))}
+                {relatedProjects.map((item) => (
+                  <LocaleLink
+                    key={item._id}
+                    href={`/projects/${item.slug}`}
+                    className={styles.relatedItem}
+                    data-track-event="internal_link_click"
+                    data-track-label={`Project related: ${item.title}`}
+                  >
+                    {item.title}
+                  </LocaleLink>
+                ))}
+                {relatedServices.map((item) => (
+                  <LocaleLink
+                    key={item._id}
+                    href={`/services/${item.slug}`}
+                    className={styles.relatedItem}
+                    data-track-event="internal_link_click"
+                    data-track-label={`Service related: ${item.title}`}
+                  >
+                    {item.title}
+                  </LocaleLink>
+                ))}
+              </div>
+            </section>
+          )}
         </article>
       </div>
     </div>

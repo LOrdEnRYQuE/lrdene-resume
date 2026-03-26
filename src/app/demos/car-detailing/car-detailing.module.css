@@ -1,0 +1,190 @@
+.app {
+  /* ── Car Detailing Tokens ──────────────────────────────────── */
+  --det-accent: #00f2ff;
+  --det-dark: #050505;
+  --det-card: rgba(255, 255, 255, 0.02);
+  --det-border: rgba(0, 242, 255, 0.1);
+  --det-text: #ffffff;
+  --det-muted: rgba(255, 255, 255, 0.6);
+  --det-radius: 16px;
+
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--det-dark);
+  color: var(--det-text);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ── Nav ────────────────────────────────────────────────────── */
+.nav {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--det-border);
+}
+
+.navInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.logo span { color: var(--det-accent); }
+
+/* ── Hero ───────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+  color: #fff;
+}
+
+.heroImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.2) 100%);
+  z-index: 2;
+}
+
+.heroTag {
+  display: inline-block;
+  background: var(--det-accent);
+  color: #000;
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+}
+
+.heroTitle {
+  font-size: 5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 2rem;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--det-accent);
+}
+
+/* ── Packages ──────────────────────────────────────────────── */
+.section { padding: 4rem 0 8rem; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  background: var(--det-card);
+  border: 1px solid var(--det-border);
+  padding: 3rem 2rem;
+  border-radius: var(--det-radius);
+  text-align: center;
+  transition: 0.3s ease;
+}
+
+.card:hover {
+  background: rgba(0, 242, 255, 0.03);
+  border-color: var(--det-accent);
+  transform: translateY(-8px);
+}
+
+.packName {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.price {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--det-accent);
+  margin-bottom: 2rem;
+  display: block;
+}
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.galleryImg {
+  width: 100%;
+  aspect-ratio: 16/10;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.featureList {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 3rem;
+  text-align: left;
+}
+
+.feature {
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--det-muted);
+}
+
+.cta {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--det-accent);
+  color: var(--det-accent);
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cta:hover {
+  background: var(--det-accent);
+  color: #000;
+}
+
+.featuredCta {
+  background: var(--det-accent);
+  color: #000;
+}

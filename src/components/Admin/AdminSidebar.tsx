@@ -1,102 +1,217 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import React from "react";
+import { usePathname, useRouter } from "next/navigation";
 import styles from "./AdminSidebar.module.css";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  LayoutDashboard, 
-  Users, 
-  FileText, 
-  Image as ImageIcon, 
-  Settings, 
-  ChevronLeft, 
-  ChevronRight,
-  LogOut,
+import {
+  BarChart3,
+  Activity,
+  Users,
+  MessageSquare,
   Home,
-  Search as SearchIcon
+  Inbox,
+  PenTool,
+  LogOut,
+  Briefcase,
+  FileText,
+  Globe,
+  ShieldCheck,
+  Zap,
+  ShoppingBag,
+  Layout,
+  Sliders,
+  Image as ImageIcon,
+  FolderLock,
+  X,
 } from "lucide-react";
+import { motion } from "framer-motion";
+import LocaleLink from "@/components/I18n/LocaleLink";
+import { stripLocalePrefix } from "@/lib/i18n/path";
+import { useLocale } from "@/lib/i18n/useLocale";
+import { clearCachedAdminToken } from "@/hooks/adminToken";
 
 const NAV_ITEMS = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
-  { icon: Users, label: "Leads Pipeline", href: "/admin/leads" },
-  { icon: FileText, label: "Journal Manager", href: "/admin/blog" },
-  { icon: ImageIcon, label: "Media Library", href: "/admin/media" },
-  { icon: SearchIcon, label: "SEO Control", href: "/admin/seo" },
-  { icon: Settings, label: "Settings", href: "/admin/settings" },
+  { section: "Core", label: "Overview", icon: BarChart3, href: "/admin" },
+  { section: "Core", label: "Analytics", icon: Activity, href: "/admin/analytics" },
+  { section: "Core", label: "SEO Manager", icon: Globe, href: "/admin/seo" },
+  { section: "Core", label: "System Health", icon: ShieldCheck, href: "/admin/health" },
+  { section: "CRM", label: "Leads", icon: Users, href: "/admin/leads" },
+  { section: "CRM", label: "Inbox", icon: Inbox, href: "/admin/inbox" },
+  { section: "CRM", label: "Portals", icon: FolderLock, href: "/admin/portals" },
+  { section: "Content", label: "Media", icon: ImageIcon, href: "/admin/media" },
+  { section: "Content", label: "Projects", icon: Briefcase, href: "/admin/projects" },
+  { section: "Content", label: "Demos", icon: Layout, href: "/admin/demos" },
+  { section: "Content", label: "About", icon: PenTool, href: "/admin/about" },
+  { section: "Content", label: "Contact", icon: MessageSquare, href: "/admin/contact" },
+  { section: "Content", label: "Blog", href: "/admin/journal", icon: FileText },
+  { section: "Offerings", label: "Services", href: "/admin/services", icon: Zap },
+  { section: "Offerings", label: "Digital Store", href: "/admin/store", icon: ShoppingBag },
+  { section: "Platform", label: "Site Control", href: "/admin/site", icon: Globe },
+  { section: "Platform", label: "Settings", href: "/admin/settings", icon: Sliders },
 ];
 
-export const AdminSidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+export default function AdminSidebar({
+  mobileOpen = false,
+  onNavigate,
+  onClose,
+}: {
+  mobileOpen?: boolean;
+  onNavigate?: () => void;
+  onClose?: () => void;
+}) {
   const pathname = usePathname();
+  const router = useRouter();
+  const locale = useLocale();
+  const normalizedPathname = stripLocalePrefix(pathname || "/");
+  const labels =
+    locale === "de"
+      ? {
+          Overview: "Übersicht",
+          Analytics: "Analytics",
+          "SEO Manager": "SEO Manager",
+          "System Health": "Systemstatus",
+          Leads: "Leads",
+          Inbox: "Inbox",
+          Portals: "Portale",
+          Media: "Medien",
+          Projects: "Projekte",
+          Demos: "Demos",
+          About: "Über Mich",
+          Contact: "Kontakt",
+          Blog: "Blog",
+          Services: "Leistungen",
+          "Digital Store": "Digital Store",
+          "Site Control": "Site Control",
+          Settings: "Einstellungen",
+          adminControl: "Admin Steuerung",
+          sectionCore: "Core",
+          sectionCRM: "CRM",
+          sectionContent: "Content",
+          sectionOfferings: "Angebote",
+          sectionPlatform: "Plattform",
+          exit: "Zur Website",
+          logout: "Abmelden",
+        }
+      : {
+          Overview: "Overview",
+          Analytics: "Analytics",
+          "SEO Manager": "SEO Manager",
+          "System Health": "System Health",
+          Leads: "Leads",
+          Inbox: "Inbox",
+          Portals: "Portals",
+          Media: "Media",
+          Projects: "Projects",
+          Demos: "Demos",
+          About: "About",
+          Contact: "Contact",
+          Blog: "Blog",
+          Services: "Services",
+          "Digital Store": "Digital Store",
+          "Site Control": "Site Control",
+          Settings: "Settings",
+          adminControl: "Admin Control",
+          sectionCore: "Core",
+          sectionCRM: "CRM",
+          sectionContent: "Content",
+          sectionOfferings: "Offerings",
+          sectionPlatform: "Platform",
+          exit: "Exit to Site",
+          logout: "Logout",
+        };
+
+  const sectionLabels: Record<string, string> = {
+    Core: labels.sectionCore,
+    CRM: labels.sectionCRM,
+    Content: labels.sectionContent,
+    Offerings: labels.sectionOfferings,
+    Platform: labels.sectionPlatform,
+  };
+
+  const groupedItems = NAV_ITEMS.reduce<Record<string, typeof NAV_ITEMS>>((acc, item) => {
+    if (!acc[item.section]) {
+      acc[item.section] = [];
+    }
+    acc[item.section].push(item);
+    return acc;
+  }, {});
 
   return (
-    <motion.aside 
-      className={styles.sidebar}
-      animate={{ width: isCollapsed ? 80 : 280 }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-    >
-      <div className={styles.header}>
-        <AnimatePresence mode="wait">
-          {!isCollapsed && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className={styles.logo}
-            >
-              ADM<span>CTR</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <button 
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className={styles.collapseBtn}
+    <aside className={`${styles.sidebar} ${mobileOpen ? styles.mobileOpen : ""}`}>
+      <div className={styles.logo}>
+        <div className={styles.logoIcon}>
+          <ShieldCheck size={24} />
+        </div>
+        <div className={styles.logoText}>
+          <h2>Portfolio<span>OS</span></h2>
+          <span>{labels.adminControl}</span>
+        </div>
+        <button
+          type="button"
+          className={styles.mobileClose}
+          aria-label="Close navigation"
+          onClick={onClose}
         >
-          {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+          <X size={16} />
         </button>
       </div>
 
       <nav className={styles.nav}>
-        {NAV_ITEMS.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link 
-              key={item.href} 
-              href={item.href}
-              className={`${styles.navItem} ${isActive ? styles.active : ""}`}
-            >
-              <item.icon size={20} />
-              <AnimatePresence>
-                {!isCollapsed && (
-                  <motion.span
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -10 }}
-                  >
-                    {item.label}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-              {isActive && !isCollapsed && (
-                <motion.div layoutId="activeNav" className={styles.activeIndicator} />
-              )}
-            </Link>
-          );
-        })}
+        {Object.entries(groupedItems).map(([section, items]) => (
+          <div key={section} className={styles.navSection}>
+            <p className={styles.navSectionTitle}>{sectionLabels[section] || section}</p>
+            {items.map((item) => {
+              const isActive = normalizedPathname === item.href;
+              return (
+                <LocaleLink 
+                  key={item.href} 
+                  href={item.href}
+                  className={`${styles.navItem} ${isActive ? styles.active : ""}`}
+                  onClick={onNavigate}
+                >
+                  <item.icon size={20} />
+                  <span>{labels[item.label as keyof typeof labels] || item.label}</span>
+
+                  {isActive && (
+                    <motion.div 
+                      layoutId="activeTab"
+                      className={styles.activeIndicator}
+                    />
+                  )}
+                </LocaleLink>
+              );
+            })}
+          </div>
+        ))}
       </nav>
 
       <div className={styles.footer}>
-        <Link href="/" className={styles.navItem}>
-          <Home size={20} />
-          {!isCollapsed && <span>Public Site</span>}
-        </Link>
-        <button className={styles.logoutBtn}>
-          <LogOut size={20} />
-          {!isCollapsed && <span>Sign Out</span>}
+        <LocaleLink href="/" className={styles.footerLink} onClick={onNavigate}>
+          <Home size={18} />
+          <span>{labels.exit}</span>
+        </LocaleLink>
+        <button
+          className={styles.logoutBtn}
+          onClick={async () => {
+            clearCachedAdminToken();
+            try {
+              await fetch("/api/admin/logout", {
+                method: "POST",
+                cache: "no-store",
+                credentials: "same-origin",
+              });
+            } catch {
+              // Ignore network failures and continue with client-side logout redirect.
+            }
+            onNavigate?.();
+            router.replace(`/${locale}/admin/login`);
+            router.refresh();
+          }}
+        >
+          <LogOut size={18} />
+          <span>{labels.logout}</span>
         </button>
       </div>
-    </motion.aside>
+    </aside>
   );
-};
+}

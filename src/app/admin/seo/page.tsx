@@ -1,9 +1,15 @@
-import { AdminSEO } from "../../../components/Admin/AdminSEO";
+import type { Metadata } from "next";
+import AdminPage from "@/components/Admin/AdminPage";
+import { SEOManager } from "../../../components/Admin/SEOManager";
 
-export const metadata = {
-  title: "Admin | SEO Control",
+export const metadata: Metadata = {
+  title: "SEO Manager",
 };
 
 export default function AdminSEOPage() {
-  return <AdminSEO />;
+  return (
+    <AdminPage>
+      <SEOManager />
+    </AdminPage>
+  );
 }

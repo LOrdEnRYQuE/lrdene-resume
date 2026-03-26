@@ -25,6 +25,118 @@
   line-height: 1.5;
 }
 
+.brandLogoOrb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 0.85rem;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 1px solid rgba(229, 228, 226, 0.42);
+  background: radial-gradient(
+    circle at 30% 25%,
+    rgba(255, 255, 255, 0.22),
+    rgba(255, 255, 255, 0.05) 45%,
+    rgba(8, 8, 8, 0.88) 100%
+  );
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38);
+  transition: transform var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.brandLogoOrb::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  padding: 1.8px;
+  background: conic-gradient(
+    from 0deg,
+    #fafafa 0deg,
+    #d9d9d9 40deg,
+    #8f959d 88deg,
+    #f3f3f3 136deg,
+    #6f767f 188deg,
+    #e5e4e2 244deg,
+    #4e545d 300deg,
+    #fafafa 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.92;
+  pointer-events: none;
+  filter: saturate(0.95) brightness(1.05) contrast(1.08);
+  animation: footer-logo-ring-spin 4.8s linear infinite;
+}
+
+.brandLogoOrb::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(185, 214, 255, 0.22) 0%,
+    rgba(210, 198, 255, 0.16) 30%,
+    rgba(255, 211, 166, 0.12) 56%,
+    transparent 72%
+  );
+  filter: blur(6px);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: -1;
+  animation: footer-logo-ring-pulse 3.6s ease-in-out infinite alternate;
+}
+
+.brandLogoOrb:hover {
+  transform: translateY(-1px);
+  border-color: rgba(229, 228, 226, 0.62);
+  background: radial-gradient(
+    circle at 30% 25%,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.08) 45%,
+    rgba(8, 8, 8, 0.92) 100%
+  );
+  box-shadow:
+    0 16px 38px rgba(0, 0, 0, 0.44),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42);
+}
+
+.brandLogo {
+  width: 71px;
+  height: auto;
+  object-fit: contain;
+}
+
+@keyframes footer-logo-ring-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes footer-logo-ring-pulse {
+  from {
+    transform: scale(0.98);
+  }
+  to {
+    transform: scale(1.03);
+  }
+}
+
+.brandLine {
+  color: var(--text-secondary);
+  max-width: 320px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
 .linksGrid {
   display: flex;
   gap: 5rem;
@@ -51,11 +163,11 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  transition: color 0.3s ease;
+  transition: color var(--transition-smooth);
 }
 
 .column a:hover {
-  color: var(--accent-gold);
+  color: var(--accent-platinum);
 }
 
 .bottom {
@@ -88,4 +200,11 @@
   .top { flex-direction: column; gap: 3rem; }
   .linksGrid { gap: 2rem; flex-wrap: wrap; }
   .bottom { flex-direction: column; gap: 2rem; text-align: center; }
+  .column a {
+    min-height: 44px;
+  }
+
+  .brandLine {
+    max-width: 100%;
+  }
 }

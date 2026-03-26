@@ -1,10 +1,22 @@
-import { mutation } from "./_generated/server";
+import { mutation, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
 
 export const seedProjects = mutation({
-  handler: async (ctx) => {
-    const existing = await ctx.db.query("projects").collect();
-    if (existing.length > 0) return;
+  args: { force: v.optional(v.boolean()) },
+  handler: async (ctx, args) => {
+    if (args.force) {
+      const existingProjects = await ctx.db.query("projects").collect();
+      for (const p of existingProjects) await ctx.db.delete(p._id);
+      
+      const existingPosts = await ctx.db.query("posts").collect();
+      for (const p of existingPosts) await ctx.db.delete(p._id);
+      
+      const existingServices = await ctx.db.query("services").collect();
+      for (const s of existingServices) await ctx.db.delete(s._id);
+    } else {
+      const existing = await ctx.db.query("projects").collect();
+      if (existing.length > 0) return;
+    }
 
     const projects = [
       {
@@ -85,6 +97,79 @@ export const seedProjects = mutation({
 
     for (const post of blogPosts) {
       await ctx.db.insert("posts", post);
+    }
+
+    const services = [
+      {
+        title: "Web Development",
+        slug: "web-development",
+        description: "High-performance, cinematic web experiences engineered for scale. We don't just build websites; we craft digital ecosystems that outperform the competition.",
+        iconName: "Globe",
+        status: "active",
+        category: "Engineering",
+        features: [
+          "Next.js 16 App Router Architecture",
+          "Edge-Optimized Performance (SSR/ISR)",
+          "Premium Glassmorphism Design Language",
+          "Dynamic Framer Motion Orchestration",
+          "Headless CMS Integration (Convex/Sanity)",
+          "SEO Engine Localization"
+        ],
+        process: [
+          { step: "Discovery", desc: "Analyzing your business DNA and technical requirements." },
+          { step: "Architecting", desc: "Defining the tech stack and system architecture." },
+          { step: "Execution", desc: "Agile development with continuous integration." },
+          { step: "Launch", desc: "Precision deployment and performance tuning." }
+        ]
+      },
+      {
+        title: "AI Integration",
+        slug: "ai-integration",
+        description: "Empower your platform with custom AI agents and LLM workflows. We bridge the gap between static code and cognitive automation.",
+        iconName: "Cpu",
+        status: "active",
+        category: "Artificial Intelligence",
+        features: [
+          "Custom LLM Agent Development",
+          "Retrieval-Augmented Generation (RAG)",
+          "AI Workflow Automation",
+          "Natural Language Interfaces",
+          "Real-time Data Processing",
+          "Cognitive Content Generation"
+        ],
+        process: [
+          { step: "Intelligence Audit", desc: "Identifying high-impact AI opportunities." },
+          { step: "Modeling", desc: "Prompt engineering and RAG pipeline design." },
+          { step: "Integration", desc: "Seamless embedding of AI into your existing stack." },
+          { step: "Optimization", desc: "Fine-tuning response accuracy and costs." }
+        ]
+      },
+      {
+        title: "UI/UX Architecture",
+        slug: "ui-ux-design",
+        description: "Design that commands attention. We blend aesthetic precision with psychological triggers to create interfaces that convert.",
+        iconName: "Layout",
+        status: "active",
+        category: "Design",
+        features: [
+          "Cinematic Motion Design",
+          "Micro-interaction Engineering",
+          "Conversion-Optimized UX Architecture",
+          "Brand Identity Evolution",
+          "Interactive Prototyping",
+          "Design System Development"
+        ],
+        process: [
+          { step: "Mood Mapping", desc: "Defining the visual and emotional tone." },
+          { step: "Wireframing", desc: "Mapping user journeys and conversion paths." },
+          { step: "High-Fidelity", desc: "Crafting the final premium visual layer." },
+          { step: "Prototyping", desc: "Validating interactions with motion." }
+        ]
+      }
+    ];
+
+    for (const service of services) {
+      await ctx.db.insert("services", service);
     }
   },
 });

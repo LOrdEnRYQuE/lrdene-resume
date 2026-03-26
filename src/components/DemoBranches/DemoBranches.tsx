@@ -1,17 +1,21 @@
-"use client";
-
 import React from "react";
 import styles from "./DemoBranches.module.css";
-import { motion } from "framer-motion";
-import { 
+import {
   Utensils, 
   Scissors, 
   Home, 
   Scale, 
   Wrench, 
   ShoppingBag,
-  ArrowUpRight 
+  ArrowUpRight,
+  Activity,
+  BookOpen,
+  PieChart,
+  Navigation,
+  Rocket
 } from "lucide-react";
+import Link from "next/link";
+import type { Locale } from "@/lib/i18n/config";
 
 const demos = [
   {
@@ -36,7 +40,7 @@ const demos = [
     title: "Lawyer & Consultant",
     description: "Secure case management and client portals.",
     icon: <Scale size={24} />,
-    slug: "legal",
+    slug: "lawyer",
   },
   {
     title: "Home Services",
@@ -50,31 +54,79 @@ const demos = [
     icon: <ShoppingBag size={24} />,
     slug: "ecommerce",
   },
+  {
+    title: "AI Dashboard",
+    description: "SaaS Analytics & Monitoring.",
+    icon: <PieChart size={24} />,
+    slug: "ai-dashboard",
+  },
+  {
+    title: "Course Platform",
+    description: "Learning Management System.",
+    icon: <BookOpen size={24} />,
+    slug: "course-platform",
+  },
+  {
+    title: "Healthcare Portal",
+    description: "Secure Patient Records.",
+    icon: <Activity size={24} />,
+    slug: "healthcare",
+  },
+  {
+    title: "Logistics System",
+    description: "Fleet & Supply Tracking.",
+    icon: <Navigation size={24} />,
+    slug: "logistics",
+  },
+  {
+    title: "SaaS Landing",
+    description: "Product Launch Boilerplate.",
+    icon: <Rocket size={24} />,
+    slug: "saas-landing",
+  },
 ];
 
-export const DemoBranches = () => {
+type DemoBranchesProps = {
+  locale: Locale;
+};
+
+export const DemoBranches = ({ locale }: DemoBranchesProps) => {
+  const localePrefix = locale === "de" ? "/de" : "/en";
+  const copy =
+    locale === "de"
+      ? {
+          titlePrefix: "Interaktive",
+          titleAccent: "Demo Branches",
+          subtitle:
+            "Teste diese spezialisierten Business-Systeme. Jede Demo ist ein funktionales MVP für reale Branchenprobleme.",
+          openDemo: "Demo Öffnen",
+        }
+      : {
+          titlePrefix: "Interactive",
+          titleAccent: "Demo Branches",
+          subtitle:
+            "Test-drive these specialized business systems. Each one is a functional MVP built to solve real industry challenges.",
+          openDemo: "Open Demo",
+        };
+
   return (
     <section className={styles.section}>
       <div className="container">
         <div className={styles.header}>
           <h2 className={styles.title}>
-            Interactive <span className="gold-text">Demo Branches</span>
+            {copy.titlePrefix} <span className="gold-text">{copy.titleAccent}</span>
           </h2>
           <p className={styles.subtitle}>
-            Test-drive these specialized business systems. Each one is a functional MVP 
-            built to solve real industry challenges.
+            {copy.subtitle}
           </p>
         </div>
 
         <div className={styles.grid}>
           {demos.map((demo, index) => (
-            <motion.div 
+            <div 
               key={demo.title}
               className={styles.card}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
+              style={{ animationDelay: `${index * 80}ms` }}
             >
               <div className={styles.iconWrapper}>
                 {demo.icon}
@@ -83,11 +135,16 @@ export const DemoBranches = () => {
               <p className={styles.cardDescription}>{demo.description}</p>
               
               <div className={styles.footer}>
-                <button className={styles.demoBtn}>
-                  Open Demo <ArrowUpRight size={14} style={{ marginLeft: "4px" }} />
-                </button>
+                <Link
+                  href={`${localePrefix}/demos/${demo.slug}`}
+                  className={styles.demoBtn}
+                  data-track-event="open_demo"
+                  data-track-label={`Demo opened: ${demo.title}`}
+                >
+                  {copy.openDemo} <ArrowUpRight size={14} style={{ marginLeft: "4px" }} />
+                </Link>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

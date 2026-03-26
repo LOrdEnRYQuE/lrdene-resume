@@ -1,16 +1,45 @@
-"use client";
-
 import React from "react";
 import styles from "./Blog.module.css";
-import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-import Link from "next/link";
-import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
+import Link from "next/link";
+import type { Locale } from "@/lib/i18n/config";
 
-export const BlogPreview = () => {
-  const posts = useQuery(api.posts.list, {}) || [];
+type BlogPost = {
+  slug: string;
+  _creationTime: number;
+  readTime: string;
+  title: string;
+  excerpt: string;
+};
+
+type BlogPreviewProps = {
+  locale: Locale;
+  posts: BlogPost[];
+};
+
+export const BlogPreview = ({ locale, posts }: BlogPreviewProps) => {
   const recentPosts = posts?.slice(0, 3) || [];
+  const copy =
+    locale === "de"
+      ? {
+          titlePrefix: "Neueste",
+          titleAccent: "Insights",
+          subtitle: "Expertise, Workflows und Branchen-Updates.",
+          readAll: "Alle Insights Lesen",
+          readFull: "Vollständigen Artikel Lesen",
+          empty: "Neue Inhalte folgen in Kürze.",
+          dateLocale: "de-DE",
+        }
+      : {
+          titlePrefix: "Latest",
+          titleAccent: "Insights",
+          subtitle: "Expertise, workflows, and industry updates.",
+          readAll: "Read All Insights",
+          readFull: "Read Full Story",
+          empty: "New content arriving soon.",
+          dateLocale: "en-US",
+        };
+  const localePrefix = locale === "de" ? "/de" : "/en";
 
   return (
     <section className={styles.previewSection}>
@@ -18,32 +47,29 @@ export const BlogPreview = () => {
         <div className={styles.previewHeader}>
           <div>
             <h2 className={styles.previewTitle}>
-              Latest <span className="gold-text">Insights</span>
+              {copy.titlePrefix} <span className="gold-text">{copy.titleAccent}</span>
             </h2>
             <p className={styles.previewSubtitle}>
-              Expertise, workflows, and industry updates.
+              {copy.subtitle}
             </p>
           </div>
-          <Link href="/blog" className={styles.viewAllBtn}>
-            Read All Insights <ArrowRight size={18} />
+          <Link href={`${localePrefix}/blog`} className={styles.previewAllLink}>
+            {copy.readAll} <ArrowRight size={18} />
           </Link>
         </div>
 
         <div className={styles.previewGrid}>
           {recentPosts.map((post, index) => (
-            <motion.div 
+            <div 
               key={post.slug}
               className={styles.blogCard}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
+              style={{ animationDelay: `${index * 80}ms` }}
             >
-              <Link href={`/blog/${post.slug}`} className={styles.cardLink}>
+              <Link href={`${localePrefix}/blog/${post.slug}`} className={styles.cardLink}>
                 <div className={styles.cardContent}>
                   <div className={styles.cardMeta}>
                     <span className={styles.metaItem}>
-                      <Calendar size={12} /> {new Date(post._creationTime).toLocaleDateString()}
+                      <Calendar size={12} /> {new Date(post._creationTime).toLocaleDateString(copy.dateLocale)}
                     </span>
                     <span className={styles.metaItem}>
                       <Clock size={12} /> {post.readTime}
@@ -53,16 +79,16 @@ export const BlogPreview = () => {
                   <p className={styles.cardExcerpt}>{post.excerpt}</p>
                   <div className={styles.cardFooter}>
                     <span className={styles.readMore}>
-                      Read Full Story <ArrowRight size={14} />
+                      {copy.readFull} <ArrowRight size={14} />
                     </span>
                   </div>
                 </div>
               </Link>
-            </motion.div>
+            </div>
           ))}
           
           {posts && posts.length === 0 && (
-            <p className={styles.empty}>New content arriving soon.</p>
+            <p className={styles.empty}>{copy.empty}</p>
           )}
         </div>
       </div>

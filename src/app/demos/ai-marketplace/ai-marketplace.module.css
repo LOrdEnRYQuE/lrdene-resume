@@ -1,0 +1,286 @@
+.aiMarketplace {
+  --am-primary: #00f2ff;
+  --am-secondary: #7000ff;
+  --am-bg: #050505;
+  --am-card-bg: rgba(20, 20, 25, 0.7);
+  --am-text: #fff;
+  
+  min-height: 100vh;
+  background-color: var(--am-bg);
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(112, 0, 255, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(0, 242, 255, 0.1) 0%, transparent 40%);
+  color: var(--am-text);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ── Nav ──────────────────────────────────────────────── */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background: rgba(5, 5, 5, 0.5);
+  backdrop-filter: blur(20px);
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.navInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 800;
+  font-size: 1.75rem;
+  letter-spacing: -1px;
+}
+
+.logo span {
+  background: linear-gradient(90deg, var(--am-primary), var(--am-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.navLinks {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.navLink {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.navLink:hover {
+  color: var(--am-primary);
+}
+
+.btnConnect {
+  padding: 0.6rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--am-primary);
+  color: var(--am-primary);
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
+}
+
+/* ── Hero ─────────────────────────────────────────────── */
+.hero {
+  padding: 180px 0 100px;
+  text-align: center;
+  position: relative;
+}
+
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.heroBadge {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  font-size: 0.8rem;
+  color: var(--am-primary);
+  margin-bottom: 2rem;
+  backdrop-filter: blur(5px);
+}
+
+.heroTitle {
+  font-size: 5rem;
+  font-weight: 900;
+  line-height: 0.95;
+  margin-bottom: 2rem;
+  letter-spacing: -2px;
+}
+
+.heroTitle span {
+  display: block;
+  opacity: 0.5;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 3rem;
+  line-height: 1.6;
+}
+
+.heroButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.cta {
+  padding: 1.1rem 2.8rem;
+  background: var(--am-primary);
+  color: #000;
+  border: none;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cta:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
+}
+
+.heroVisual {
+  margin-top: 5rem;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ── Marketplace Grid ────────────────────────────────── */
+.section {
+  padding: 8rem 0;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 4rem;
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 2rem;
+}
+
+.agentCard {
+  background: var(--am-card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 2.5rem;
+  position: relative;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+}
+
+.agentCard:hover {
+  border-color: rgba(0, 242, 255, 0.3);
+  transform: translateY(-10px);
+}
+
+.agentIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  color: var(--am-primary);
+}
+
+.agentTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.agentDesc {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.statItem {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.75rem;
+  border-radius: 10px;
+}
+
+.statVal {
+  display: block;
+  font-weight: 700;
+  color: var(--am-primary);
+}
+
+.statLabel {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pricing {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.pricing span {
+  font-size: 0.8rem;
+  font-weight: 400;
+  opacity: 0.5;
+}
+
+.btnDeploy {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--am-primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 3rem;
+  }
+}

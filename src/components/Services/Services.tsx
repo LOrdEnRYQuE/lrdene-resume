@@ -69,7 +69,11 @@ export const Services = () => {
               className={styles.card}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              whileHover={{ 
+                y: -12,
+                transition: { type: "spring", stiffness: 300, damping: 20 }
+              }}
+              viewport={{ once: true, margin: "-100px" }}
               transition={{ delay: index * 0.1 }}
             >
               <div className={styles.iconWrapper}>

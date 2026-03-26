@@ -1,17 +1,15 @@
+import type { Metadata } from "next";
+import AdminPage from "@/components/Admin/AdminPage";
 import { ProjectManager } from "../../../components/Admin/ProjectManager";
 
-export const metadata = {
-  title: "Admin | Project Manager",
-  robots: {
-    index: false,
-    follow: false,
-  },
+export const metadata: Metadata = {
+  title: "Projects",
 };
 
 export default function AdminProjectsPage() {
   return (
-    <main className="admin-page">
+    <AdminPage>
       <ProjectManager />
-    </main>
+    </AdminPage>
   );
 }

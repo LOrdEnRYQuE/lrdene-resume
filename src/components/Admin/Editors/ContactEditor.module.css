@@ -1,0 +1,413 @@
+.container {
+  padding: 2rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.editorGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.cardHeader h2 {
+  font-size: 1.05rem;
+}
+
+.cardHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.field input,
+.field textarea,
+.field select,
+.toolbar input,
+.toolbar select,
+.bulkBar select,
+.inboxPane select,
+.item textarea,
+.item input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  padding: 0.6rem 0.7rem;
+  color: #fff;
+}
+
+.field textarea,
+.item textarea {
+  min-height: 96px;
+}
+
+.itemList {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.presetRow {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.presetLabel {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  margin-right: 0.35rem;
+}
+
+.item {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.itemRow {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+
+.bulkBar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.bulkMeta {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.inboxLayout {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 0.75rem;
+}
+
+.leadList {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.5rem;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.empty {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  padding: 0.75rem;
+}
+
+.leadItem {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 0.65rem;
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 0.45rem;
+}
+
+.leadItemActive {
+  border-color: rgba(255, 215, 0, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.leadItemTop {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.leadSelect {
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+}
+
+.leadMeta {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.followupBadge {
+  font-size: 0.68rem;
+  color: #ffd38a;
+  border: 1px solid rgba(255, 194, 86, 0.5);
+  border-radius: 999px;
+  padding: 0.08rem 0.45rem;
+}
+
+.inboxPane {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.leadTitle {
+  margin-bottom: 0.15rem;
+}
+
+.leadSub {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.submissionsWrap {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.mobileLeadList {
+  display: none;
+}
+
+.mobileLeadCard {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 0.7rem;
+  display: grid;
+  gap: 0.28rem;
+}
+
+.mobileLeadTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mobileLeadCard p {
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+}
+
+.mobileLeadCard small {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.table th {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+}
+
+.noteEntry {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.noteTime {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
+.saveBtn,
+.addBtn,
+.syncBtn,
+.deleteBtn {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.saveBtn {
+  color: #111;
+  background: #e5e4e2;
+  border-color: #f1f2f4;
+}
+
+.addBtn,
+.syncBtn {
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+}
+
+.deleteBtn {
+  padding: 0.45rem;
+  background: rgba(255, 77, 77, 0.1);
+  color: #ff8080;
+}
+
+@media (max-width: 1100px) {
+  .fieldGrid,
+  .inboxLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .header {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 720px) {
+  .container {
+    padding: 0.8rem;
+  }
+
+  .card {
+    padding: 0.8rem;
+  }
+
+  .headerActions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .headerActions > * {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .itemRow,
+  .itemHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .itemHeader > * {
+    width: 100%;
+  }
+
+  .presetRow {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .presetRow > * {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .leadItemTop {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .tableWrap {
+    overflow-x: auto;
+  }
+
+  .table {
+    min-width: 660px;
+  }
+
+  .tableWrap {
+    display: none;
+  }
+
+  .mobileLeadList {
+    display: grid;
+    gap: 0.55rem;
+  }
+}

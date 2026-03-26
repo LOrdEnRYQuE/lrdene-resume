@@ -15,6 +15,7 @@
 
 # next.js
 /.next/
+/.next_*/
 /out/
 
 # production
@@ -71,3 +72,8 @@ brain/
 .antigravity/
 .pnpm-store/
 .npm-cache/
+
+# local temp/debug artifacts
+.tmp/
+test_screenshot.png
+wrangler.toml

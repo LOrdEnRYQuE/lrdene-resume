@@ -1,94 +1,272 @@
-import { ServiceDetail } from "../../../components/Services/ServiceDetail";
-import { Footer } from "../../../components/Footer/Footer";
-import { Globe, Cpu, Layout, MessageSquare, Zap } from "lucide-react";
+import type { Metadata } from "next";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../../convex/_generated/api";
+import { ServiceDetail } from "@/components/Services/ServiceDetail";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { resolveServiceLocationSlug } from "@/utils/serviceLocations";
+import { getLanguageAlternates } from "@/lib/seo/alternates";
+
+type PageProps = {
+  params: Promise<{ slug: string }>;
+};
 
 export const runtime = "edge";
 
-const SERVICES_DATA: Record<string, any> = {
-  "web-development": {
-    title: "Premium Web",
-    description: "High-performance, cinematic web experiences engineered for scale. We don't just build websites; we craft digital ecosystems that outperform the competition.",
-    icon: <Globe size={40} />,
-    features: [
-      "Next.js 16 App Router Architecture",
-      "Edge-Optimized Performance (SSR/ISR)",
-      "Premium Glassmorphism Design Language",
-      "Dynamic Framer Motion Orchestration",
-      "Headless CMS Integration (Convex/Sanity)",
-      "SEO Engine Localization"
-    ],
-    process: [
-      { step: "Discovery", desc: "Analyzing your business DNA and technical requirements." },
-      { step: "Architecting", desc: "Defining the tech stack and system architecture." },
-      { step: "Execution", desc: "Agile development with continuous integration." },
-      { step: "Launch", desc: "Precision deployment and performance tuning." }
-    ]
-  },
-  "ai-integration": {
-    title: "Intelligence",
-    description: "Empower your platform with custom AI agents and LLM workflows. We bridge the gap between static code and cognitive automation.",
-    icon: <Cpu size={40} />,
-    features: [
-      "Custom LLM Agent Development",
-      "Retrieval-Augmented Generation (RAG)",
-      "AI Workflow Automation",
-      "Natural Language Interfaces",
-      "Real-time Data Processing",
-      "Cognitive Content Generation"
-    ],
-    process: [
-      { step: "Intelligence Audit", desc: "Identifying high-impact AI opportunities." },
-      { step: "Modeling", desc: "Prompt engineering and RAG pipeline design." },
-      { step: "Integration", desc: "Seamless embedding of AI into your existing stack." },
-      { step: "Optimization", desc: "Fine-tuning response accuracy and costs." }
-    ]
-  },
-  "ui-ux-design": {
-    title: "Strategic",
-    description: "Design that commands attention. We blend aesthetic precision with psychological triggers to create interfaces that convert.",
-    icon: <Layout size={40} />,
-    features: [
-      "Cinematic Motion Design",
-      "Micro-interaction Engineering",
-      "Conversion-Optimized UX Architecture",
-      "Brand Identity Evolution",
-      "Interactive Prototyping",
-      "Design System Development"
-    ],
-    process: [
-      { step: "Mood Mapping", desc: "Defining the visual and emotional tone." },
-      { step: "Wireframing", desc: "Mapping user journeys and conversion paths." },
-      { step: "High-Fidelity", desc: "Crafting the final premium visual layer." },
-      { step: "Prototyping", desc: "Validating interactions with motion." }
-    ]
-  }
-};
-
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const service = SERVICES_DATA[slug];
-  if (!service) return {};
+  let service = await fetchQuery(api.services.getBySlug, { slug });
+  const locationResolution = !service ? resolveServiceLocationSlug(slug) : null;
+
+  if (!service && locationResolution) {
+    service = await fetchQuery(api.services.getBySlug, { slug: locationResolution.serviceSlug });
+  }
+
+  if (!service) {
+    return {
+      title: "Service Not Found",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const title = locationResolution
+    ? `${service.title} in ${locationResolution.location.city}`
+    : `${service.title} Services`;
+  const description = locationResolution
+    ? `${service.description} Delivery for ${locationResolution.location.city}, ${locationResolution.location.country}.`
+    : service.description;
+  const canonical = locationResolution
+    ? `/services/${service.slug}-${locationResolution.location.slug}`
+    : `/services/${service.slug}`;
 
   return {
-    title: `${service.title} | Service`,
-    description: service.description,
+    title,
+    description,
+    keywords: [service.category, service.title, "service", "digital solutions"],
+    alternates: {
+      canonical,
+      languages: getLanguageAlternates(canonical),
+    },
+    openGraph: {
+      title: `${service.title} | LOrdEnRYQuE`,
+      description,
+      url: `https://lrdene.com${canonical}`,
+      type: "article",
+      tags: [service.category, service.title],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${service.title} | LOrdEnRYQuE`,
+      description,
+    },
   };
 }
 
-export default async function ServicePage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ServicePage({ params }: PageProps) {
   const { slug } = await params;
-  const service = SERVICES_DATA[slug];
-  
+  let service = await fetchQuery(api.services.getBySlug, { slug });
+  const locationResolution = !service ? resolveServiceLocationSlug(slug) : null;
+
+  if (!service && locationResolution) {
+    service = await fetchQuery(api.services.getBySlug, { slug: locationResolution.serviceSlug });
+  }
+
   if (!service) {
     notFound();
   }
 
+  const [posts, projects, serviceSections] = await Promise.all([
+    fetchQuery(api.posts.list, { onlyPublished: true }),
+    fetchQuery(api.projects.list, { category: undefined }),
+    fetchQuery(api.pages.getPageSections, { page: "services" }),
+  ]);
+
+  const relatedPosts = posts
+    .filter((post) => post.category.toLowerCase() === service.category.toLowerCase())
+    .slice(0, 3);
+  const relatedProjects = projects
+    .filter((project) => project.category.toLowerCase() === service.category.toLowerCase())
+    .slice(0, 3);
+
+  const canonicalPath = locationResolution
+    ? `/services/${service.slug}-${locationResolution.location.slug}`
+    : `/services/${service.slug}`;
+
+  const locationSection = locationResolution
+    ? serviceSections.find(
+        (section) => section.sectionKey === `location-${service.slug}-${locationResolution.location.slug}`,
+      )
+    : null;
+  const locationData = (locationSection?.data ?? {}) as {
+    headline?: string;
+    intro?: string;
+    proofPoint?: string;
+    testimonial?: string;
+    faqQuestion?: string;
+    faqAnswer?: string;
+    ctaText?: string;
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://lrdene.com",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Services",
+        item: "https://lrdene.com/services",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: locationResolution ? `${service.title} in ${locationResolution.location.city}` : service.title,
+        item: `https://lrdene.com${canonicalPath}`,
+      },
+    ],
+  };
+
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: locationResolution ? `${service.title} in ${locationResolution.location.city}` : service.title,
+    description: locationData.intro || service.description,
+    provider: {
+      "@type": "Organization",
+      name: "LOrdEnRYQuE",
+      url: "https://lrdene.com",
+    },
+    areaServed: locationResolution
+      ? {
+          "@type": "City",
+          name: locationResolution.location.city,
+        }
+      : {
+          "@type": "Country",
+          name: "Germany",
+        },
+    url: `https://lrdene.com${canonicalPath}`,
+  };
+
+  const faqItems = locationData.faqQuestion && locationData.faqAnswer
+    ? [
+        {
+          q: locationData.faqQuestion,
+          a: locationData.faqAnswer,
+        },
+      ]
+    : [];
+
+  const faqJsonLd = faqItems.length > 0
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqItems.map((item) => ({
+          "@type": "Question",
+          name: item.q,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.a,
+          },
+        })),
+      }
+    : null;
+
   return (
-    <main>
-      <ServiceDetail {...service} />
-      <Footer />
-    </main>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+      />
+      {faqJsonLd ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      ) : null}
+      <ServiceDetail
+        title={
+          locationResolution
+            ? locationData.headline || `${service.title} in ${locationResolution.location.city}`
+            : service.title
+        }
+        description={
+          locationResolution
+            ? `${locationData.intro || service.description} ${locationData.proofPoint || locationResolution.location.proofPoint}`
+            : service.description
+        }
+        features={service.features}
+        process={service.process}
+        iconName={service.iconName}
+      />
+      <section className="container" style={{ marginTop: "3rem", marginBottom: "5rem" }}>
+        {locationResolution ? (
+          <div
+            style={{
+              border: "1px solid var(--glass-border)",
+              borderRadius: "12px",
+              padding: "1rem",
+              marginBottom: "1.2rem",
+            }}
+          >
+            <p style={{ marginBottom: "0.45rem" }}>
+              <strong>Client Proof:</strong>{" "}
+              {locationData.testimonial ||
+                "Delivery quality and communication standards built long-term confidence and faster launches."}
+            </p>
+            {faqItems.length > 0 ? (
+              <p>
+                <strong>{faqItems[0].q}</strong> {faqItems[0].a}
+              </p>
+            ) : null}
+            <div style={{ marginTop: "0.9rem" }}>
+              <Link
+                href="/contact"
+                data-track-event="click_cta"
+                data-track-label={`Service location CTA: ${service.title} ${locationResolution.location.city}`}
+              >
+                {locationData.ctaText || "Book a discovery call"}
+              </Link>
+            </div>
+          </div>
+        ) : null}
+        <h2 style={{ marginBottom: "1rem" }}>Related Insights</h2>
+        <div style={{ display: "grid", gap: "0.65rem" }}>
+          {relatedPosts.map((post) => (
+            <Link
+              key={post._id}
+              href={`/blog/${post.slug}`}
+              data-track-event="internal_link_click"
+              data-track-label={`Service->Blog: ${post.title}`}
+            >
+              {post.title}
+            </Link>
+          ))}
+          {relatedProjects.map((project) => (
+            <Link
+              key={project._id}
+              href={`/projects/${project.slug}`}
+              data-track-event="internal_link_click"
+              data-track-label={`Service->Project: ${project.title}`}
+            >
+              {project.title}
+            </Link>
+          ))}
+          {relatedPosts.length === 0 && relatedProjects.length === 0 ? (
+            <Link href="/blog">Read the latest implementation insights</Link>
+          ) : null}
+        </div>
+      </section>
+    </>
   );
 }
-

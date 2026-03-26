@@ -2,14 +2,15 @@
 
 import React, { useState } from "react";
 import styles from "./AdminSEO.module.css";
-import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { Globe, Search, Save, AlertTriangle } from "lucide-react";
+import { Globe, Save } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAdminMutation } from "@/hooks/useAdminMutation";
+import { useAdminQuery } from "@/hooks/useAdminQuery";
 
 export const AdminSEO = () => {
-  const metadata = useQuery(api.settings.listMetadata) || [];
-  const updateMetadata = useMutation(api.settings.updateMetadata);
+  const metadata = (useAdminQuery(api.settings.listMetadata) as any[]) || [];
+  const updateMetadata = useAdminMutation(api.settings.updateMetadata);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<any>(null);
 

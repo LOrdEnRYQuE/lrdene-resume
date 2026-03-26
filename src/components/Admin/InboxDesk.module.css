@@ -1,0 +1,662 @@
+.container {
+  position: relative;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0.9rem;
+  min-width: 0;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  min-width: 0;
+}
+
+.navRail,
+.mainPane,
+.listPane,
+.detailPane,
+.card,
+.threadItem,
+.templateItem,
+.campaignItem,
+.composerDock {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.25);
+}
+
+.navRail {
+  padding: 1rem;
+  display: grid;
+  gap: 0.6rem;
+  position: sticky;
+  top: 1rem;
+}
+
+.railTitle {
+  margin: 0;
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
+}
+
+.railBtn {
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.035);
+  color: #fff;
+  padding: 0.62rem 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.48rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.18s ease;
+}
+
+.railBtnActive {
+  border-color: rgba(232, 232, 232, 0.7);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.railBtn:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.railActions {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.55rem;
+}
+
+.mainPane {
+  padding: 1rem;
+  display: grid;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+.mainToolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 220px);
+  gap: 0.75rem;
+}
+
+.incomingMetrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.metricCard {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.65rem 0.78rem;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.metricCard strong {
+  font-size: 1.08rem;
+  line-height: 1.1;
+}
+
+.metricLabel {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.incomingLayout {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: start;
+  min-width: 0;
+}
+
+.listPane {
+  max-height: min(72vh, 760px);
+  overflow-y: auto;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.detailPane {
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.65rem;
+  min-height: 0;
+  max-height: min(72vh, 760px);
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.paneHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.74);
+  padding: 0.2rem 0.2rem 0.34rem;
+}
+
+.threadItem {
+  text-align: left;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.2rem;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: all 0.16s ease;
+}
+
+.threadItem:hover {
+  border-left-color: rgba(221, 221, 221, 0.65);
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.threadTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.threadName {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.threadEmail {
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.78rem;
+}
+
+.threadSubject {
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.8rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
+.preview {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin-top: 0.18rem;
+}
+
+.active {
+  border-color: rgba(255, 255, 255, 0.28);
+  border-left-color: rgba(235, 235, 235, 0.85);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.badge {
+  font-size: 0.68rem;
+  color: #111;
+  background: #f1f1f1;
+  border-radius: 999px;
+  padding: 0.1rem 0.48rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.card {
+  padding: 0.95rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.65rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cardHeader h3 {
+  margin: 0;
+}
+
+.timeline {
+  max-height: 54vh;
+  overflow-y: auto;
+  display: grid;
+  gap: 0.6rem;
+  padding-right: 0.1rem;
+}
+
+.messageRow {
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 11px;
+  padding: 0.62rem 0.68rem;
+  display: grid;
+  gap: 0.24rem;
+}
+
+.incoming {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.outgoing {
+  background: rgba(212, 212, 212, 0.14);
+  border-color: rgba(229, 229, 229, 0.34);
+}
+
+.messageTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.direction {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.78);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.messageBody {
+  white-space: pre-wrap;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.noteTime,
+.sub,
+.empty,
+.meta {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.sub {
+  font-size: 0.82rem;
+}
+
+.noteTime {
+  font-size: 0.74rem;
+}
+
+.inlineActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.templateGrid {
+  display: grid;
+  gap: 0.58rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+.templatePresets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.templateList,
+.campaignList,
+.eventList {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.templatePreview {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 0.65rem;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: auto;
+  min-width: 0;
+}
+
+.templatePreviewInner {
+  min-width: min(560px, 100%);
+}
+
+.eventItem {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 0.42rem;
+  display: grid;
+  gap: 0.18rem;
+}
+
+.templateItem {
+  padding: 0.62rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+.templateBtn {
+  border: 0;
+  background: transparent;
+  color: #fff;
+  display: grid;
+  text-align: left;
+  gap: 0.12rem;
+  cursor: pointer;
+}
+
+.deleteBtn {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  padding: 0.42rem 0.62rem;
+  background: rgba(255, 255, 255, 0.045);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.76rem;
+}
+
+.campaignLayout {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+
+.campaignItem {
+  padding: 0.7rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.primaryBtn,
+.ghostBtn {
+  border-radius: 10px;
+  padding: 0.58rem 0.82rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 650;
+  transition: all 0.16s ease;
+}
+
+.primaryBtn {
+  color: #131313;
+  border: 1px solid rgba(230, 230, 230, 0.85);
+  background: linear-gradient(140deg, #cacaca 0%, #ececec 100%);
+}
+
+.ghostBtn {
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.primaryBtn:hover,
+.ghostBtn:hover {
+  transform: translateY(-1px);
+}
+
+.primaryBtn:disabled,
+.ghostBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.composerDock {
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 100%;
+  padding: 1rem;
+  display: grid;
+  gap: 0.72rem;
+}
+
+.composerTools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.mobileToolbar {
+  display: none;
+}
+
+.mobileOnly {
+  display: none;
+}
+
+.composerBody {
+  display: grid;
+  gap: 0.72rem;
+}
+
+.composerBodyCollapsed {
+  display: grid;
+}
+
+.toolLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.8rem;
+}
+
+.container input,
+.container select,
+.container textarea {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 10px;
+  padding: 0.62rem 0.78rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.container input:focus,
+.container select:focus,
+.container textarea:focus {
+  outline: none;
+  border-color: rgba(232, 232, 232, 0.75);
+  box-shadow: 0 0 0 2px rgba(245, 245, 245, 0.1);
+}
+
+.empty {
+  padding: 0.5rem 0.12rem;
+}
+
+@media (max-width: 1180px) {
+  .container {
+    padding: 0.8rem;
+  }
+
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .navRail {
+    position: static;
+    top: auto;
+  }
+
+  .incomingLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .detailPane,
+  .listPane {
+    max-height: none;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .campaignLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 980px) {
+  .container {
+    padding: 0.65rem;
+  }
+
+  .workspace {
+    gap: 0.75rem;
+  }
+
+  .mainPane {
+    padding: 0.8rem;
+  }
+
+  .mainToolbar {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .container {
+    padding: 0.35rem;
+  }
+
+  .navRail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+    top: 0;
+    padding: 0.6rem;
+  }
+
+  .railTitle {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .railBtn {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+  }
+
+  .railActions {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .mainPane,
+  .listPane,
+  .detailPane,
+  .card {
+    padding: 0.58rem;
+  }
+
+  .mainToolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .incomingMetrics {
+    grid-template-columns: 1fr;
+  }
+
+  .mobileToolbar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .mobileOnly {
+    display: inline-flex;
+  }
+
+  .mobileCollapsed {
+    display: none;
+  }
+
+  .templateGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .templatePreviewInner {
+    min-width: 0;
+  }
+
+  .campaignItem,
+  .templateItem {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .inlineActions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+
+  .inlineActions > * {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cardHeader {
+    flex-wrap: wrap;
+  }
+
+  .timeline {
+    max-height: none;
+  }
+
+  .composerDock {
+    margin-top: 0.6rem;
+    padding: 0.68rem;
+  }
+
+  .composerBodyCollapsed {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .navRail {
+    grid-template-columns: 1fr;
+  }
+
+  .mobileToolbar {
+    grid-template-columns: 1fr;
+  }
+}

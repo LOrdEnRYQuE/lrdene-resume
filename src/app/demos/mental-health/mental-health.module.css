@@ -1,0 +1,254 @@
+.mentalHealth {
+  --mc-lavender: #e2e2ff;
+  --mc-blue: #d0e7ff;
+  --mc-accent: #9d8df1;
+  --mc-bg: #f8f9ff;
+  --mc-text: #3c3c5a;
+  
+  min-height: 100vh;
+  background: var(--mc-bg);
+  color: var(--mc-text);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ── Nav ──────────────────────────────────────────────── */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: rgba(248, 249, 255, 0.7);
+  backdrop-filter: blur(20px);
+  z-index: 100;
+}
+
+.navInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--mc-accent);
+}
+
+.navLinks {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.navLink {
+  text-decoration: none;
+  color: var(--mc-text);
+  opacity: 0.7;
+  font-weight: 500;
+  transition: opacity 0.3s;
+}
+
+.navLink:hover {
+  opacity: 1;
+}
+
+.btnStart {
+  padding: 0.6rem 1.8rem;
+  background: var(--mc-accent);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Hero ─────────────────────────────────────────────── */
+.hero {
+  padding: 160px 0 100px;
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: radial-gradient(circle at 50% 100%, var(--mc-lavender) 0%, transparent 60%);
+}
+
+.heroContent {
+  max-width: 700px;
+  margin-bottom: 4rem;
+}
+
+.heroTitle {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--mc-text) 0%, var(--mc-accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  opacity: 0.6;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+.heroImage {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 16/9;
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(157, 141, 241, 0.2);
+}
+
+/* ── Features ────────────────────────────────────────── */
+.section {
+  padding: 8rem 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 3rem;
+}
+
+.featureCard {
+  background: #fff;
+  padding: 3rem;
+  border-radius: 32px;
+  transition: transform 0.3s;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+}
+
+.featureCard:hover {
+  transform: translateY(-5px);
+}
+
+.iconWrap {
+  width: 60px;
+  height: 60px;
+  background: var(--mc-blue);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  color: var(--mc-accent);
+}
+
+.featureTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.featureDesc {
+  opacity: 0.6;
+  line-height: 1.6;
+}
+
+/* ── Journaling UI [MVP Highlight] ── */
+.journalSection {
+  background: #fff;
+  border-radius: 48px;
+  padding: 6rem;
+  margin-bottom: 8rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+}
+
+.journalPreview {
+  background: var(--mc-bg);
+  padding: 2.5rem;
+  border-radius: 24px;
+}
+
+.journalEntry {
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 16px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  position: relative;
+}
+
+.journalEntry::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--mc-accent);
+  border-radius: 4px 0 0 4px;
+}
+
+.sentimentBadge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  background: var(--mc-blue);
+  color: var(--mc-accent);
+  border-radius: 50px;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+/* ── Stats ──────────────────────────────────────────── */
+.stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 4rem 0;
+  background: var(--mc-accent);
+  border-radius: 32px;
+  color: #fff;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statVal {
+  display: block;
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+.statLabel {
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 992px) {
+  .journalSection {
+    grid-template-columns: 1fr;
+    padding: 3rem;
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+}

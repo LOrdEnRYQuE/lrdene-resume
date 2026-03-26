@@ -1,9 +1,15 @@
-import { AdminSettings } from "../../../components/Admin/AdminSettings";
+import type { Metadata } from "next";
+import AdminPage from "@/components/Admin/AdminPage";
+import { SettingsManager } from "@/components/Admin/SettingsManager";
 
-export const metadata = {
-  title: "Admin | Global Settings",
+export const metadata: Metadata = {
+  title: "Settings",
 };
 
 export default function AdminSettingsPage() {
-  return <AdminSettings />;
+  return (
+    <AdminPage>
+      <SettingsManager />
+    </AdminPage>
+  );
 }

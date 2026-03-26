@@ -1,41 +1,74 @@
-"use client";
-
 import React from "react";
 import styles from "./FeaturedProjects.module.css";
-import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-import { motion } from "framer-motion";
-import { ArrowUpRight, BarChart3, Target, Code2 } from "lucide-react";
+import { ArrowUpRight, Target, Code2, Globe, Cpu, Layout, Shield } from "lucide-react";
 import Link from "next/link";
+import type { Locale } from "@/lib/i18n/config";
 
-export const FeaturedProjects = () => {
-  const featuredProjects = useQuery(api.projects.getFeatured);
+const ICON_MAP: Record<string, React.ReactNode> = {
+  Target: <Target size={80} />,
+  Code2: <Code2 size={80} />,
+  Globe: <Globe size={80} />,
+  Cpu: <Cpu size={80} />,
+  Layout: <Layout size={80} />,
+  Shield: <Shield size={80} />,
+};
+
+type FeaturedProject = {
+  slug: string;
+  title: string;
+  summary: string;
+  stack: string[];
+  iconName?: string;
+};
+
+type FeaturedProjectsProps = {
+  locale: Locale;
+  featuredProjects: FeaturedProject[];
+};
+
+export const FeaturedProjects = ({ locale, featuredProjects }: FeaturedProjectsProps) => {
+  const copy =
+    locale === "de"
+      ? {
+          titlePrefix: "Ausgewählte",
+          titleAccent: "Arbeiten",
+          subtitle: "Ausgewählte Projekte, die meinen Standard definieren.",
+          viewAll: "Alle Projekte",
+          caseStudy: "Case Study Lesen",
+          loading: "Ausgewählte Projekte werden geladen...",
+        }
+      : {
+          titlePrefix: "Featured",
+          titleAccent: "Work",
+          subtitle: "Selected projects that define my standards.",
+          viewAll: "View All Projects",
+          caseStudy: "Read Case Study",
+          loading: "Loading featured work...",
+        };
+  const localePrefix = locale === "de" ? "/de" : "/en";
 
   return (
     <section className={styles.projects} id="projects">
       <div className="container">
         <div className={styles.header}>
           <div>
-            <h2 className={styles.title}>Featured <span className="gold-text">Work</span></h2>
-            <p className={styles.subtitle}>Selected projects that define my standards.</p>
+            <h2 className={styles.title}>{copy.titlePrefix} <span className="gold-text">{copy.titleAccent}</span></h2>
+            <p className={styles.subtitle}>{copy.subtitle}</p>
           </div>
-          <Link href="/projects" className={styles.viewAll}>
-            View All Projects <ArrowUpRight size={20} />
+          <Link href={`${localePrefix}/projects`} className={styles.viewAll}>
+            {copy.viewAll} <ArrowUpRight size={20} />
           </Link>
         </div>
 
         <div className={styles.projectList}>
           {featuredProjects?.map((project, index) => (
-            <motion.div 
+            <div 
               key={project.slug}
               className={styles.projectCard}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
+              style={{ animationDelay: `${index * 90}ms` }}
             >
               <div className={styles.projectImage}>
-                {project.category === "AI" ? <Target size={80} /> : <Code2 size={80} />}
+                {project.iconName ? ICON_MAP[project.iconName] : <Code2 size={80} />}
               </div>
               
               <div className={styles.projectInfo}>
@@ -49,16 +82,12 @@ export const FeaturedProjects = () => {
                   ))}
                 </div>
                 
-                <Link href={`/projects/${project.slug}`} className={styles.caseStudyBtn}>
-                  Read Case Study <ArrowUpRight size={18} />
+                <Link href={`${localePrefix}/projects/${project.slug}`} className={styles.caseStudyLink}>
+                  {copy.caseStudy} <ArrowUpRight size={18} />
                 </Link>
               </div>
-            </motion.div>
+            </div>
           ))}
-          
-          {featuredProjects === undefined && (
-            <p className={styles.loading}>Loading featured work...</p>
-          )}
         </div>
       </div>
     </section>

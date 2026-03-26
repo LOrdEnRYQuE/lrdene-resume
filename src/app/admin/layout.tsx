@@ -1,17 +1,22 @@
 import React from "react";
-import { AdminSidebar } from "../../components/Admin/AdminSidebar";
+import type { Metadata } from "next";
+import AdminShell from "@/components/Admin/AdminShell";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Admin",
+    template: "%s | Admin",
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#050505" }}>
-      <AdminSidebar />
-      <main style={{ flex: 1, padding: "2rem", overflowY: "auto" }}>
-        {children}
-      </main>
-    </div>
-  );
+  return <AdminShell>{children}</AdminShell>;
 }

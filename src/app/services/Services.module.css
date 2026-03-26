@@ -1,0 +1,317 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 10rem 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 8rem;
+}
+
+.badge {
+  color: var(--accent-gold);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+.title {
+  font-size: 4.5rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  margin-bottom: 2rem;
+}
+
+.title span {
+  color: var(--accent-gold);
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 3rem;
+  margin-bottom: 8rem;
+}
+
+.serviceCard {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s ease;
+}
+
+.serviceCard:hover {
+  border-color: var(--accent-gold);
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.serviceLogoBadge {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.08) 45%, rgba(8, 8, 8, 0.9) 100%);
+  border: 1px solid rgba(229, 228, 226, 0.42);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34);
+}
+
+.serviceLogoRing {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  padding: 1.6px;
+  background: conic-gradient(
+    from 0deg,
+    #fafafa 0deg,
+    #d9d9d9 44deg,
+    #8f959d 96deg,
+    #f3f3f3 150deg,
+    #6f767f 208deg,
+    #e5e4e2 268deg,
+    #4e545d 320deg,
+    #fafafa 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.95;
+  animation: service-logo-spin 5.2s linear infinite;
+}
+
+.serviceLogoImage {
+  width: 30px;
+  height: auto;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 0 10px rgba(229, 228, 226, 0.38))
+    brightness(1.08)
+    contrast(1.04);
+}
+
+@keyframes service-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.priceInfo {
+  text-align: right;
+}
+
+.priceLabel {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #fff;
+}
+
+.serviceTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.serviceDesc {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 3rem;
+  flex-grow: 1;
+}
+
+.featureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  font-weight: 600;
+}
+
+.check {
+  color: var(--accent-gold);
+}
+
+.deliveryInfo {
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.deliveryItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.bookBtn {
+  background: #fff;
+  color: #000;
+  padding: 1.25rem;
+  border-radius: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.bookBtn:hover {
+  background: var(--accent-gold);
+}
+
+.customSection {
+  margin-top: 4rem;
+}
+
+.customCard {
+  background: linear-gradient(135deg, #111 0%, #000 100%);
+  border: 1px solid var(--glass-border);
+  border-radius: 30px;
+  padding: 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.customText h2 {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin: 1.5rem 0 1rem;
+}
+
+.customText p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.customBtn {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: #fff;
+  padding: 1.2rem 2.5rem;
+  border-radius: 50px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.customBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 1024px) {
+  .container {
+    padding: 8rem 1.2rem;
+  }
+
+  .servicesGrid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .serviceCard {
+    padding: 2rem;
+  }
+
+  .title {
+    font-size: clamp(2.3rem, 9vw, 3.4rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 7rem 0.85rem;
+  }
+
+  .header {
+    margin-bottom: 3.5rem;
+  }
+
+  .servicesGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .deliveryInfo {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .customCard {
+    padding: 1.4rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .customText h2 {
+    font-size: 1.65rem;
+    margin: 0.7rem 0 0.5rem;
+  }
+
+  .serviceLogoBadge {
+    width: 48px;
+    height: 48px;
+  }
+
+  .serviceLogoImage {
+    width: 26px;
+  }
+}

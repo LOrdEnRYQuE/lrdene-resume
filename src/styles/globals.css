@@ -13,7 +13,20 @@ body {
   background-color: var(--bg-dark);
   color: var(--text-primary);
   font-family: var(--font-serif);
+  font-size: var(--font-base-size);
   -webkit-font-smoothing: antialiased;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
 }
 
 a {
@@ -23,9 +36,231 @@ a {
 
 button {
   cursor: pointer;
-  border: none;
-  background: none;
   font-family: inherit;
+}
+
+/* Global Button Theme: Silver / Platinum */
+html body :is(
+  button[class],
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  a.magnetic-button,
+  a[class*="Btn"],
+  a[class*="btn"],
+  a[class*="Cta"],
+  a[class*="cta"],
+  a[class*="Action"],
+  a[class*="action"],
+  a.primaryBtn,
+  a.secondaryBtn,
+  a.viewBtn,
+  a.liveLink,
+  a.detailsLink,
+  a.cta
+):not(.navLink):not([class*="navLink"])
+{
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.5rem 1.05rem;
+  border-radius: 999px !important;
+  border: 1px solid rgba(229, 228, 226, 0.3) !important;
+  box-shadow: none !important;
+  background: rgba(229, 228, 226, 0.08) !important;
+  color: #fff !important;
+  font-size: 0.76rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  text-decoration: none;
+  transition: var(--transition-smooth) !important;
+}
+
+html body :is(
+  button[class],
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  a.magnetic-button,
+  a[class*="Btn"],
+  a[class*="btn"],
+  a[class*="Cta"],
+  a[class*="cta"],
+  a[class*="Action"],
+  a[class*="action"],
+  a.primaryBtn,
+  a.secondaryBtn,
+  a.viewBtn,
+  a.liveLink,
+  a.detailsLink,
+  a.cta
+):not(.navLink):not([class*="navLink"]):hover {
+  transform: translateY(-2px) !important;
+  background: var(--accent-platinum) !important;
+  color: #000 !important;
+  border-color: var(--accent-platinum) !important;
+  box-shadow: 0 8px 22px rgba(229, 228, 226, 0.22) !important;
+}
+
+html body :is(
+  button[class],
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  a.magnetic-button,
+  a[class*="Btn"],
+  a[class*="btn"],
+  a[class*="Cta"],
+  a[class*="cta"],
+  a[class*="Action"],
+  a[class*="action"],
+  a.primaryBtn,
+  a.secondaryBtn,
+  a.viewBtn,
+  a.liveLink,
+  a.detailsLink,
+  a.cta
+):not(.navLink):not([class*="navLink"]):active {
+  transform: translateY(-1px) !important;
+}
+
+html body :is(
+  button[class],
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  a.magnetic-button,
+  a[class*="Btn"],
+  a[class*="btn"],
+  a[class*="Cta"],
+  a[class*="cta"],
+  a[class*="Action"],
+  a[class*="action"],
+  a.primaryBtn,
+  a.secondaryBtn,
+  a.viewBtn,
+  a.liveLink,
+  a.detailsLink,
+  a.cta
+):not(.navLink):not([class*="navLink"]):focus-visible {
+  outline: 2px solid rgba(229, 228, 226, 0.95) !important;
+  outline-offset: 2px !important;
+}
+
+html body :is(
+  button[class],
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  a.magnetic-button,
+  a[class*="Btn"],
+  a[class*="btn"],
+  a[class*="Cta"],
+  a[class*="cta"],
+  a[class*="Action"],
+  a[class*="action"],
+  a.primaryBtn,
+  a.secondaryBtn,
+  a.viewBtn,
+  a.liveLink,
+  a.detailsLink,
+  a.cta
+):not(.navLink):not([class*="navLink"]):disabled {
+  cursor: not-allowed;
+  opacity: 0.55 !important;
+  filter: grayscale(0.2);
+  box-shadow: none !important;
+}
+
+/* Icons inside interactive controls inherit the same navbar button behavior */
+html body :is(
+  button[class],
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  a.magnetic-button,
+  a[class*="Btn"],
+  a[class*="btn"],
+  a[class*="Cta"],
+  a[class*="cta"],
+  a[class*="Action"],
+  a[class*="action"],
+  a.primaryBtn,
+  a.secondaryBtn,
+  a.viewBtn,
+  a.liveLink,
+  a.detailsLink,
+  a.cta
+):not(.navLink):not([class*="navLink"]) :is(svg, i) {
+  color: currentColor !important;
+  stroke: currentColor !important;
+  transition: color var(--transition-fast), stroke var(--transition-fast), transform var(--transition-fast);
+}
+
+html body :is(
+  button[class],
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  a.magnetic-button,
+  a[class*="Btn"],
+  a[class*="btn"],
+  a[class*="Cta"],
+  a[class*="cta"],
+  a[class*="Action"],
+  a[class*="action"],
+  a.primaryBtn,
+  a.secondaryBtn,
+  a.viewBtn,
+  a.liveLink,
+  a.detailsLink,
+  a.cta
+):not(.navLink):not([class*="navLink"]):hover :is(svg, i) {
+  color: currentColor !important;
+  stroke: currentColor !important;
+  transform: translateY(-0.5px) scale(1.04) !important;
+  filter: drop-shadow(0 0 6px rgba(229, 228, 226, 0.35));
+}
+
+/* Icon-only controls (e.g. admin action icons) get the same hover treatment */
+html body :is(
+  button[class*="icon"],
+  a[class*="icon"],
+  button[aria-label],
+  a[aria-label]
+) {
+  min-height: 44px;
+  padding: 0.5rem 0.7rem;
+  border-radius: 999px !important;
+  border: 1px solid rgba(229, 228, 226, 0.26) !important;
+  background: rgba(229, 228, 226, 0.08) !important;
+  color: #fff !important;
+  transition: var(--transition-smooth) !important;
+}
+
+html body :is(
+  button[class*="icon"],
+  a[class*="icon"],
+  button[aria-label],
+  a[aria-label]
+):hover {
+  transform: translateY(-2px) !important;
+  background: var(--accent-platinum) !important;
+  color: #000 !important;
+  border-color: var(--accent-platinum) !important;
+  box-shadow: 0 8px 22px rgba(229, 228, 226, 0.22) !important;
 }
 
 /* Base utility classes */
@@ -33,6 +268,115 @@ button {
   max-width: var(--container-max-width);
   margin: 0 auto;
   padding: 0 2rem;
+}
+
+@media (max-width: 900px) {
+  .container {
+    padding-inline: 1.2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-inline: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  section {
+    scroll-margin-top: 92px;
+  }
+}
+
+/* Admin Mobile Overrides */
+@media (max-width: 980px) {
+  .admin-main {
+    overflow-x: hidden;
+  }
+
+  .admin-main [class*="container"] {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 1rem !important;
+    height: auto !important;
+    min-width: 0 !important;
+  }
+
+  .admin-main [class*="header"] {
+    flex-wrap: wrap;
+    align-items: flex-start !important;
+    gap: 0.8rem !important;
+  }
+
+  .admin-main [class*="headerActions"] {
+    width: 100%;
+    flex-wrap: wrap !important;
+    gap: 0.65rem !important;
+  }
+
+  .admin-main :is(
+    [class*="workspace"],
+    [class*="mainLayout"],
+    [class*="incomingLayout"],
+    [class*="workspaceGrid"],
+    [class*="projectGrid"],
+    [class*="formRow"],
+    [class*="actionGrid"],
+    [class*="stageGrid"],
+    [class*="kpiGrid"],
+    [class*="proofGrid"],
+    [class*="templateGrid"],
+    [class*="campaignLayout"]
+  ) {
+    grid-template-columns: 1fr !important;
+    min-width: 0 !important;
+  }
+
+  .admin-main [class*="searchBar"] {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .admin-main [class*="modalOverlay"] {
+    padding: 0.8rem !important;
+  }
+
+  .admin-main [class*="modal"] {
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: 92dvh !important;
+  }
+
+  .admin-main [class*="tableWrap"] {
+    overflow-x: auto !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-main [class*="container"] {
+    padding: 0.72rem !important;
+  }
+
+  .admin-main :is(
+    [class*="saveBtn"],
+    [class*="addBtn"],
+    [class*="primaryBtn"],
+    [class*="ghostBtn"],
+    [class*="syncBtn"],
+    [class*="cancelBtn"]
+  ) {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .admin-main [class*="buttonGroup"] {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .admin-main [class*="buttonGroup"] > * {
+    flex: 1 1 100%;
+  }
 }
 
 .glass {
@@ -52,4 +396,94 @@ button {
 
 .gold-text {
   color: var(--accent-gold);
+}
+
+/* Scroll Lamp Effect */
+.scroll-lamp {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.scroll-lamp.is-active {
+  opacity: 1;
+}
+
+.scroll-lamp-beam {
+  position: absolute;
+  top: 74px;
+  left: var(--lamp-x, 50%);
+  transform: translateX(-50%) rotate(var(--lamp-tilt, 0deg));
+  width: min(88vw, 1180px);
+  height: 86vh;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 243, 205, 0.24) 0%,
+    rgba(206, 227, 255, 0.16) 38%,
+    rgba(206, 227, 255, 0.1) 65%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  filter: blur(9px);
+  mix-blend-mode: screen;
+  transform-origin: top center;
+  transition: left 0.24s ease, transform 0.24s ease;
+  animation: lamp-breathe 3.8s ease-in-out infinite alternate;
+}
+
+.scroll-lamp-core {
+  position: absolute;
+  top: 48px;
+  left: var(--lamp-x, 50%);
+  transform: translateX(-50%);
+  width: min(44vw, 380px);
+  height: 96px;
+  border-radius: 999px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 244, 213, 0.38) 0%,
+    rgba(255, 233, 179, 0.19) 45%,
+    rgba(255, 233, 179, 0) 76%
+  );
+  filter: blur(6px);
+}
+
+.scroll-lamp-road {
+  position: absolute;
+  left: var(--lamp-x, 50%);
+  bottom: 3vh;
+  transform: translateX(-50%);
+  width: min(74vw, 1020px);
+  height: min(36vh, 300px);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 245, 212, 0.22) 0%,
+    rgba(206, 227, 255, 0.14) 32%,
+    rgba(206, 227, 255, 0.07) 55%,
+    rgba(0, 0, 0, 0) 78%
+  );
+  filter: blur(16px);
+  mix-blend-mode: screen;
+  transition: left 0.24s ease;
+}
+
+@keyframes lamp-breathe {
+  from {
+    opacity: 0.6;
+    filter: blur(9px) saturate(1);
+  }
+  to {
+    opacity: 0.78;
+    filter: blur(10px) saturate(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-lamp-beam {
+    animation: none;
+  }
 }

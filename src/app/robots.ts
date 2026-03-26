@@ -7,6 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin/", "/admin"],
     },
+    host: "https://lrdene.com",
     sitemap: "https://lrdene.com/sitemap.xml",
   };
 }
