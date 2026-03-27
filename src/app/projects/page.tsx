@@ -8,13 +8,32 @@ export const runtime = "edge";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
+  const canonical = toLocaleCanonical("/projects", locale);
 
   return {
     title: "Project Archive",
     description: "A comprehensive collection of digital products, AI solutions, and design case studies by LOrdEnRYQuE.",
+    keywords: [
+      "software case studies",
+      "AI project portfolio",
+      "web development portfolio",
+      "Next.js case study",
+      "digital product delivery",
+    ],
     alternates: {
-      canonical: toLocaleCanonical("/projects", locale),
+      canonical,
       languages: getLanguageAlternates("/projects"),
+    },
+    openGraph: {
+      title: "Project Archive | LOrdEnRYQuE",
+      description: "A comprehensive collection of digital products, AI solutions, and design case studies by LOrdEnRYQuE.",
+      url: `https://lordenryque.com${canonical}`,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Project Archive | LOrdEnRYQuE",
+      description: "A comprehensive collection of digital products, AI solutions, and design case studies by LOrdEnRYQuE.",
     },
   };
 }

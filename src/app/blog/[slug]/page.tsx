@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${post.title} | LOrdEnRYQuE`,
     description: post.excerpt,
-    keywords: [post.category, ...(post.tags ?? [])],
+    keywords: [post.category, ...(post.tags ?? []), `${post.title} article`, "AI and software insights"],
     alternates: {
       canonical,
       languages: getLanguageAlternates(basePath),

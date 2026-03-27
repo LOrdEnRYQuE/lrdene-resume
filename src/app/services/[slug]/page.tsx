@@ -69,10 +69,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     : `/services/${service.slug}`;
   const localeCanonical = toLocaleCanonical(canonical, locale);
 
+  const keywordSet = [
+    service.category,
+    service.title,
+    `${service.title} service`,
+    `${service.category} consulting`,
+    "digital solutions",
+    "business growth",
+    locationResolution ? `${service.title} ${locationResolution.location.city}` : null,
+    locationResolution ? `${service.category} ${locationResolution.location.country}` : null,
+  ].filter((value): value is string => Boolean(value));
+
   return {
     title,
     description,
-    keywords: [service.category, service.title, "service", "digital solutions"],
+    keywords: keywordSet,
     alternates: {
       canonical: localeCanonical,
       languages: getLanguageAlternates(canonical),

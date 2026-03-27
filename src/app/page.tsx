@@ -47,9 +47,30 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "LOrdEnRYQuE | Advanced Digital Solution",
     description:
       "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",
+    keywords: [
+      "AI engineer Germany",
+      "Next.js developer Germany",
+      "full-stack engineer",
+      "software architecture consulting",
+      "web development Landshut",
+      "digital solutions",
+    ],
     alternates: {
       canonical: `/${locale}`,
       languages: getLanguageAlternates("/"),
+    },
+    openGraph: {
+      title: "LOrdEnRYQuE | Advanced Digital Solution",
+      description:
+        "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",
+      url: `https://lordenryque.com/${locale}`,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "LOrdEnRYQuE | Advanced Digital Solution",
+      description:
+        "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",
     },
   };
 }

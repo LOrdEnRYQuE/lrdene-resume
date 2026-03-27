@@ -10,13 +10,32 @@ export const runtime = "edge";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
+  const canonical = toLocaleCanonical("/about", locale);
 
   return {
     title: "About",
     description: "Learn about Attila Lazar, the engineer and designer behind LOrdEnRYQuE.",
+    keywords: [
+      "Attila Lazar",
+      "AI engineer profile",
+      "full-stack developer Germany",
+      "software architect portfolio",
+      "LOrdEnRYQuE",
+    ],
     alternates: {
-      canonical: toLocaleCanonical("/about", locale),
+      canonical,
       languages: getLanguageAlternates("/about"),
+    },
+    openGraph: {
+      title: "About | LOrdEnRYQuE",
+      description: "Learn about Attila Lazar, the engineer and designer behind LOrdEnRYQuE.",
+      url: `https://lordenryque.com${canonical}`,
+      type: "profile",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "About | LOrdEnRYQuE",
+      description: "Learn about Attila Lazar, the engineer and designer behind LOrdEnRYQuE.",
     },
   };
 }

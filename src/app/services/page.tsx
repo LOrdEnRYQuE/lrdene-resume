@@ -20,6 +20,13 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Services",
     description:
       "Premium AI engineering, full-stack architecture, and high-performance digital product services.",
+    keywords: [
+      "AI development services",
+      "Next.js development service",
+      "software architecture consulting",
+      "custom web app development",
+      "digital solutions Germany",
+    ],
     alternates: {
       canonical,
       languages: getLanguageAlternates("/services"),
@@ -30,6 +37,12 @@ export async function generateMetadata(): Promise<Metadata> {
         "Premium AI engineering, full-stack architecture, and high-performance digital product services.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Services | LOrdEnRYQuE",
+      description:
+        "Premium AI engineering, full-stack architecture, and high-performance digital product services.",
     },
   };
 }

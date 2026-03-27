@@ -11,13 +11,32 @@ export const runtime = "edge";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
+  const canonical = toLocaleCanonical("/contact", locale);
 
   return {
     title: "Contact",
     description: `Get in touch with ${BUSINESS_PROFILE.name} for ${BUSINESS_PROFILE.description}. Remote-first delivery from Germany (${BUSINESS_PROFILE.timezone}).`,
+    keywords: [
+      "contact AI engineer",
+      "hire Next.js developer",
+      "software architect consultation",
+      "web development Germany",
+      "digital solutions contact",
+    ],
     alternates: {
-      canonical: toLocaleCanonical("/contact", locale),
+      canonical,
       languages: getLanguageAlternates("/contact"),
+    },
+    openGraph: {
+      title: "Contact | LOrdEnRYQuE",
+      description: `Get in touch with ${BUSINESS_PROFILE.name} for ${BUSINESS_PROFILE.description}. Remote-first delivery from Germany (${BUSINESS_PROFILE.timezone}).`,
+      url: `https://lordenryque.com${canonical}`,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Contact | LOrdEnRYQuE",
+      description: `Get in touch with ${BUSINESS_PROFILE.name} for ${BUSINESS_PROFILE.description}. Remote-first delivery from Germany (${BUSINESS_PROFILE.timezone}).`,
     },
   };
 }

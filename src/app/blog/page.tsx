@@ -10,13 +10,32 @@ export const runtime = "edge";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
+  const canonical = toLocaleCanonical("/blog", locale);
 
   return {
     title: "Journal | LOrdEnRYQuE",
     description: "Insights on product architecture, design evolution, and business-focused AI by Attila Lazar.",
+    keywords: [
+      "AI insights blog",
+      "Next.js architecture articles",
+      "digital product strategy",
+      "software engineering journal",
+      "SEO and GEO strategy",
+    ],
     alternates: {
-      canonical: toLocaleCanonical("/blog", locale),
+      canonical,
       languages: getLanguageAlternates("/blog"),
+    },
+    openGraph: {
+      title: "Journal | LOrdEnRYQuE",
+      description: "Insights on product architecture, design evolution, and business-focused AI by Attila Lazar.",
+      url: `https://lordenryque.com${canonical}`,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Journal | LOrdEnRYQuE",
+      description: "Insights on product architecture, design evolution, and business-focused AI by Attila Lazar.",
     },
   };
 }
