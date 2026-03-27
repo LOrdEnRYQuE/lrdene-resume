@@ -62,6 +62,11 @@ export async function middleware(request: NextRequest) {
   }
 
   const pathname = request.nextUrl.pathname;
+  if (pathname === "/icon" || pathname === "/apple-icon") {
+    const iconUrl = request.nextUrl.clone();
+    iconUrl.pathname = "/favicon.ico";
+    return withSecurityHeaders(NextResponse.redirect(iconUrl, 307));
+  }
   const localeInPath = getLocalePrefixFromPathname(pathname);
   const normalizedPathname = localeInPath ? stripLocalePrefix(pathname) : pathname;
   const localePrefix = localeInPath ? `/${localeInPath}` : "";
@@ -134,6 +139,6 @@ export const config = {
   matcher: [
     "/admin/:path*",
     "/api/admin/:path*",
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|icon|apple-icon|.*\\..*).*)",
   ],
 };
