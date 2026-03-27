@@ -15,9 +15,12 @@ import { SERVICE_LOCATIONS } from "@/utils/serviceLocations";
 
 const DEFAULT_GA_ID = "G-R3P3P44GWT";
 const ICON_VERSION = "20260327";
+const GOOGLE_SITE_VERIFICATION =
+  process.env.GOOGLE_SITE_VERIFICATION || process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://lordenryque.com"),
+  applicationName: "LOrdEnRYQuE",
   title: {
     template: "%s | LOrdEnRYQuE",
     default: "LOrdEnRYQuE | Advanced Digital Solution",
@@ -54,6 +57,20 @@ export const metadata: Metadata = {
     ],
     shortcut: `/favicon.ico?v=${ICON_VERSION}`,
     apple: `/apple-touch-icon.png?v=${ICON_VERSION}`,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  verification: {
+    google: GOOGLE_SITE_VERIFICATION,
   },
   other: {
     "geo.region": "DE-BY",

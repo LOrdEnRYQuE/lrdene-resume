@@ -29,6 +29,7 @@ function toLocalizedEntries(
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://lordenryque.com";
+  const staticLastModified = new Date("2026-03-27T00:00:00.000Z");
 
   let posts: Awaited<ReturnType<typeof fetchQuery<typeof api.posts.list>>> = [];
   let projects: Awaited<ReturnType<typeof fetchQuery<typeof api.projects.list>>> = [];
@@ -94,34 +95,46 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  const insightClusterEntries = topicClusters.map((cluster) => ({
-    path: `/insights/${cluster.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.75,
-  }));
+  const insightClusterEntries = topicClusters.map((cluster) => {
+    const newestTopicUpdate = cluster.topics.reduce<number | null>((latest, topic) => {
+      const time = Date.parse(topic.updatedAt);
+      if (Number.isNaN(time)) return latest;
+      return latest === null ? time : Math.max(latest, time);
+    }, null);
+    return {
+      path: `/insights/${cluster.slug}`,
+      lastModified: newestTopicUpdate ? new Date(newestTopicUpdate) : staticLastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    };
+  });
 
-  const insightTopicEntries = getAllTopicClusterPaths(topicClusters).map((entry) => ({
-    path: entry.path,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
+  const insightTopicEntries = getAllTopicClusterPaths(topicClusters).map((entry) => {
+    const cluster = topicClusters.find((item) => item.slug === entry.cluster);
+    const topic = cluster?.topics.find((item) => item.slug === entry.topic);
+    const updatedAt = topic ? Date.parse(topic.updatedAt) : NaN;
+    return {
+      path: entry.path,
+      lastModified: Number.isNaN(updatedAt) ? staticLastModified : new Date(updatedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    };
+  });
 
   const staticRoutes = [
-    { path: "/", lastModified: new Date(), changeFrequency: "daily" as const, priority: 1 },
-    { path: "/about", lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.8 },
-    { path: "/blog", lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
-    { path: "/insights", lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.85 },
-    { path: "/projects", lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.9 },
-    { path: "/services", lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.9 },
-    { path: "/qr-solutions", lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.85 },
-    { path: "/demos", lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
-    { path: "/contact", lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.8 },
-    { path: "/privacy", lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.4 },
-    { path: "/terms", lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.4 },
-    { path: "/imprint", lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.4 },
-    { path: "/cookies", lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.4 },
+    { path: "/", lastModified: staticLastModified, changeFrequency: "daily" as const, priority: 1 },
+    { path: "/about", lastModified: staticLastModified, changeFrequency: "monthly" as const, priority: 0.8 },
+    { path: "/blog", lastModified: staticLastModified, changeFrequency: "daily" as const, priority: 0.9 },
+    { path: "/insights", lastModified: staticLastModified, changeFrequency: "weekly" as const, priority: 0.85 },
+    { path: "/projects", lastModified: staticLastModified, changeFrequency: "weekly" as const, priority: 0.9 },
+    { path: "/services", lastModified: staticLastModified, changeFrequency: "weekly" as const, priority: 0.9 },
+    { path: "/qr-solutions", lastModified: staticLastModified, changeFrequency: "weekly" as const, priority: 0.85 },
+    { path: "/demos", lastModified: staticLastModified, changeFrequency: "weekly" as const, priority: 0.8 },
+    { path: "/contact", lastModified: staticLastModified, changeFrequency: "yearly" as const, priority: 0.8 },
+    { path: "/privacy", lastModified: staticLastModified, changeFrequency: "yearly" as const, priority: 0.4 },
+    { path: "/terms", lastModified: staticLastModified, changeFrequency: "yearly" as const, priority: 0.4 },
+    { path: "/imprint", lastModified: staticLastModified, changeFrequency: "yearly" as const, priority: 0.4 },
+    { path: "/cookies", lastModified: staticLastModified, changeFrequency: "yearly" as const, priority: 0.4 },
   ];
 
   return toLocalizedEntries(baseUrl, [
