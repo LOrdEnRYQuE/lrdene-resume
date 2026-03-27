@@ -8,6 +8,7 @@ import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { TOPIC_CLUSTER_CONTENT_KEY, resolveTopicClusters } from "@/lib/seo/topicClusters";
 import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
 import { FALLBACK_SERVICES } from "@/lib/servicesFallback";
+import styles from "./Services.module.css";
 
 export const runtime = "edge";
 
@@ -49,61 +50,64 @@ export default async function ServicesPage() {
   return (
     <>
       <ServicesPageClient services={services} />
-      <section className="container" style={{ marginTop: "2rem", marginBottom: "5rem" }}>
-        <h2 style={{ marginBottom: "1rem" }}>Local SEO Focus Pages</h2>
-        <p style={{ color: "var(--text-secondary)", marginBottom: "1rem" }}>
+      <section className={`container ${styles.linkHubSection}`}>
+        <h2 className={styles.linkHubTitle}>Local SEO Focus Pages</h2>
+        <p className={styles.linkHubIntro}>
           Intent-specific landing pages optimized for service + city searches.
         </p>
-        <div style={{ display: "grid", gap: "0.5rem" }}>
+        <ul className={styles.linkHubList}>
           {localSeoTargets.map((entry) => (
-            <Link
-              key={entry.slug}
-              href={`/services/${entry.slug}`}
-              data-track-event="internal_link_click"
-              data-track-label={`Local SEO page: ${entry.label}`}
-            >
-              {entry.label}
-            </Link>
+            <li key={entry.slug}>
+              <Link
+                href={`/services/${entry.slug}`}
+                data-track-event="internal_link_click"
+                data-track-label={`Local SEO page: ${entry.label}`}
+              >
+                {entry.label}
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
 
-        <h2 style={{ marginBottom: "1rem" }}>Location Landing Pages</h2>
-        <p style={{ color: "var(--text-secondary)", marginBottom: "1rem" }}>
+        <h2 className={styles.linkHubTitle}>Location Landing Pages</h2>
+        <p className={styles.linkHubIntro}>
           Region-specific delivery pages for local-intent search visibility.
         </p>
-        <div style={{ display: "grid", gap: "0.5rem" }}>
+        <ul className={styles.linkHubList}>
           {services.flatMap((service) =>
             SERVICE_LOCATIONS.map((location) => (
-              <Link
-                key={`${service._id}-${location.slug}`}
-                href={`/services/${service.slug}-${location.slug}`}
-                data-track-event="internal_link_click"
-                data-track-label={`Service location: ${service.title} ${location.city}`}
-              >
-                {service.title} in {location.city}
-              </Link>
+              <li key={`${service._id}-${location.slug}`}>
+                <Link
+                  href={`/services/${service.slug}-${location.slug}`}
+                  data-track-event="internal_link_click"
+                  data-track-label={`Service location: ${service.title} ${location.city}`}
+                >
+                  {service.title} in {location.city}
+                </Link>
+              </li>
             )),
           )}
-        </div>
+        </ul>
 
-        <h2 style={{ marginTop: "2rem", marginBottom: "1rem" }}>Topic Clusters</h2>
-        <p style={{ color: "var(--text-secondary)", marginBottom: "1rem" }}>
+        <h2 className={`${styles.linkHubTitle} ${styles.linkHubTitleWithTopMargin}`}>Topic Clusters</h2>
+        <p className={styles.linkHubIntro}>
           Implementation-ready cluster pages that connect services with technical guides.
         </p>
-        <div style={{ display: "grid", gap: "0.5rem" }}>
+        <ul className={styles.linkHubList}>
           {topicClusters.flatMap((cluster) =>
             cluster.topics.slice(0, 2).map((topic) => (
-              <Link
-                key={`${cluster.slug}-${topic.slug}`}
-                href={`/insights/${cluster.slug}/${topic.slug}`}
-                data-track-event="internal_link_click"
-                data-track-label={`Services->Insights: ${cluster.title} ${topic.title}`}
-              >
-                {topic.title}
-              </Link>
+              <li key={`${cluster.slug}-${topic.slug}`}>
+                <Link
+                  href={`/insights/${cluster.slug}/${topic.slug}`}
+                  data-track-event="internal_link_click"
+                  data-track-label={`Services->Insights: ${cluster.title} ${topic.title}`}
+                >
+                  {topic.title}
+                </Link>
+              </li>
             )),
           )}
-        </div>
+        </ul>
       </section>
     </>
   );

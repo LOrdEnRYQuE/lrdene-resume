@@ -14,6 +14,7 @@ import {
 import Image from "next/image";
 import LocaleLink from "@/components/I18n/LocaleLink";
 import { useLocale } from "@/lib/i18n/useLocale";
+import { useSearchParams } from "next/navigation";
 
 type ServiceItem = {
   _id: string;
@@ -27,6 +28,26 @@ type ServiceItem = {
 
 export function ServicesPageClient({ services }: { services: ServiceItem[] }) {
   const locale = useLocale();
+  const searchParams = useSearchParams();
+  const focusParam = searchParams.get("focus")?.trim().toLowerCase() ?? "";
+  const focusAlias: Record<string, string> = {
+    "web-dev": "web-development",
+    "web-design": "web-development",
+    "ai-tools": "ai-integration",
+    "ai-tooling": "ai-integration",
+    design: "ui-ux-design",
+    "ui-design": "ui-ux-design",
+    "ux-design": "ui-ux-design",
+  };
+  const normalizedFocusSlug = focusAlias[focusParam] ?? focusParam;
+  const hasFocusedService = services.some((service) => service.slug === normalizedFocusSlug);
+  const orderedServices = hasFocusedService
+    ? [...services].sort((left, right) => {
+        if (left.slug === normalizedFocusSlug) return -1;
+        if (right.slug === normalizedFocusSlug) return 1;
+        return 0;
+      })
+    : services;
   const copy =
     locale === "de"
       ? {
@@ -45,6 +66,7 @@ export function ServicesPageClient({ services }: { services: ServiceItem[] }) {
           bespokeDesc:
             "Für komplexe Plattformen und Enterprise-Lösungen planen wir eine maßgeschneiderte Roadmap.",
           quote: "Individuelles Angebot",
+          focusedLabel: "Fokus",
         }
       : {
           badge: "Strategic Offerings",
@@ -61,6 +83,7 @@ export function ServicesPageClient({ services }: { services: ServiceItem[] }) {
           bespokeDesc:
             "For complex enterprise solutions or custom platform engineering, let's discuss a tailored roadmap.",
           quote: "Request Custom Quote",
+          focusedLabel: "Focused",
         };
 
   return (
@@ -76,10 +99,12 @@ export function ServicesPageClient({ services }: { services: ServiceItem[] }) {
       </header>
 
       <div className={styles.servicesGrid}>
-        {services.map((service, idx) => (
+        {orderedServices.map((service, idx) => (
           <motion.div
             key={service._id}
-            className={styles.serviceCard}
+            className={`${styles.serviceCard} ${
+              service.slug === normalizedFocusSlug ? styles.serviceCardFocused : ""
+            }`}
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -102,7 +127,12 @@ export function ServicesPageClient({ services }: { services: ServiceItem[] }) {
               </div>
             </div>
 
-            <h3 className={styles.serviceTitle}>{service.title}</h3>
+            <h3 className={styles.serviceTitle}>
+              {service.title}
+              {service.slug === normalizedFocusSlug ? (
+                <span className={styles.focusedBadge}>{copy.focusedLabel}</span>
+              ) : null}
+            </h3>
             <p className={styles.serviceDesc}>{service.description}</p>
 
             <div className={styles.features}>
