@@ -9,6 +9,7 @@ import DeferredEnhancements from "@/components/Runtime/DeferredEnhancements";
 import CookieConsent from "@/components/Cookies/CookieConsent";
 import { getPageContentCached, getSiteSettingsCached } from "@/lib/server/cachedQueries";
 import { BUSINESS_PROFILE } from "@/lib/businessProfile";
+import { SERVICE_LOCATIONS } from "@/utils/serviceLocations";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://lordenryque.com"),
@@ -43,92 +44,13 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/assets/LOGO.png",
-  }
-};
-
-const globalStructuredData = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      name: BUSINESS_PROFILE.name,
-      url: "https://lordenryque.com",
-      logo: "https://lordenryque.com/assets/LOGO.png",
-      description: BUSINESS_PROFILE.description,
-      slogan: BUSINESS_PROFILE.brandLine,
-      knowsAbout: BUSINESS_PROFILE.services,
-      sameAs: [
-        "https://github.com/LOrdEnRYQuE",
-        "https://www.linkedin.com/in/LOrdEnRQuE",
-        "https://www.facebook.com/LOrdEnRYQuEit",
-        "https://www.tiktok.com/@LOrdEnRYQuE",
-      ],
-    },
-    {
-      "@type": "WebSite",
-      name: BUSINESS_PROFILE.name,
-      url: "https://lordenryque.com",
-      inLanguage: "en",
-    },
-    {
-      "@type": "LocalBusiness",
-      name: `${BUSINESS_PROFILE.name} | ${BUSINESS_PROFILE.brandLine}`,
-      url: "https://lordenryque.com",
-      image: "https://lordenryque.com/assets/LOGO.png",
-      description: BUSINESS_PROFILE.description,
-      telephone: "+49 1722620671",
-      email: "lordenryque.dev@gmail.com",
-      areaServed: [
-        { "@type": "Country", name: "Germany" },
-        { "@type": "Place", name: "Remote (online)" },
-      ],
-      openingHoursSpecification: [
-        {
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: BUSINESS_PROFILE.hours.days,
-          opens: BUSINESS_PROFILE.hours.opens,
-          closes: BUSINESS_PROFILE.hours.closes,
-        },
-      ],
-      serviceType: BUSINESS_PROFILE.services,
-      hasOfferCatalog: {
-        "@type": "OfferCatalog",
-        name: "Core Services",
-        itemListElement: BUSINESS_PROFILE.services.map((service, index) => ({
-          "@type": "Offer",
-          position: index + 1,
-          itemOffered: {
-            "@type": "Service",
-            name: service,
-          },
-        })),
-      },
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "Nahensteig 188E",
-        postalCode: "84028",
-        addressLocality: "Landshut",
-        addressRegion: "Bayern",
-        addressCountry: "DE",
-      },
-      sameAs: [
-        "https://www.linkedin.com/in/LOrdEnRQuE",
-        "https://www.facebook.com/LOrdEnRYQuEit",
-        "https://www.tiktok.com/@LOrdEnRYQuE",
-      ],
-    },
-    {
-      "@type": "FAQPage",
-      mainEntity: BUSINESS_PROFILE.faq.map((entry) => ({
-        "@type": "Question",
-        name: entry.q,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: entry.a,
-        },
-      })),
-    },
-  ],
+  },
+  other: {
+    "geo.region": "DE-BY",
+    "geo.placename": "Landshut",
+    "geo.position": "48.5442;12.1469",
+    ICBM: "48.5442, 12.1469",
+  },
 };
 
 export default async function RootLayout({
@@ -152,12 +74,135 @@ export default async function RootLayout({
     en: (footerEn?.data ?? null) as unknown,
     de: (footerDe?.data ?? null) as unknown,
   };
+  const settings = siteSettings as
+    | {
+        gaId?: string;
+        socialLinks?: {
+          github?: string;
+          twitter?: string;
+          linkedin?: string;
+          instagram?: string;
+          youtube?: string;
+        };
+      }
+    | null;
+  const gaId = settings?.gaId?.trim() || process.env.NEXT_PUBLIC_GA_ID || "";
+  const sameAsLinks = Array.from(
+    new Set(
+      [
+        settings?.socialLinks?.github,
+        settings?.socialLinks?.twitter,
+        settings?.socialLinks?.linkedin,
+        settings?.socialLinks?.instagram,
+        settings?.socialLinks?.youtube,
+        "https://www.facebook.com/LOrdEnRYQuEit",
+        "https://www.tiktok.com/@LOrdEnRYQuE",
+      ].filter((value): value is string => Boolean(value && value.trim())),
+    ),
+  );
+  const areaServed = [
+    { "@type": "Country", name: "Germany" },
+    { "@type": "Country", name: "Switzerland" },
+    ...SERVICE_LOCATIONS.map((location) => ({
+      "@type": "City",
+      name: location.city,
+      containedInPlace: {
+        "@type": "AdministrativeArea",
+        name: location.region,
+      },
+    })),
+    { "@type": "Place", name: "Remote (online)" },
+  ];
+  const globalStructuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        name: BUSINESS_PROFILE.name,
+        url: "https://lordenryque.com",
+        logo: "https://lordenryque.com/assets/LOGO.png",
+        description: BUSINESS_PROFILE.description,
+        slogan: BUSINESS_PROFILE.brandLine,
+        knowsAbout: BUSINESS_PROFILE.services,
+        sameAs: sameAsLinks,
+      },
+      {
+        "@type": "WebSite",
+        name: BUSINESS_PROFILE.name,
+        url: "https://lordenryque.com",
+        inLanguage: ["en", "de"],
+        potentialAction: {
+          "@type": "SearchAction",
+          target: "https://lordenryque.com/en/blog?query={search_term_string}",
+          "query-input": "required name=search_term_string",
+        },
+      },
+      {
+        "@type": "LocalBusiness",
+        name: `${BUSINESS_PROFILE.name} | ${BUSINESS_PROFILE.brandLine}`,
+        url: "https://lordenryque.com",
+        image: "https://lordenryque.com/assets/LOGO.png",
+        description: BUSINESS_PROFILE.description,
+        telephone: "+49 1722620671",
+        email: "lordenryque.dev@gmail.com",
+        areaServed,
+        openingHoursSpecification: [
+          {
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: BUSINESS_PROFILE.hours.days,
+            opens: BUSINESS_PROFILE.hours.opens,
+            closes: BUSINESS_PROFILE.hours.closes,
+          },
+        ],
+        serviceType: BUSINESS_PROFILE.services,
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Core Services",
+          itemListElement: BUSINESS_PROFILE.services.map((service, index) => ({
+            "@type": "Offer",
+            position: index + 1,
+            itemOffered: {
+              "@type": "Service",
+              name: service,
+            },
+          })),
+        },
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "Nahensteig 188E",
+          postalCode: "84028",
+          addressLocality: "Landshut",
+          addressRegion: "Bayern",
+          addressCountry: "DE",
+        },
+        sameAs: sameAsLinks,
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: BUSINESS_PROFILE.faq.map((entry) => ({
+          "@type": "Question",
+          name: entry.q,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: entry.a,
+          },
+        })),
+      },
+    ],
+  };
 
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
         <ConvexClientProvider>
           <LocaleDocumentSync />
+          {gaId ? (
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `window.__LRDENE_GA_ID=${JSON.stringify(gaId)};`,
+              }}
+            />
+          ) : null}
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(globalStructuredData) }}

@@ -12,6 +12,18 @@ const SESSION_KEY = "lrdene_session_id";
 const FIRST_TOUCH_KEY = "lrdene_first_touch";
 const LAST_TOUCH_KEY = "lrdene_last_touch";
 const LANDING_PAGE_KEY = "lrdene_landing_page";
+const GA_BOOTSTRAP_ID = "lrdene-ga4-loader";
+const GA_ID_ENV = process.env.NEXT_PUBLIC_GA_ID || "";
+
+type GtagFn = (...args: unknown[]) => void;
+
+declare global {
+  interface Window {
+    dataLayer?: unknown[];
+    gtag?: GtagFn;
+    __LRDENE_GA_ID?: string;
+  }
+}
 
 export const useAnalytics = () => {
   const pathname = usePathname();
@@ -26,8 +38,19 @@ export const useAnalytics = () => {
       (typeof window !== "undefined" && localStorage.getItem(SESSION_KEY)) || "unknown";
     const normalizedPath = normalizeLocalizedPath(pathname || "/");
     const template = resolveTemplateName(normalizedPath);
+    const locale = resolveLocaleFromPath(pathname || "/");
 
     if (!["LCP", "INP", "CLS", "FCP", "TTFB"].includes(metric.name)) return;
+
+    initGa4();
+    sendGaEvent("web_vital", {
+      metric_name: metric.name,
+      metric_value: typeof metric.value === "number" ? Number(metric.value.toFixed(2)) : undefined,
+      metric_rating: metric.rating,
+      page_template: template,
+      page_locale: locale,
+      page_path: pathname || "/",
+    });
 
     recordEvent({
       type: ANALYTICS_EVENTS.WEB_VITAL,
@@ -45,9 +68,13 @@ export const useAnalytics = () => {
 
   useEffect(() => {
     const onConsentChanged = () => {
-      setAnalyticsEnabled(hasAnalyticsConsent());
+      const enabled = hasAnalyticsConsent();
+      setAnalyticsEnabled(enabled);
+      updateGaConsent(enabled);
     };
-    setAnalyticsEnabled(hasAnalyticsConsent());
+    const enabled = hasAnalyticsConsent();
+    setAnalyticsEnabled(enabled);
+    updateGaConsent(enabled);
     window.addEventListener(COOKIE_CONSENT_EVENT, onConsentChanged as EventListener);
     return () => window.removeEventListener(COOKIE_CONSENT_EVENT, onConsentChanged as EventListener);
   }, []);
@@ -72,6 +99,20 @@ export const useAnalytics = () => {
     const landingPage = ensureLandingPage(pathname);
     const firstTouch = readOrCreateTouchpoint(FIRST_TOUCH_KEY, campaign, pathname);
     const lastTouch = writeTouchpoint(LAST_TOUCH_KEY, campaign, pathname);
+    const normalizedPath = normalizeLocalizedPath(pathname || "/");
+    const template = resolveTemplateName(normalizedPath);
+    const locale = resolveLocaleFromPath(pathname || "/");
+    initGa4();
+    sendGaEvent("page_view", {
+      page_path: pathname || "/",
+      page_template: template,
+      page_locale: locale,
+      page_referrer: document.referrer || undefined,
+      source: campaign.source,
+      medium: campaign.medium,
+      campaign: campaign.campaign,
+      term: campaign.term,
+    });
     recordPageView({
       route: pathname,
       referrer: document.referrer || undefined,
@@ -108,6 +149,11 @@ export const useAnalytics = () => {
         route: pathname,
         sessionId: sessionId as string,
       });
+      sendGaEvent(routeEvent.type, {
+        event_label: routeEvent.label,
+        page_template: template,
+        page_locale: locale,
+      });
     }
 
     const handleTrackedClick = (event: MouseEvent) => {
@@ -135,6 +181,12 @@ export const useAnalytics = () => {
         route: pathname,
         sessionId: sessionId as string,
       });
+      sendGaEvent(eventType, {
+        event_label: label,
+        page_path: pathname || "/",
+        page_template: template,
+        page_locale: locale,
+      });
     };
 
     document.addEventListener("click", handleTrackedClick);
@@ -150,6 +202,9 @@ export const useAnalytics = () => {
     const landingPage = localStorage.getItem(LANDING_PAGE_KEY) || pathname || "/";
     const firstTouch = localStorage.getItem(FIRST_TOUCH_KEY) || undefined;
     const lastTouch = localStorage.getItem(LAST_TOUCH_KEY) || undefined;
+    const normalizedPath = normalizeLocalizedPath(pathname || "/");
+    const template = resolveTemplateName(normalizedPath);
+    const locale = resolveLocaleFromPath(pathname || "/");
     recordEvent({
       type,
       label: formatEventLabel(label, {
@@ -162,6 +217,12 @@ export const useAnalytics = () => {
       route: pathname,
       sessionId,
     });
+    sendGaEvent(type, {
+      event_label: label,
+      page_path: pathname || "/",
+      page_template: template,
+      page_locale: locale,
+    });
   };
 
   const trackConversion = (conversionType: string, value: number = 0) => {
@@ -171,6 +232,9 @@ export const useAnalytics = () => {
     const landingPage = localStorage.getItem(LANDING_PAGE_KEY) || pathname || "/";
     const firstTouch = localStorage.getItem(FIRST_TOUCH_KEY) || undefined;
     const lastTouch = localStorage.getItem(LAST_TOUCH_KEY) || undefined;
+    const normalizedPath = normalizeLocalizedPath(pathname || "/");
+    const template = resolveTemplateName(normalizedPath);
+    const locale = resolveLocaleFromPath(pathname || "/");
     recordEvent({
       type: ANALYTICS_EVENTS.CONVERSION,
       label: formatEventLabel(`Conversion: ${conversionType}`, {
@@ -183,6 +247,13 @@ export const useAnalytics = () => {
       value,
       route: pathname,
       sessionId,
+    });
+    sendGaEvent(ANALYTICS_EVENTS.CONVERSION, {
+      conversion_type: conversionType,
+      value,
+      page_path: pathname || "/",
+      page_template: template,
+      page_locale: locale,
     });
   };
 
@@ -320,4 +391,66 @@ function generateSessionId() {
   }
 
   return `sid-${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
+}
+
+function getGaId() {
+  if (typeof window === "undefined") return GA_ID_ENV || "";
+  return window.__LRDENE_GA_ID?.trim() || GA_ID_ENV;
+}
+
+function initGa4() {
+  if (typeof window === "undefined") return;
+  const gaId = getGaId();
+  if (!gaId) return;
+
+  if (!window.gtag) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function gtag(...args: unknown[]) {
+      window.dataLayer?.push(args);
+    };
+    window.gtag("consent", "default", {
+      analytics_storage: "denied",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+    });
+    window.gtag("js", new Date());
+    window.gtag("config", gaId, {
+      send_page_view: false,
+      anonymize_ip: true,
+      allow_google_signals: false,
+    });
+  }
+
+  if (!document.getElementById(GA_BOOTSTRAP_ID)) {
+    const script = document.createElement("script");
+    script.id = GA_BOOTSTRAP_ID;
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`;
+    document.head.appendChild(script);
+  }
+}
+
+function updateGaConsent(enabled: boolean) {
+  if (typeof window === "undefined") return;
+  if (!window.gtag) return;
+  window.gtag("consent", "update", {
+    analytics_storage: enabled ? "granted" : "denied",
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+  });
+}
+
+function sendGaEvent(name: string, params: Record<string, string | number | undefined>) {
+  if (typeof window === "undefined") return;
+  if (!window.gtag) return;
+  window.gtag("event", name, params);
+}
+
+function resolveLocaleFromPath(path: string) {
+  const segments = path.split("/").filter(Boolean);
+  const first = segments[0];
+  if (first === "en" || first === "de") return first;
+  return "en";
 }
