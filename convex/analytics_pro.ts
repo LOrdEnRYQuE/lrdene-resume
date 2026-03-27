@@ -1,5 +1,4 @@
 import { query } from "./_generated/server";
-import { v } from "convex/values";
 import { ADMIN_TOKEN, requireAdminToken } from "./adminAuth";
 
 const EVENTS_SAMPLE_LIMIT = 3000;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useSpring } from "framer-motion";
 
 export const useMagnetic = (strength = 0.5) => {
@@ -9,6 +9,8 @@ export const useMagnetic = (strength = 0.5) => {
   const y = useSpring(0, { stiffness: 150, damping: 15, mass: 0.1 });
 
   useEffect(() => {
+    const target = ref.current;
+
     const handleMouseMove = (e: MouseEvent) => {
       if (!ref.current) return;
       const { clientX, clientY } = e;
@@ -34,11 +36,11 @@ export const useMagnetic = (strength = 0.5) => {
     };
 
     window.addEventListener("mousemove", handleMouseMove);
-    ref.current?.addEventListener("mouseleave", handleMouseLeave);
+    target?.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      ref.current?.removeEventListener("mouseleave", handleMouseLeave);
+      target?.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, [strength, x, y]);
 

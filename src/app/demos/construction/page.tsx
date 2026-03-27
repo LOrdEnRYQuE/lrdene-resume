@@ -6,18 +6,14 @@ import Image from "next/image";
 import { 
   HardHat, 
   Construction, 
-  Ruler, 
-  Hammer, 
   ShieldCheck, 
-  Clock, 
   MapPin, 
   ArrowRight,
   ChevronRight,
-  Calendar,
   Layers,
   Zap,
   Phone,
-  Mail
+  Mail,
 } from "lucide-react";
 import styles from "./construction.module.css";
 

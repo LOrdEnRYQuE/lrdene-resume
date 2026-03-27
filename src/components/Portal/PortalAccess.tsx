@@ -8,7 +8,6 @@ import { KeyRound, ArrowRight, ShieldCheck } from "lucide-react";
 
 export const PortalAccess = () => {
   const [code, setCode] = useState("");
-  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 

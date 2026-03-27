@@ -5,14 +5,10 @@ import styles from "./ai-seo.module.css";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { 
-  Activity, 
-  Search, 
-  Globe, 
   Zap, 
   ChevronRight, 
   Quote, 
   Database,
-  LineChart,
   ShieldCheck,
   Bot
 } from "lucide-react";

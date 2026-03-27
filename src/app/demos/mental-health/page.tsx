@@ -8,7 +8,6 @@ import {
   Heart, 
   Wind, 
   Moon, 
-  Sun, 
   BrainCircuit, 
   Sparkles,
   MessageSquareHeart,

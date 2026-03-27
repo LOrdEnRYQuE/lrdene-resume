@@ -6,14 +6,11 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { 
   Cpu, 
-  Terminal, 
   BarChart3, 
   ShieldAlert, 
   Zap, 
-  Layers,
   Search,
   ArrowUpRight,
-  Code2,
   Users
 } from "lucide-react";
 

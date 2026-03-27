@@ -4,12 +4,8 @@ import React from "react";
 import styles from "./car-detailing.module.css";
 import { motion } from "framer-motion";
 import { 
-  Droplets, 
-  Sparkles, 
   Shield, 
   CheckCircle, 
-  ChevronRight, 
-  Clock, 
   Star,
   Zap
 } from "lucide-react";

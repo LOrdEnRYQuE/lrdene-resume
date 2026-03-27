@@ -5,7 +5,6 @@ import styles from "./logistics.module.css";
 import { motion } from "framer-motion";
 import { 
   Truck, 
-  MapPin, 
   Package, 
   BarChart2, 
   Users, 
@@ -13,7 +12,6 @@ import {
   Search, 
   Filter,
   ArrowUpRight,
-  MoreVertical,
   Navigation,
   Box
 } from "lucide-react";

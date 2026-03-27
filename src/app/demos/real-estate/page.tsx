@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styles from "./real-estate.module.css";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { Building2, Search, MapPin, BedDouble, Bath, Maximize2, Heart, ArrowRight, Star, ChevronRight, X, BarChart3, Home, Users, DollarSign, Menu as MenuIcon, Sparkles, TrendingUp, Eye } from "lucide-react";
+import { Building2, Search, MapPin, BedDouble, Bath, Maximize2, Heart, ArrowRight, ChevronRight, X, BarChart3, Home, Users, DollarSign, Menu as MenuIcon, Sparkles, TrendingUp, Eye } from "lucide-react";
 
 const LISTINGS = [
   { id: 1, title: "Sky Penthouse", location: "Manhattan, NY", price: "4,200,000", beds: 4, baths: 3, sqft: "3,800", type: "Penthouse", img: "#0d1b2a", tag: "Featured" },

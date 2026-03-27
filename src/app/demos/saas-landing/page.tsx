@@ -5,13 +5,9 @@ import styles from "./saas-landing.module.css";
 import { motion } from "framer-motion";
 import { 
   Check, 
-  ArrowRight, 
   Zap, 
   Layers, 
   Shield, 
-  Globe, 
-  Rocket, 
-  Users,
   Star
 } from "lucide-react";
 import Link from "next/link";

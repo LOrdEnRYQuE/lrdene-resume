@@ -8,13 +8,8 @@ import {
   Building2, 
   Home, 
   ShieldCheck, 
-  Wallet, 
-  ArrowRight, 
-  PhoneCall, 
-  LineChart, 
   BadgeCheck,
   Check,
-  Users,
   Target,
   Compass
 } from "lucide-react";
@@ -117,7 +112,7 @@ export default function BrokerMVP() {
         <div className={styles.container}>
           <h2 className={styles.sectionTitle}>Expertise Across Markets</h2>
           <div className={styles.grid}>
-            {SERVICES.map((s, idx) => (
+            {SERVICES.map((s) => (
               <motion.div 
                 key={s.title}
                 className={styles.card}

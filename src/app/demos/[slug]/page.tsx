@@ -6,16 +6,15 @@ import { api } from "../../../../convex/_generated/api";
 import styles from "./DemoDetail.module.css";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { 
   ArrowLeft, 
   ExternalLink, 
   CheckCircle2, 
   Code2, 
-  Layers, 
   Zap, 
   Sparkles,
   Loader2,
-  Mail,
   Send
 } from "lucide-react";
 
@@ -105,7 +104,12 @@ export default function DemoDetailPage() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
         >
-          <img src={demo.imageUrl || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426"} alt={demo.name} />
+          <Image
+            src={demo.imageUrl || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426"}
+            alt={demo.name}
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
           <div className={styles.glare}></div>
         </motion.div>
       </div>

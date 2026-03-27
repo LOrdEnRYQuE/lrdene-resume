@@ -9,11 +9,8 @@ import {
   BookOpen, 
   Sparkles, 
   Send,
-  ArrowLeft,
-  Settings,
   Bell,
   Search,
-  ChevronRight
 } from "lucide-react";
 import Link from "next/link";
 

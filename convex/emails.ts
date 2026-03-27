@@ -1,6 +1,5 @@
-import { action, internalMutation, mutation } from "./_generated/server";
+import { action } from "./_generated/server";
 import { v } from "convex/values";
-import { internal } from "./_generated/api";
 
 export const sendEmail = action({
   args: {
@@ -43,7 +42,7 @@ export const sendEmail = action({
 
 export const sendAutoReply = action({
   args: { leadId: v.id("leads") },
-  handler: async (ctx, args) => {
+  handler: async () => {
     // This would be triggered by a mutation check
     // Logic for auto-reply content
   },

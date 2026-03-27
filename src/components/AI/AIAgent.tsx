@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useAction, useMutation } from "convex/react";
+import { useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, Send, X, MessageSquare, Zap } from "lucide-react";
+import { Bot, Send, X, MessageSquare } from "lucide-react";
 import styles from "./ai-agent.module.css";
 
 interface Message {
@@ -44,7 +44,7 @@ export default function AIAgent() {
       });
       
       setMessages(prev => [...prev, { role: "agent", content: response }]);
-    } catch (error) {
+    } catch {
       setMessages(prev => [...prev, { role: "agent", content: "I'm sorry, I had an error. Please try again." }]);
     } finally {
       setIsLoading(false);

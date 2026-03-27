@@ -15,6 +15,7 @@ import {
   Code2
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const MOCK_PRODUCTS = [
   {
@@ -86,7 +87,12 @@ export default function StorePage() {
             transition={{ delay: idx * 0.1 }}
           >
             <div className={styles.preview}>
-              <img src={product.imageUrl || "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=2070"} alt={product.name} />
+              <Image
+                src={product.imageUrl || "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=2070"}
+                alt={product.name}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
               <div className={styles.priceBadge}>${product.price}</div>
             </div>
             

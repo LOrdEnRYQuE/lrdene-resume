@@ -1,21 +1,6 @@
 import { action, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
-// Identity & System Prompt for the AI Assistant
-const SYSTEM_PROMPT = `
-You are the "Studio Assistant" for LOrdEnRYQuE's portfolio.
-Your goal is to help visitors, explain what we do, and take their contact info if they want to work together.
-
-Identity:
-- Helpful, friendly, and professional.
-- You know about: Web Development, AI Tools, and Design.
-
-Rules:
-- If someone wants to work together, ask for their Name, Email, and what they need help with.
-- Once you have the info, tell them you've saved it and the team will reach out.
-- Keep it simple. Don't use fancy or complicated words.
-`;
-
 export const chat = action({
   args: {
     message: v.string(),
@@ -26,17 +11,6 @@ export const chat = action({
     const apiKey = process.env.OPENAI_API_KEY;
     const niche = args.niche || "general";
 
-    // Persona mapping
-    const personas: Record<string, string> = {
-      "car-dealer": "You are a Car Sales Assistant. You help users find the right car, explain features, and book test drives. Use simple words.",
-      "broker": "You are a Real Estate Broker Assistant. You help users find properties, explain the buying process, and schedule viewings. Use simple words.",
-      "salon": "You are a Salon Assistant. You help users see services, check prices, and book hair or beauty appointments. Use simple words.",
-      "detailing": "You are a Car Detailing Specialist. You explain cleaning packages, protection coatings, and book service times. Use simple words.",
-      "general": "You are a helpful Studio Assistant for LOrdEnRYQuE's portfolio. You explain our web and AI services. Use simple words."
-    };
-
-    const systemPrompt = personas[niche] || personas.general;
-    
     if (!apiKey) {
       const nicheNames: Record<string, string> = {
         "car-dealer": "Car Dealer Assistant",

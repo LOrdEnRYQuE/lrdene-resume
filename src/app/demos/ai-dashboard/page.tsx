@@ -9,11 +9,8 @@ import {
   Database, 
   ShieldCheck, 
   Zap, 
-  TrendingUp, 
   Settings, 
-  Activity,
   AlertCircle,
-  Clock,
   ExternalLink
 } from "lucide-react";
 import Link from "next/link";

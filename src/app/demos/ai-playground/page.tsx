@@ -1,15 +1,13 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { 
   Car, 
   Home, 
   Scissors, 
   Sparkles, 
   Send, 
-  User, 
-  Bot,
   ArrowRight
 } from "lucide-react";
 import { useAction, useMutation } from "convex/react";
@@ -113,7 +111,7 @@ export default function AIPlayground() {
         });
         setMessages(prev => [...prev, { role: "agent", content: "Great! I've saved your info for the team to reach out." }]);
       }
-    } catch (error) {
+    } catch {
       setMessages(prev => [...prev, { role: "agent", content: "I'm sorry, I had an error. Please try again." }]);
     } finally {
       setIsLoading(false);

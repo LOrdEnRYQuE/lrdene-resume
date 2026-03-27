@@ -11,8 +11,7 @@ import {
   Wind, 
   Recycle, 
   Globe,
-  ArrowRight,
-  Star
+  ArrowRight
 } from "lucide-react";
 
 const PRODUCTS = [

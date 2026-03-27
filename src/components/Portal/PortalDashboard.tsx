@@ -18,8 +18,7 @@ import {
   File,
   ShieldCheck,
   ThumbsUp,
-  ThumbsDown,
-  ChevronRight
+  ThumbsDown
 } from "lucide-react";
 
 interface PortalDashboardProps {
@@ -126,7 +125,7 @@ export const PortalDashboard = ({ code }: PortalDashboardProps) => {
           return;
         }
         setPortal(result.portal);
-      } catch (error) {
+      } catch {
         if (!cancelled) {
           setValidationError("Unable to validate portal access right now.");
           setPortal(null);

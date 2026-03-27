@@ -4,18 +4,6 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { 
-  Box, 
-  Layers, 
-  Map, 
-  Maximize, 
-  Minimize, 
-  Activity, 
-  Sun, 
-  Wind,
-  ArrowUpRight,
-  Compass
-} from 'lucide-react';
 import styles from './architecture.module.css';
 
 const SERVICES = [

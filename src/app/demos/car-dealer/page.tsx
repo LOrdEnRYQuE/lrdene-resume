@@ -6,10 +6,6 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { 
   Car, 
-  Search, 
-  MapPin, 
-  Phone, 
-  ArrowRight, 
   Gauge, 
   Fuel, 
   Calendar,

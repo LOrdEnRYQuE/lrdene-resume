@@ -7,12 +7,8 @@ import Image from "next/image";
 import { 
   BarChart4, 
   ShieldCheck, 
-  Zap, 
-  Car, 
-  BadgeDollarSign, 
   Clock,
   ArrowRight,
-  Calculator
 } from "lucide-react";
 
 export default function CarSellingMVP() {

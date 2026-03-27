@@ -6,15 +6,11 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { 
   Bot, 
-  Cpu, 
   MessageSquare, 
   Zap, 
   ShieldCheck, 
   BarChart3, 
   Search, 
-  Sparkles,
-  ArrowRight,
-  Globe,
   Terminal
 } from 'lucide-react';
 import styles from './ai-agents.module.css';
