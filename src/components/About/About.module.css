@@ -459,7 +459,7 @@
   letter-spacing: 0.05em;
 }
 
-.timeLineContent h4 {
+.timeLineContent h3 {
   font-size: 1.5rem;
   font-weight: 800;
   margin-bottom: 1rem;
@@ -701,7 +701,7 @@
   border-radius: var(--radius-md);
 }
 
-.trianglePillarCard h4 {
+.trianglePillarCard h3 {
   font-size: 0.9rem;
   font-weight: 800;
   margin-bottom: 0.45rem;
@@ -737,7 +737,7 @@
   margin-bottom: 1.4rem;
 }
 
-.triangleFlowBlock h4 {
+.triangleFlowBlock h3 {
   font-size: 0.95rem;
   margin-bottom: 0.7rem;
   color: #f3f3f3;
@@ -787,7 +787,7 @@
   padding: 1rem;
 }
 
-.triangleSupportCard h4 {
+.triangleSupportCard h3 {
   font-size: 0.9rem;
   font-weight: 800;
   margin-bottom: 0.65rem;
@@ -797,7 +797,7 @@
   margin-bottom: 1.4rem;
 }
 
-.proofStrip h4 {
+.proofStrip h3 {
   font-size: 0.95rem;
   margin-bottom: 0.7rem;
   color: #f3f3f3;
@@ -859,7 +859,7 @@
   margin-bottom: 0.85rem;
 }
 
-.skillCard h5 {
+.skillCard h4 {
   font-weight: 700;
   font-size: 0.9rem;
   margin-bottom: 0.4rem;
@@ -944,7 +944,7 @@
   box-shadow: 0 0 24px rgba(229, 228, 226, 0.15);
 }
 
-.valueCard h4 {
+.valueCard h3 {
   font-weight: 800;
   font-size: 1rem;
   margin-bottom: 0.75rem;

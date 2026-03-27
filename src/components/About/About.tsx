@@ -981,7 +981,7 @@ export const About = () => {
                   alt="Attila Lazar"
                   fill
                   className={styles.portraitImage}
-                  priority
+                  loading="lazy"
                 />
                 {/* Overlay shimmer */}
                 <div className={styles.portraitOverlay} />
@@ -1039,7 +1039,7 @@ export const About = () => {
 
             <div className={styles.ctaRow}>
               <a
-                href="/assets/Attila_Lazar_CV_EN.pdf"
+                href="/assets/Attila_Lazar_Resume_Portfolio.pdf"
                 className={styles.resumeBtn}
                 target="_blank"
                 rel="noopener noreferrer"

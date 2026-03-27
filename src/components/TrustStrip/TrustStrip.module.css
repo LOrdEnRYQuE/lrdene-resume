@@ -81,7 +81,7 @@
   }
 
   .container {
-    animation-duration: 22s;
+    animation: none;
   }
 
   .item {

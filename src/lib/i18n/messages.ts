@@ -13,6 +13,8 @@ type LocaleMessages = {
     rightsReserved: string;
     privacyPolicy: string;
     termsOfService: string;
+    imprint: string;
+    cookiePolicy: string;
     labels: Record<string, string>;
   };
   localeSwitcherLabel: string;
@@ -40,6 +42,8 @@ export const messages: Record<Locale, LocaleMessages> = {
       rightsReserved: "All rights reserved.",
       privacyPolicy: "Privacy Policy",
       termsOfService: "Terms of Service",
+      imprint: "Imprint",
+      cookiePolicy: "Cookie Policy",
       labels: {
         Projects: "Projects",
         Journal: "Journal",
@@ -73,6 +77,8 @@ export const messages: Record<Locale, LocaleMessages> = {
       rightsReserved: "Alle Rechte vorbehalten.",
       privacyPolicy: "Datenschutz",
       termsOfService: "Nutzungsbedingungen",
+      imprint: "Impressum",
+      cookiePolicy: "Cookie-Richtlinie",
       labels: {
         Projects: "Projekte",
         Journal: "Journal",

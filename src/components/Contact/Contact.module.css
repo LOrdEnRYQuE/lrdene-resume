@@ -76,6 +76,7 @@
   box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
   width: 100%;
   min-width: 0;
+  color: #f4f4f4;
 }
 
 .formGrid {
@@ -97,7 +98,7 @@
   justify-content: space-between;
   align-items: center;
   font-size: 0.8rem;
-  color: var(--text-secondary);
+  color: #d4d7dd;
   font-weight: 600;
 }
 
@@ -150,7 +151,7 @@
 .stepLabel {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: #d4d7dd;
 }
 
 .stepActive {
@@ -198,7 +199,7 @@
 .label {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: #d4d7dd;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -222,7 +223,7 @@
 
 .hint {
   font-size: 0.82rem;
-  color: var(--text-secondary);
+  color: #cfd3da;
 }
 
 .optionGrid {
@@ -646,10 +647,10 @@
 
 .optional {
   font-size: 0.75rem;
-  color: var(--text-secondary);
+  color: #d1d5dc;
   font-weight: 400;
   margin-left: 0.5rem;
-  opacity: 0.6;
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

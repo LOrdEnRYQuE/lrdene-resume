@@ -54,9 +54,9 @@ export const Footer = ({ cmsContent, siteSettings }: FooterProps) => {
         {
           title: "Services",
           links: [
-            { label: "Web Dev", href: "/services/web-development" },
-            { label: "AI Tools", href: "/services/ai-integration" },
-            { label: "Design", href: "/services/ui-ux-design" }
+            { label: "Web Dev", href: "/services?focus=web-development" },
+            { label: "AI Tools", href: "/services?focus=ai-integration" },
+            { label: "Design", href: "/services?focus=ui-ux-design" }
           ]
         }
       ]
@@ -65,6 +65,29 @@ export const Footer = ({ cmsContent, siteSettings }: FooterProps) => {
     }),
     [localeCmsData, localeMessages.brandText],
   );
+
+  const normalizeServiceHref = (href: string, label: string) => {
+    const normalizedHref = href.trim().toLowerCase();
+    const normalizedLabel = label.trim().toLowerCase();
+    const serviceByLabel: Record<string, string> = {
+      "web dev": "/services?focus=web-development",
+      "ai tools": "/services?focus=ai-integration",
+      design: "/services?focus=ui-ux-design",
+    };
+    if (serviceByLabel[normalizedLabel]) {
+      return serviceByLabel[normalizedLabel];
+    }
+    const serviceByHref: Record<string, string> = {
+      "/services/web-dev": "/services/web-development",
+      "/services/web-design": "/services/web-development",
+      "/services/ai-tools": "/services/ai-integration",
+      "/services/ai-tooling": "/services/ai-integration",
+      "/services/design": "/services/ui-ux-design",
+      "/services/ui-design": "/services/ui-ux-design",
+      "/services/ux-design": "/services/ui-ux-design",
+    };
+    return serviceByHref[normalizedHref] ?? href;
+  };
 
   if (normalizedPathname.startsWith("/admin")) return null;
 
@@ -101,15 +124,15 @@ export const Footer = ({ cmsContent, siteSettings }: FooterProps) => {
           <div className={styles.linksGrid}>
             {footerData.pillars.map((pillar: any, idx: number) => (
               <div key={idx} className={styles.column}>
-                <h4>
+                <h3>
                   {pillar.title === "Navigation"
                     ? localeMessages.sectionNavigation
                     : pillar.title === "Services"
                       ? localeMessages.sectionServices
                       : pillar.title}
-                </h4>
+                </h3>
                 {pillar.links.map((link: any, lIdx: number) => (
-                  <LocaleLink key={lIdx} href={link.href}>
+                  <LocaleLink key={lIdx} href={normalizeServiceHref(link.href, link.label)}>
                     {localeMessages.labels[link.label] || link.label}
                   </LocaleLink>
                 ))}
@@ -117,7 +140,7 @@ export const Footer = ({ cmsContent, siteSettings }: FooterProps) => {
             ))}
 
             <div className={styles.column}>
-              <h4>{localeMessages.sectionSocial}</h4>
+              <h3>{localeMessages.sectionSocial}</h3>
               {socialLinks.linkedin && (
                 <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
                   LinkedIn <ArrowUpRight size={14} />
@@ -152,6 +175,10 @@ export const Footer = ({ cmsContent, siteSettings }: FooterProps) => {
             <LocaleLink href="/privacy">{localeMessages.privacyPolicy}</LocaleLink>
             <div className={styles.divider} />
             <LocaleLink href="/terms">{localeMessages.termsOfService}</LocaleLink>
+            <div className={styles.divider} />
+            <LocaleLink href="/imprint">{localeMessages.imprint}</LocaleLink>
+            <div className={styles.divider} />
+            <LocaleLink href="/cookies">{localeMessages.cookiePolicy}</LocaleLink>
           </div>
         </div>
       </div>

@@ -161,12 +161,12 @@ export const Hero = ({ locale, content }: HeroProps) => {
           <div className={styles.portraitBorderFrame}>
             <div className={styles.portrait}>
               <Image
-                src="/assets/Profile.jpg"
+                src="/assets/Profile.webp"
                 alt="Attila Lazar - LOrdEnRYQuE"
                 fill
                 className={styles.profileImage}
-                fetchPriority="low"
-                quality={68}
+                priority
+                quality={70}
                 sizes="(max-width: 768px) 88vw, (max-width: 1200px) 44vw, 480px"
               />
               {/* Bottom vignette for depth */}
