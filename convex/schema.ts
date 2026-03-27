@@ -38,6 +38,26 @@ export default defineSchema({
       content: v.string(), // JSON string for flexibility
     }))),
   }).index("by_slug", ["slug"]).index("by_category", ["category"]),
+  autoPostQueue: defineTable({
+    day: v.number(),
+    title: v.string(),
+    slug: v.string(),
+    category: v.string(),
+    excerpt: v.string(),
+    content: v.string(),
+    coverImage: v.string(),
+    readTime: v.string(),
+    tags: v.array(v.string()),
+    publishAt: v.number(),
+    status: v.union(v.literal("queued"), v.literal("published"), v.literal("skipped"), v.literal("failed")),
+    source: v.string(),
+    publishedAt: v.optional(v.number()),
+    publishedPostId: v.optional(v.id("posts")),
+    error: v.optional(v.string()),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_status_and_publishAt", ["status", "publishAt"])
+    .index("by_source_and_publishAt", ["source", "publishAt"]),
   projects: defineTable({
     title: v.string(),
     slug: v.string(),
