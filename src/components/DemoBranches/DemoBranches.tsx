@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./DemoBranches.module.css";
 import {
   Utensils, 
@@ -100,6 +99,7 @@ export const DemoBranches = ({ locale }: DemoBranchesProps) => {
           subtitle:
             "Teste diese spezialisierten Business-Systeme. Jede Demo ist ein funktionales MVP für reale Branchenprobleme.",
           openDemo: "Demo Öffnen",
+          allDemos: "Alle Demos ansehen",
         }
       : {
           titlePrefix: "Interactive",
@@ -107,6 +107,7 @@ export const DemoBranches = ({ locale }: DemoBranchesProps) => {
           subtitle:
             "Test-drive these specialized business systems. Each one is a functional MVP built to solve real industry challenges.",
           openDemo: "Open Demo",
+          allDemos: "View all demos",
         };
 
   return (
@@ -122,11 +123,10 @@ export const DemoBranches = ({ locale }: DemoBranchesProps) => {
         </div>
 
         <div className={styles.grid}>
-          {demos.map((demo, index) => (
+          {demos.map((demo) => (
             <div 
               key={demo.title}
               className={styles.card}
-              style={{ animationDelay: `${index * 80}ms` }}
             >
               <div className={styles.iconWrapper}>
                 {demo.icon}
@@ -146,6 +146,11 @@ export const DemoBranches = ({ locale }: DemoBranchesProps) => {
               </div>
             </div>
           ))}
+        </div>
+        <div className={styles.moreWrap}>
+          <Link href={`${localePrefix}/demos`} className={styles.moreBtn}>
+            {copy.allDemos}
+          </Link>
         </div>
       </div>
     </section>
