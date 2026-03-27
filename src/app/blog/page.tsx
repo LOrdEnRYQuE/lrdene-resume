@@ -13,8 +13,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const canonical = toLocaleCanonical("/blog", locale);
 
   return {
-    title: "Journal | LOrdEnRYQuE",
-    description: "Insights on product architecture, design evolution, and business-focused AI by Attila Lazar.",
+    title: "AI, Web & Growth Insights Blog",
+    description: "Actionable insights on AI systems, Next.js architecture, SEO/GEO strategy, and product growth execution.",
     keywords: [
       "AI insights blog",
       "Next.js architecture articles",
@@ -27,15 +27,15 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/blog"),
     },
     openGraph: {
-      title: "Journal | LOrdEnRYQuE",
-      description: "Insights on product architecture, design evolution, and business-focused AI by Attila Lazar.",
+      title: "AI, Web & Growth Insights Blog | LOrdEnRYQuE",
+      description: "Actionable insights on AI systems, Next.js architecture, SEO/GEO strategy, and product growth execution.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: "Journal | LOrdEnRYQuE",
-      description: "Insights on product architecture, design evolution, and business-focused AI by Attila Lazar.",
+      title: "AI, Web & Growth Insights Blog | LOrdEnRYQuE",
+      description: "Actionable insights on AI systems, Next.js architecture, SEO/GEO strategy, and product growth execution.",
     },
   };
 }

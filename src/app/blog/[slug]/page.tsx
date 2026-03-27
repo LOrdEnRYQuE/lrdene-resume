@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const canonical = toLocaleCanonical(basePath, locale);
 
   return {
-    title: `${post.title} | LOrdEnRYQuE`,
+    title: `${post.title} | AI & Product Insights`,
     description: post.excerpt,
     keywords: [post.category, ...(post.tags ?? []), `${post.title} article`, "AI and software insights"],
     alternates: {
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       languages: getLanguageAlternates(basePath),
     },
     openGraph: {
-      title: post.title,
+      title: `${post.title} | AI & Product Insights`,
       description: post.excerpt,
       type: "article",
       url: `https://lordenryque.com${canonical}`,
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title,
+      title: `${post.title} | AI & Product Insights`,
       description: post.excerpt,
       images: [post.coverImage],
       creator: post.author,

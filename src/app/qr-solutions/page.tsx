@@ -10,9 +10,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const canonical = toLocaleCanonical("/qr-solutions", locale);
 
   return {
-    title: "QR Code Solutions for Business",
+    title: "QR & NFC Solutions for Business Growth",
     description:
-      "Dynamic QR and NFC solutions for lead capture, virtual business cards, campaigns, and measurable conversion growth.",
+      "Deploy dynamic QR and NFC systems for lead capture, digital business cards, campaign tracking, and measurable conversions.",
     keywords: [
       "QR code business solutions",
       "digital business card",
@@ -25,17 +25,17 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/qr-solutions"),
     },
     openGraph: {
-      title: "QR Code Solutions for Business | LOrdEnRYQuE",
+      title: "QR & NFC Solutions for Business Growth | LOrdEnRYQuE",
       description:
-        "Dynamic QR and NFC solutions for lead capture, virtual business cards, campaigns, and measurable conversion growth.",
+        "Deploy dynamic QR and NFC systems for lead capture, digital business cards, campaign tracking, and measurable conversions.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: "QR Code Solutions for Business | LOrdEnRYQuE",
+      title: "QR & NFC Solutions for Business Growth | LOrdEnRYQuE",
       description:
-        "Dynamic QR and NFC solutions for lead capture, virtual business cards, campaigns, and measurable conversion growth.",
+        "Deploy dynamic QR and NFC systems for lead capture, digital business cards, campaign tracking, and measurable conversions.",
     },
   };
 }

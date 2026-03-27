@@ -13,8 +13,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const canonical = toLocaleCanonical("/about", locale);
 
   return {
-    title: "About",
-    description: "Learn about Attila Lazar, the engineer and designer behind LOrdEnRYQuE.",
+    title: "About Attila Lazar",
+    description: "Meet the engineer behind LOrdEnRYQuE: AI systems, full-stack architecture, and premium digital product delivery.",
     keywords: [
       "Attila Lazar",
       "AI engineer profile",
@@ -27,15 +27,15 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/about"),
     },
     openGraph: {
-      title: "About | LOrdEnRYQuE",
-      description: "Learn about Attila Lazar, the engineer and designer behind LOrdEnRYQuE.",
+      title: "About Attila Lazar | LOrdEnRYQuE",
+      description: "Meet the engineer behind LOrdEnRYQuE: AI systems, full-stack architecture, and premium digital product delivery.",
       url: `https://lordenryque.com${canonical}`,
       type: "profile",
     },
     twitter: {
       card: "summary_large_image",
-      title: "About | LOrdEnRYQuE",
-      description: "Learn about Attila Lazar, the engineer and designer behind LOrdEnRYQuE.",
+      title: "About Attila Lazar | LOrdEnRYQuE",
+      description: "Meet the engineer behind LOrdEnRYQuE: AI systems, full-stack architecture, and premium digital product delivery.",
     },
   };
 }

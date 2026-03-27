@@ -14,9 +14,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const canonical = toLocaleCanonical("/insights", locale);
 
   return {
-    title: "Insights | Topic Clusters",
+    title: "SEO, AI & Web Growth Playbooks",
     description:
-      "Template-driven topic clusters for web development, AI automation, analytics, SEO, and growth operations.",
+      "Topic-cluster playbooks for SEO, AI automation, web development, and measurable growth operations.",
     keywords: [
       "topic clusters",
       "programmatic SEO content",
@@ -29,17 +29,17 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/insights"),
     },
     openGraph: {
-      title: "Insights | LOrdEnRYQuE",
+      title: "SEO, AI & Web Growth Playbooks | LOrdEnRYQuE",
       description:
-        "Template-driven topic clusters for web development, AI automation, analytics, SEO, and growth operations.",
+        "Topic-cluster playbooks for SEO, AI automation, web development, and measurable growth operations.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: "Insights | LOrdEnRYQuE",
+      title: "SEO, AI & Web Growth Playbooks | LOrdEnRYQuE",
       description:
-        "Template-driven topic clusters for web development, AI automation, analytics, SEO, and growth operations.",
+        "Topic-cluster playbooks for SEO, AI automation, web development, and measurable growth operations.",
     },
   };
 }

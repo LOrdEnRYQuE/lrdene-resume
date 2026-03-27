@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const canonical = toLocaleCanonical(basePath, locale);
 
   return {
-    title: `${data.title} Insights | LOrdEnRYQuE`,
+    title: `${data.title} Playbooks | SEO & AI`,
     description: data.description,
     keywords: [
       data.title,
@@ -52,14 +52,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       languages: getLanguageAlternates(basePath),
     },
     openGraph: {
-      title: `${data.title} Insights | LOrdEnRYQuE`,
+      title: `${data.title} Playbooks | SEO & AI`,
       description: data.description,
       type: "website",
       url: `https://lordenryque.com${canonical}`,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${data.title} Insights | LOrdEnRYQuE`,
+      title: `${data.title} Playbooks | SEO & AI`,
       description: data.description,
     },
   };

@@ -44,9 +44,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale: Locale = isLocale(localeHeader) ? localeHeader : "en";
 
   return {
-    title: "LOrdEnRYQuE | Advanced Digital Solution",
+    title: "AI Engineer & Next.js Architect in Germany",
     description:
-      "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",
+      "Build high-performance websites, AI workflows, and scalable digital products with measurable business outcomes.",
     keywords: [
       "AI engineer Germany",
       "Next.js developer Germany",
@@ -60,17 +60,17 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/"),
     },
     openGraph: {
-      title: "LOrdEnRYQuE | Advanced Digital Solution",
+      title: "AI Engineer & Next.js Architect in Germany | LOrdEnRYQuE",
       description:
-        "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",
+        "Build high-performance websites, AI workflows, and scalable digital products with measurable business outcomes.",
       url: `https://lordenryque.com/${locale}`,
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: "LOrdEnRYQuE | Advanced Digital Solution",
+      title: "AI Engineer & Next.js Architect in Germany | LOrdEnRYQuE",
       description:
-        "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",
+        "Build high-performance websites, AI workflows, and scalable digital products with measurable business outcomes.",
     },
   };
 }

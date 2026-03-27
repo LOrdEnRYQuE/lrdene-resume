@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const canonical = toLocaleCanonical(basePath, locale);
 
   return {
-    title: `${data.topic.title} | ${data.cluster.title}`,
+    title: `${data.topic.title} Guide | ${data.cluster.title}`,
     description: data.topic.summary,
     keywords: [
       ...data.topic.intentKeywords,
@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       languages: getLanguageAlternates(basePath),
     },
     openGraph: {
-      title: `${data.topic.title} | ${data.cluster.title}`,
+      title: `${data.topic.title} Guide | ${data.cluster.title}`,
       description: data.topic.summary,
       type: "article",
       url: `https://lordenryque.com${canonical}`,
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: "summary_large_image",
-      title: `${data.topic.title} | ${data.cluster.title}`,
+      title: `${data.topic.title} Guide | ${data.cluster.title}`,
       description: data.topic.summary,
     },
   };

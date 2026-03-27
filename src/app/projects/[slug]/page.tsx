@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const canonical = toLocaleCanonical(basePath, locale);
 
   return {
-    title: `${project.title} | Case Study`,
+    title: `${project.title} Case Study | Stack & Results`,
     description: project.summary,
     keywords: [project.category, ...project.stack, "case study", `${project.title} project`, "software delivery"],
     alternates: {
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       languages: getLanguageAlternates(basePath),
     },
     openGraph: {
-      title: `${project.title} | Case Study`,
+      title: `${project.title} Case Study | Stack & Results`,
       description: project.summary,
       type: "article",
       url: `https://lordenryque.com${canonical}`,
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     },
     twitter: {
       card: "summary_large_image",
-      title: `${project.title} | Case Study`,
+      title: `${project.title} Case Study | Stack & Results`,
       description: project.summary,
       images: [project.coverImage],
     },

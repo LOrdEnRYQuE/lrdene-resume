@@ -11,8 +11,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const canonical = toLocaleCanonical("/projects", locale);
 
   return {
-    title: "Project Archive",
-    description: "A comprehensive collection of digital products, AI solutions, and design case studies by LOrdEnRYQuE.",
+    title: "AI & Web Case Studies",
+    description: "Real project outcomes across AI products, high-performance web platforms, and conversion-focused digital delivery.",
     keywords: [
       "software case studies",
       "AI project portfolio",
@@ -25,15 +25,15 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/projects"),
     },
     openGraph: {
-      title: "Project Archive | LOrdEnRYQuE",
-      description: "A comprehensive collection of digital products, AI solutions, and design case studies by LOrdEnRYQuE.",
+      title: "AI & Web Case Studies | LOrdEnRYQuE",
+      description: "Real project outcomes across AI products, high-performance web platforms, and conversion-focused digital delivery.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: "Project Archive | LOrdEnRYQuE",
-      description: "A comprehensive collection of digital products, AI solutions, and design case studies by LOrdEnRYQuE.",
+      title: "AI & Web Case Studies | LOrdEnRYQuE",
+      description: "Real project outcomes across AI products, high-performance web platforms, and conversion-focused digital delivery.",
     },
   };
 }

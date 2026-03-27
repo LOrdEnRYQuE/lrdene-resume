@@ -14,8 +14,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const canonical = toLocaleCanonical("/contact", locale);
 
   return {
-    title: "Contact",
-    description: `Get in touch with ${BUSINESS_PROFILE.name} for ${BUSINESS_PROFILE.description}. Remote-first delivery from Germany (${BUSINESS_PROFILE.timezone}).`,
+    title: "Start Your Project",
+    description: `Talk with ${BUSINESS_PROFILE.name} about AI systems, web architecture, and growth-focused digital solutions. Remote-first from Germany (${BUSINESS_PROFILE.timezone}).`,
     keywords: [
       "contact AI engineer",
       "hire Next.js developer",
@@ -28,15 +28,15 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/contact"),
     },
     openGraph: {
-      title: "Contact | LOrdEnRYQuE",
-      description: `Get in touch with ${BUSINESS_PROFILE.name} for ${BUSINESS_PROFILE.description}. Remote-first delivery from Germany (${BUSINESS_PROFILE.timezone}).`,
+      title: "Start Your Project | LOrdEnRYQuE",
+      description: `Talk with ${BUSINESS_PROFILE.name} about AI systems, web architecture, and growth-focused digital solutions. Remote-first from Germany (${BUSINESS_PROFILE.timezone}).`,
       url: `https://lordenryque.com${canonical}`,
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: "Contact | LOrdEnRYQuE",
-      description: `Get in touch with ${BUSINESS_PROFILE.name} for ${BUSINESS_PROFILE.description}. Remote-first delivery from Germany (${BUSINESS_PROFILE.timezone}).`,
+      title: "Start Your Project | LOrdEnRYQuE",
+      description: `Talk with ${BUSINESS_PROFILE.name} about AI systems, web architecture, and growth-focused digital solutions. Remote-first from Germany (${BUSINESS_PROFILE.timezone}).`,
     },
   };
 }

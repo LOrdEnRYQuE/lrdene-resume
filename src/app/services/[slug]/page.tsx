@@ -58,8 +58,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const title = locationResolution
-    ? `${service.title} in ${locationResolution.location.city}`
-    : `${service.title} Services`;
+    ? `${service.title} in ${locationResolution.location.city} | Strategy & Delivery`
+    : `${service.title} Services | Strategy & Delivery`;
   const description = locationResolution
     ? `${service.description} Delivery for ${locationResolution.location.city}, ${locationResolution.location.country}.`
     : service.description;

@@ -17,9 +17,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const canonical = toLocaleCanonical("/services", locale);
 
   return {
-    title: "Services",
+    title: "AI & Next.js Development Services",
     description:
-      "Premium AI engineering, full-stack architecture, and high-performance digital product services.",
+      "AI engineering, web architecture, and product delivery services designed to increase conversion, speed, and growth.",
     keywords: [
       "AI development services",
       "Next.js development service",
@@ -32,17 +32,17 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/services"),
     },
     openGraph: {
-      title: "Services | LOrdEnRYQuE",
+      title: "AI & Next.js Development Services | LOrdEnRYQuE",
       description:
-        "Premium AI engineering, full-stack architecture, and high-performance digital product services.",
+        "AI engineering, web architecture, and product delivery services designed to increase conversion, speed, and growth.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: "Services | LOrdEnRYQuE",
+      title: "AI & Next.js Development Services | LOrdEnRYQuE",
       description:
-        "Premium AI engineering, full-stack architecture, and high-performance digital product services.",
+        "AI engineering, web architecture, and product delivery services designed to increase conversion, speed, and growth.",
     },
   };
 }

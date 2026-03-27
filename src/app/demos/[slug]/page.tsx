@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     demo.imageUrl || "https://lordenryque.com/assets/LOGO.png";
 
   return {
-    title: `${demo.name} Demo`,
+    title: `${demo.name} Demo | Live UX & Stack`,
     description: demo.description,
     keywords: [demo.category, ...demo.techStack, "interactive demo", "portfolio showcase"],
     alternates: {
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       languages: getLanguageAlternates(basePath),
     },
     openGraph: {
-      title: `${demo.name} Demo | LOrdEnRYQuE`,
+      title: `${demo.name} Demo | Live UX & Stack`,
       description: demo.description,
       url: `https://lordenryque.com${canonical}`,
       type: "website",
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: "summary_large_image",
-      title: `${demo.name} Demo | LOrdEnRYQuE`,
+      title: `${demo.name} Demo | Live UX & Stack`,
       description: demo.description,
       images: [shareImage],
     },
