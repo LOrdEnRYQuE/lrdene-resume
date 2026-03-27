@@ -406,6 +406,13 @@ function initGa4() {
 
   if (!window.gtag) {
     window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: "gtm.init_consent",
+      analytics_storage: "denied",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+    });
     window.gtag = function gtag(...args: unknown[]) {
       window.dataLayer?.push(args);
     };
