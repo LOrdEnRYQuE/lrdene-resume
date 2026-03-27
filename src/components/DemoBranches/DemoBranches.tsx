@@ -1,10 +1,10 @@
 import styles from "./DemoBranches.module.css";
 import {
-  Utensils, 
-  Scissors, 
-  Home, 
-  Scale, 
-  Wrench, 
+  Utensils,
+  Scissors,
+  Home,
+  Scale,
+  Wrench,
   ShoppingBag,
   ArrowUpRight,
   Activity,
@@ -12,172 +12,71 @@ import {
   PieChart,
   Navigation,
   Rocket,
-  QrCode
+  QrCode,
 } from "lucide-react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/config";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../convex/_generated/api";
 
-const demos = [
+type DemoRecord = {
+  _id: string;
+  name: string;
+  slug: string;
+  description: string;
+  category: string;
+  techStack?: string[];
+};
+
+const fallbackDemos = [
   {
-    title: "Restaurant MVP",
+    name: "Restaurant MVP",
     description: "Modern booking + menu + admin flow for hospitality.",
-    icon: <Utensils size={24} />,
     slug: "restaurant",
-    stack: ["Next.js", "Convex", "Booking UX"],
+    techStack: ["Next.js", "Convex", "Booking UX"],
+    category: "Hospitality",
   },
   {
-    title: "Salon & Barber",
+    name: "Salon & Barber",
     description: "Appointment scheduling and service showcase.",
-    icon: <Scissors size={24} />,
     slug: "salon",
-    stack: ["Scheduler", "CRM-ready", "Mobile-first"],
+    techStack: ["Scheduler", "CRM-ready", "Mobile-first"],
+    category: "Beauty & Wellness",
   },
   {
-    title: "Real Estate",
+    name: "Real Estate",
     description: "Premium property listings and agent dashboards.",
-    icon: <Home size={24} />,
     slug: "real-estate",
-    stack: ["Search", "Map UX", "Lead Forms"],
+    techStack: ["Search", "Map UX", "Lead Forms"],
+    category: "Real Estate",
   },
   {
-    title: "Lawyer & Consultant",
+    name: "Lawyer & Consultant",
     description: "Secure case management and client portals.",
-    icon: <Scale size={24} />,
     slug: "lawyer",
-    stack: ["Client Portal", "Docs", "Audit Trail"],
+    techStack: ["Client Portal", "Docs", "Audit Trail"],
+    category: "Legal & Consulting",
   },
   {
-    title: "Home Services",
+    name: "Home Services",
     description: "Job tracking and invoice management for contractors.",
-    icon: <Wrench size={24} />,
     slug: "home-services",
-    stack: ["Field Ops", "Invoicing", "Scheduling"],
+    techStack: ["Field Ops", "Invoicing", "Scheduling"],
+    category: "Home Services",
   },
   {
-    title: "E-commerce",
+    name: "E-commerce",
     description: "High-conversion product stores and inventory tools.",
-    icon: <ShoppingBag size={24} />,
     slug: "ecommerce",
-    stack: ["Checkout", "Catalog", "Analytics"],
+    techStack: ["Checkout", "Catalog", "Analytics"],
+    category: "E-commerce",
   },
   {
-    title: "uTraLink QR SaaS",
+    name: "uTraLink QR SaaS",
     description: "Digital business cards, BioLinks, and dynamic QR workflows.",
-    icon: <QrCode size={24} />,
     slug: "utralink",
-    stack: ["Laravel", "PHP", "QR Platform"],
-  },
-  {
-    title: "AI Dashboard",
-    description: "SaaS Analytics & Monitoring.",
-    icon: <PieChart size={24} />,
-    slug: "ai-dashboard",
-    stack: ["Realtime", "Monitoring", "Convex"],
-  },
-  {
-    title: "Course Platform",
-    description: "Learning Management System.",
-    icon: <BookOpen size={24} />,
-    slug: "course-platform",
-    stack: ["LMS", "Progress", "Auth"],
-  },
-  {
-    title: "Healthcare Portal",
-    description: "Secure Patient Records.",
-    icon: <Activity size={24} />,
-    slug: "healthcare",
-    stack: ["Secure Access", "Records", "Telehealth"],
-  },
-  {
-    title: "Logistics System",
-    description: "Fleet & Supply Tracking.",
-    icon: <Navigation size={24} />,
-    slug: "logistics",
-    stack: ["Tracking", "Route Ops", "Dispatch"],
-  },
-  {
-    title: "SaaS Landing",
-    description: "Product Launch Boilerplate.",
-    icon: <Rocket size={24} />,
-    slug: "saas-landing",
-    stack: ["CRO", "SEO", "Launch Pages"],
-  },
-  {
-    title: "AI Agents",
-    description: "Autonomous assistants for support and workflow ops.",
-    icon: <Rocket size={24} />,
-    slug: "ai-agents",
-    stack: ["LLM Agents", "Convex", "Knowledge Base"],
-  },
-  {
-    title: "AI Marketplace",
-    description: "Deploy and evaluate specialized AI agents.",
-    icon: <PieChart size={24} />,
-    slug: "ai-marketplace",
-    stack: ["Marketplace", "DevTools", "Integrations"],
-  },
-  {
-    title: "AI SEO / GEO",
-    description: "Track visibility across AI engines and search.",
-    icon: <PieChart size={24} />,
-    slug: "ai-seo",
-    stack: ["SEO", "GEO", "Content Intelligence"],
-  },
-  {
-    title: "Architecture Studio",
-    description: "Generative design and spatial visualization.",
-    icon: <Home size={24} />,
-    slug: "architecture",
-    stack: ["3D Preview", "Design Systems", "AI"],
-  },
-  {
-    title: "Finance Broker",
-    description: "Consultation funnel with market and lead ops.",
-    icon: <Scale size={24} />,
-    slug: "broker",
-    stack: ["Lead Routing", "Advisory", "Compliance UX"],
-  },
-  {
-    title: "Construction Suite",
-    description: "Project showcase and qualification flow.",
-    icon: <Wrench size={24} />,
-    slug: "construction",
-    stack: ["Project Pipeline", "Service Area", "Blueprint UX"],
-  },
-  {
-    title: "Auto Dealer",
-    description: "Vehicle showcase and test-drive conversion flow.",
-    icon: <Navigation size={24} />,
-    slug: "car-dealer",
-    stack: ["Inventory", "Booking", "Finance Calculator"],
-  },
-  {
-    title: "Auto Detailing",
-    description: "Package-based booking and upsell structure.",
-    icon: <Navigation size={24} />,
-    slug: "car-detailing",
-    stack: ["Service Packages", "Scheduler", "Upsell Blocks"],
-  },
-  {
-    title: "Auto Selling",
-    description: "AI valuation and instant offer funnel.",
-    icon: <Navigation size={24} />,
-    slug: "car-selling",
-    stack: ["AI Valuation", "FinTech", "Lead Qualification"],
-  },
-  {
-    title: "Mental Wellness",
-    description: "Companion-style wellness journaling experience.",
-    icon: <Activity size={24} />,
-    slug: "mental-health",
-    stack: ["Sentiment Flow", "AI Companion", "Habit UX"],
-  },
-  {
-    title: "Green Commerce",
-    description: "Eco-focused marketplace with impact signals.",
-    icon: <ShoppingBag size={24} />,
-    slug: "green-eco",
-    stack: ["Sustainability", "Marketplace", "Score Cards"],
+    techStack: ["Laravel", "PHP", "QR Platform"],
+    category: "SaaS",
   },
 ];
 
@@ -185,8 +84,27 @@ type DemoBranchesProps = {
   locale: Locale;
 };
 
-export const DemoBranches = ({ locale }: DemoBranchesProps) => {
+function getDemoIcon(slug: string, category: string) {
+  const key = `${slug} ${category}`.toLowerCase();
+  if (slug === "utralink" || key.includes("qr")) return <QrCode size={24} />;
+  if (key.includes("restaurant") || key.includes("hospitality")) return <Utensils size={24} />;
+  if (key.includes("salon") || key.includes("wellness")) return <Scissors size={24} />;
+  if (key.includes("real estate") || key.includes("architecture")) return <Home size={24} />;
+  if (key.includes("law") || key.includes("legal") || key.includes("broker") || key.includes("finance")) return <Scale size={24} />;
+  if (key.includes("construction") || key.includes("home services")) return <Wrench size={24} />;
+  if (key.includes("e-commerce") || key.includes("commerce") || key.includes("marketplace")) return <ShoppingBag size={24} />;
+  if (key.includes("health")) return <Activity size={24} />;
+  if (key.includes("course") || key.includes("edutech")) return <BookOpen size={24} />;
+  if (key.includes("logistics") || key.includes("automotive")) return <Navigation size={24} />;
+  if (key.includes("ai")) return <PieChart size={24} />;
+  if (key.includes("saas")) return <Rocket size={24} />;
+  return <Rocket size={24} />;
+}
+
+export const DemoBranches = async ({ locale }: DemoBranchesProps) => {
   const localePrefix = locale === "de" ? "/de" : "/en";
+  const dbDemos = (await fetchQuery(api.demos.list)) as DemoRecord[] | null;
+  const demos = dbDemos && dbDemos.length > 0 ? dbDemos : fallbackDemos;
   const copy =
     locale === "de"
       ? {
@@ -220,17 +138,14 @@ export const DemoBranches = ({ locale }: DemoBranchesProps) => {
 
         <div className={styles.grid}>
           {demos.map((demo) => (
-            <div 
-              key={demo.title}
-              className={styles.card}
-            >
+            <div key={demo.slug} className={styles.card}>
               <div className={styles.iconWrapper}>
-                {demo.icon}
+                {getDemoIcon(demo.slug, demo.category)}
               </div>
-              <h3 className={styles.cardTitle}>{demo.title}</h3>
+              <h3 className={styles.cardTitle}>{demo.name}</h3>
               <p className={styles.cardDescription}>{demo.description}</p>
               <div className={styles.stackRow}>
-                {demo.stack.map((item) => (
+                {(demo.techStack ?? []).slice(0, 3).map((item) => (
                   <span key={`${demo.slug}-${item}`} className={styles.stackPill}>
                     {item}
                   </span>
@@ -242,7 +157,7 @@ export const DemoBranches = ({ locale }: DemoBranchesProps) => {
                   href={`${localePrefix}/demos/${demo.slug}`}
                   className={styles.demoBtn}
                   data-track-event="open_demo"
-                  data-track-label={`Demo opened: ${demo.title}`}
+                  data-track-label={`Demo opened: ${demo.name}`}
                 >
                   {copy.openDemo} <ArrowUpRight size={14} style={{ marginLeft: "4px" }} />
                 </Link>
