@@ -13,7 +13,8 @@ const FIRST_TOUCH_KEY = "lrdene_first_touch";
 const LAST_TOUCH_KEY = "lrdene_last_touch";
 const LANDING_PAGE_KEY = "lrdene_landing_page";
 const GA_BOOTSTRAP_ID = "lrdene-ga4-loader";
-const GA_ID_ENV = process.env.NEXT_PUBLIC_GA_ID || "";
+const DEFAULT_GA_ID = "G-R3P3P44GWT";
+const GA_ID_ENV = process.env.NEXT_PUBLIC_GA_ID || DEFAULT_GA_ID;
 
 type GtagFn = (...args: unknown[]) => void;
 

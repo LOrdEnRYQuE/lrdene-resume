@@ -13,6 +13,8 @@ import { getPageContentCached, getSiteSettingsCached } from "@/lib/server/cached
 import { BUSINESS_PROFILE } from "@/lib/businessProfile";
 import { SERVICE_LOCATIONS } from "@/utils/serviceLocations";
 
+const DEFAULT_GA_ID = "G-R3P3P44GWT";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://lordenryque.com"),
   title: {
@@ -88,7 +90,7 @@ export default async function RootLayout({
         };
       }
     | null;
-  const gaId = settings?.gaId?.trim() || process.env.NEXT_PUBLIC_GA_ID || "";
+  const gaId = settings?.gaId?.trim() || process.env.NEXT_PUBLIC_GA_ID || DEFAULT_GA_ID;
   const sameAsLinks = Array.from(
     new Set(
       [
