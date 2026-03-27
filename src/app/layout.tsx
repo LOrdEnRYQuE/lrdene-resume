@@ -6,6 +6,7 @@ import ConvexClientProvider from "@/components/ConvexClientProvider";
 import DesignTokensRuntime from "@/components/DesignTokensRuntime";
 import LocaleDocumentSync from "@/components/I18n/LocaleDocumentSync";
 import DeferredEnhancements from "@/components/Runtime/DeferredEnhancements";
+import AnalyticsTracker from "@/components/Analytics/AnalyticsTracker";
 import CookieConsent from "@/components/Cookies/CookieConsent";
 import { getPageContentCached, getSiteSettingsCached } from "@/lib/server/cachedQueries";
 import { BUSINESS_PROFILE } from "@/lib/businessProfile";
@@ -196,6 +197,7 @@ export default async function RootLayout({
       <body>
         <ConvexClientProvider>
           <LocaleDocumentSync />
+          <AnalyticsTracker />
           {gaId ? (
             <script
               dangerouslySetInnerHTML={{

@@ -3,9 +3,6 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
-const AnalyticsTracker = dynamic(() => import("@/components/Analytics/AnalyticsTracker"), {
-  ssr: false,
-});
 const ScrollLampEffect = dynamic(() => import("@/components/Effects/ScrollLampEffect"), {
   ssr: false,
 });
@@ -42,7 +39,6 @@ export default function DeferredEnhancements() {
 
   return (
     <>
-      <AnalyticsTracker />
       <ScrollLampEffect />
       {ENABLE_AI_AGENT ? <AIAgent /> : null}
     </>

@@ -67,6 +67,7 @@ export const useAnalytics = () => {
   });
 
   useEffect(() => {
+    initGa4();
     const onConsentChanged = () => {
       const enabled = hasAnalyticsConsent();
       setAnalyticsEnabled(enabled);
