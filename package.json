@@ -15,7 +15,7 @@
     "preflight:prod": "bash scripts/preflight-prod.sh",
     "deploy:convex": "npx convex deploy",
     "pages:build": "npx @cloudflare/next-on-pages",
-    "pages:deploy": "npx wrangler pages deploy .vercel/output --project-name=portfolio-lrdene"
+    "pages:deploy": "npx wrangler pages deploy .vercel/output/static --project-name=lrdene-resume --branch=main --commit-dirty=true"
   },
   "dependencies": {
     "convex": "^1.34.0",
