@@ -9,6 +9,8 @@ import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { motion, useScroll, useTransform } from "framer-motion";
 
+const PRIVACY_CONSENT_VERSION = "qr_solutions_form_v1";
+
 export default function QRSolutionsPage() {
   const locale = useLocale();
   const de = locale === "de";
@@ -168,6 +170,11 @@ export default function QRSolutionsPage() {
         leadSending: "Sending...",
         leadSuccess: "Your request was sent successfully. I will get back to you shortly.",
         leadError: "Could not send right now. Please try again in a moment.",
+        leadPrivacyConsentPrefix:
+          "Ich stimme zu, dass meine Angaben zur Bearbeitung dieser Anfrage verarbeitet werden. Ich habe die",
+        leadPrivacyConsentLink: "Datenschutzerklarung",
+        leadPrivacyConsentSuffix: "gelesen.",
+        leadPrivacyConsentError: "Bitte stimme der Verarbeitung gemaß Datenschutzerklarung zu.",
         checklistTitle: "Getting Started Checklist",
         checklistIntro: "Follow these quick steps to launch your first business-ready QR flow.",
         checklistSteps: [
@@ -412,6 +419,11 @@ export default function QRSolutionsPage() {
         leadSending: "Sending...",
         leadSuccess: "Your request was sent successfully. I will get back to you shortly.",
         leadError: "Could not send right now. Please try again in a moment.",
+        leadPrivacyConsentPrefix:
+          "I agree that my details are processed to handle this request. I have read the",
+        leadPrivacyConsentLink: "Privacy Policy",
+        leadPrivacyConsentSuffix: ".",
+        leadPrivacyConsentError: "Please agree to data processing according to the Privacy Policy.",
         checklistTitle: "Getting Started Checklist",
         checklistIntro: "Follow these quick steps to launch your first business-ready QR flow.",
         checklistSteps: [
@@ -510,6 +522,7 @@ export default function QRSolutionsPage() {
     company: "",
     useCase: "Virtual Business Card",
     message: "",
+    privacyConsent: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -544,6 +557,10 @@ export default function QRSolutionsPage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) return;
+    if (!formData.privacyConsent) {
+      setSubmitError(copy.leadPrivacyConsentError);
+      return;
+    }
     setSubmitError("");
     setIsSubmitting(true);
     const nicheMap: Record<string, string> = {
@@ -563,6 +580,9 @@ export default function QRSolutionsPage() {
         timeline: "Discovery pending",
         message: `[Use case] ${formData.useCase}\n\n${formData.message.trim()}`,
         niche: nicheMap[formData.useCase] || "qr-solutions",
+        privacyConsent: formData.privacyConsent,
+        privacyConsentAt: Date.now(),
+        privacyConsentVersion: PRIVACY_CONSENT_VERSION,
       });
       setSubmitted(true);
       setFormData({
@@ -571,6 +591,7 @@ export default function QRSolutionsPage() {
         company: "",
         useCase: "Virtual Business Card",
         message: "",
+        privacyConsent: false,
       });
     } catch (error) {
       console.error("Failed to submit QR lead", error);
@@ -882,6 +903,22 @@ export default function QRSolutionsPage() {
                     onChange={(event) => setFormData((prev) => ({ ...prev, message: event.target.value }))}
                     placeholder="Share goals, channels, timeline, and expected outcomes."
                   />
+                </label>
+                <label className={styles.consentField}>
+                  <input
+                    type="checkbox"
+                    checked={formData.privacyConsent}
+                    onChange={(event) => setFormData((prev) => ({ ...prev, privacyConsent: event.target.checked }))}
+                    required
+                  />
+                  <span>
+                    {copy.leadPrivacyConsentPrefix}{" "}
+                    <LocaleLink href="/privacy" className={styles.privacyLink}>
+                      {copy.leadPrivacyConsentLink}
+                    </LocaleLink>
+                    {" "}
+                    {copy.leadPrivacyConsentSuffix}
+                  </span>
                 </label>
                 {submitError ? <p className={styles.leadError}>{submitError}</p> : null}
                 <button type="submit" className="magnetic-button" disabled={isSubmitting}>

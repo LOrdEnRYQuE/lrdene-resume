@@ -40,6 +40,9 @@ export const createLeadFromChat = mutation({
     projectType: v.string(),
     message: v.string(),
     niche: v.optional(v.string()),
+    privacyConsent: v.optional(v.boolean()),
+    privacyConsentAt: v.optional(v.number()),
+    privacyConsentVersion: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const leadId = await ctx.db.insert("leads", {
@@ -49,6 +52,9 @@ export const createLeadFromChat = mutation({
       budget: "TBD from Chat",
       message: args.message,
       niche: args.niche,
+      privacyConsent: args.privacyConsent,
+      privacyConsentAt: args.privacyConsentAt,
+      privacyConsentVersion: args.privacyConsentVersion,
       status: "New",
       notes: [],
       createdAt: Date.now(),

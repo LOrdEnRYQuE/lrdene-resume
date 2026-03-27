@@ -272,6 +272,34 @@
   border-color: var(--accent-gold);
 }
 
+.privacyConsentRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.privacyConsentRow input[type="checkbox"] {
+  margin-top: 0.15rem;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-gold);
+}
+
+.privacyLink {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.submitError {
+  color: #ff8f8f;
+  font-size: 0.86rem;
+  margin-top: -0.2rem;
+}
+
 .submitBtn {
   background: #fff;
   color: #000;

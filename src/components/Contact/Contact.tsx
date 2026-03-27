@@ -8,6 +8,7 @@ import { api } from "../../../convex/_generated/api";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { useLocale } from "@/lib/i18n/useLocale";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/taxonomy";
+import LocaleLink from "@/components/I18n/LocaleLink";
 
 type ContactContent = {
   title: string;
@@ -45,6 +46,7 @@ const QR_PROJECT_TYPE_DE = "QR/NFC Lösung";
 const MIN_NAME_LENGTH = 2;
 const MIN_MESSAGE_LENGTH = 20;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PRIVACY_CONSENT_VERSION = "contact_form_v1";
 
 export const Contact = () => {
   const DEFAULT_CONTACT_TITLE = "Let's Build Your Next Digital Product.";
@@ -112,7 +114,10 @@ export const Contact = () => {
           sendAnother: "Weitere Anfrage Senden",
           optional: "Optional",
           sending: "Wird gesendet...",
-          note: "Deine Daten sind sicher und werden in der Convex Echtzeit-DB gespeichert.",
+          note: "Deine Daten werden nur zur Bearbeitung deiner Anfrage gemaß Datenschutzerklarung verarbeitet.",
+          privacyConsentPrefix: "Ich stimme zu, dass meine Angaben zur Bearbeitung meiner Anfrage verarbeitet werden. Ich habe die",
+          privacyConsentLink: "Datenschutzerklarung",
+          privacyConsentSuffix: "gelesen.",
           stepLabels: ["Basis", "Projekt", "Scope", "Details"],
           next: "Weiter",
           back: "Zuruck",
@@ -174,6 +179,7 @@ export const Contact = () => {
           validationMessageLength: "Bitte gib mehr Details an (mindestens 20 Zeichen).",
           validationBudget: "Bitte eigenes Budget eingeben oder eine Budget-Stufe wahlen.",
           validationGoals: "Bitte mindestens ein Projektziel auswahlen.",
+          validationPrivacyConsent: "Bitte stimme der Verarbeitung gemaß Datenschutzerklarung zu.",
         }
       : {
           title: "Let's Build Something Trustworthy.",
@@ -188,7 +194,10 @@ export const Contact = () => {
           sendAnother: "Send Another",
           optional: "Optional",
           sending: "Sending...",
-          note: "Your data is secure and handled by Convex real-time DB.",
+          note: "Your data is used only to handle your inquiry, as described in our Privacy Policy.",
+          privacyConsentPrefix: "I agree that my details are processed to handle my inquiry. I have read the",
+          privacyConsentLink: "Privacy Policy",
+          privacyConsentSuffix: ".",
           stepLabels: ["Basics", "Project", "Scope", "Details"],
           next: "Next",
           back: "Back",
@@ -250,6 +259,7 @@ export const Contact = () => {
           validationMessageLength: "Please share more detail (at least 20 characters).",
           validationBudget: "Please enter a custom budget or choose one range.",
           validationGoals: "Please select at least one project goal.",
+          validationPrivacyConsent: "Please agree to data processing according to the Privacy Policy.",
         };
 
   const platformOptions = useMemo(
@@ -353,6 +363,7 @@ export const Contact = () => {
     budgetCustom: "",
     timeline: pickOption(timelines, 1, defaultTimelines[1]),
     message: "",
+    privacyConsent: false,
   });
 
   const [formData, setFormData] = useState(buildInitialFormData);
@@ -516,6 +527,10 @@ export const Contact = () => {
         setStepError(copy.validationMessageLength);
         return false;
       }
+      if (!formData.privacyConsent) {
+        setStepError(copy.validationPrivacyConsent);
+        return false;
+      }
     }
 
     setStepError("");
@@ -583,6 +598,9 @@ export const Contact = () => {
         timeline: formData.timeline,
         message: enrichedMessage,
         niche: isQrProject ? formData.qrUseCase || "qr-solutions" : undefined,
+        privacyConsent: formData.privacyConsent,
+        privacyConsentAt: Date.now(),
+        privacyConsentVersion: PRIVACY_CONSENT_VERSION,
       });
 
       trackConversion("contact_submit", 1);
@@ -1043,6 +1061,25 @@ export const Contact = () => {
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     />
+                  </div>
+
+                  <div className={`${styles.field} ${styles.fullWidth}`}>
+                    <label className={styles.consentRow}>
+                      <input
+                        type="checkbox"
+                        checked={formData.privacyConsent}
+                        onChange={(e) => setFormData({ ...formData, privacyConsent: e.target.checked })}
+                        required
+                        className={styles.consentCheckbox}
+                      />
+                      <span className={styles.consentText}>
+                        {copy.privacyConsentPrefix}{" "}
+                        <LocaleLink href="/privacy" className={styles.consentLink}>
+                          {copy.privacyConsentLink}
+                        </LocaleLink>{" "}
+                        {copy.privacyConsentSuffix}
+                      </span>
+                    </label>
                   </div>
 
                   <div className={`${styles.reviewCard} ${styles.fullWidth}`}>

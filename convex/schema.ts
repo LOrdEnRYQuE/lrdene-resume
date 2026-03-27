@@ -19,6 +19,9 @@ export default defineSchema({
     aiPriority: v.optional(v.string()), // "High", "Medium", "Low"
     niche: v.optional(v.string()), // e.g. "car-dealer", "salon"
     createdAt: v.optional(v.number()),
+    privacyConsent: v.optional(v.boolean()),
+    privacyConsentAt: v.optional(v.number()),
+    privacyConsentVersion: v.optional(v.string()),
   }).index("by_status", ["status"]),
   posts: defineTable({
     title: v.string(),

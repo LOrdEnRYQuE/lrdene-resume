@@ -820,6 +820,33 @@
   margin-top: 0.7rem;
 }
 
+.consentField {
+  margin-top: 0.65rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.62rem;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.consentField input[type="checkbox"] {
+  margin-top: 0.15rem;
+  width: 18px;
+  height: 18px;
+  accent-color: #e5e4e2;
+}
+
+.privacyLink {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.privacyLink:hover {
+  color: var(--accent-platinum);
+}
+
 .leadError {
   margin-top: 0.6rem;
   color: #ff8f8f;

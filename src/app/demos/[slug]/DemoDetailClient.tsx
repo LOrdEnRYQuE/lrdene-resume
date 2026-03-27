@@ -7,6 +7,7 @@ import styles from "./DemoDetail.module.css";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import LocaleLink from "@/components/I18n/LocaleLink";
 import {
   ArrowLeft,
   ExternalLink,
@@ -21,6 +22,7 @@ import {
 type Props = {
   slug: string;
 };
+const PRIVACY_CONSENT_VERSION = "demo_request_form_v1";
 
 export default function DemoDetailClient({ slug }: Props) {
   const router = useRouter();
@@ -29,10 +31,12 @@ export default function DemoDetailClient({ slug }: Props) {
 
   const [requesting, setRequesting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [leadForm, setLeadForm] = useState({
     name: "",
     email: "",
     message: "",
+    privacyConsent: false,
   });
 
   if (demo === undefined) {
@@ -54,20 +58,29 @@ export default function DemoDetailClient({ slug }: Props) {
 
   const handleRequest = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!leadForm.privacyConsent) {
+      setSubmitError("Please agree to the Privacy Policy before sending your request.");
+      return;
+    }
     setRequesting(true);
+    setSubmitError("");
     try {
       await createLead({
-        name: leadForm.name,
-        email: leadForm.email,
-        message: `[REQUEST FROM ${demo.name} SHOWCASE]: ${leadForm.message}`,
+        name: leadForm.name.trim(),
+        email: leadForm.email.trim().toLowerCase(),
+        message: `[REQUEST FROM ${demo.name} SHOWCASE]: ${leadForm.message.trim()}`,
         projectType: demo.category,
         budget: "To be discussed",
         company: "Demo Requester",
         timeline: "ASAP",
+        privacyConsent: leadForm.privacyConsent,
+        privacyConsentAt: Date.now(),
+        privacyConsentVersion: PRIVACY_CONSENT_VERSION,
       });
       setSubmitted(true);
     } catch (err) {
       console.error(err);
+      setSubmitError("Could not send right now. Please try again in a moment.");
     } finally {
       setRequesting(false);
     }
@@ -175,6 +188,22 @@ export default function DemoDetailClient({ slug }: Props) {
                   value={leadForm.message}
                   onChange={(e) => setLeadForm({ ...leadForm, message: e.target.value })}
                 />
+                <label className={styles.privacyConsentRow}>
+                  <input
+                    type="checkbox"
+                    checked={leadForm.privacyConsent}
+                    onChange={(e) => setLeadForm({ ...leadForm, privacyConsent: e.target.checked })}
+                    required
+                  />
+                  <span>
+                    I agree that my details are processed for this request. I have read the{" "}
+                    <LocaleLink href="/privacy" className={styles.privacyLink}>
+                      Privacy Policy
+                    </LocaleLink>
+                    .
+                  </span>
+                </label>
+                {submitError ? <p className={styles.submitError}>{submitError}</p> : null}
                 <button type="submit" disabled={requesting} className={styles.submitBtn}>
                   {requesting ? <Loader2 className={styles.spinner} /> : <><Send size={18} /> Send Request</>}
                 </button>

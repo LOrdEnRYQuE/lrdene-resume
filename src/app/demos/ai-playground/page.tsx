@@ -14,6 +14,9 @@ import { useAction, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import styles from "./playground.module.css";
 import { Navbar } from "@/components/Navbar/Navbar";
+import LocaleLink from "@/components/I18n/LocaleLink";
+
+const PRIVACY_CONSENT_VERSION = "ai_playground_v1";
 
 const NICHES = [
   {
@@ -58,6 +61,7 @@ export default function AIPlayground() {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [leadConsent, setLeadConsent] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatAction = useAction(api.ai.chat);
   const createLead = useMutation(api.ai.createLeadFromChat);
@@ -101,15 +105,23 @@ export default function AIPlayground() {
 
       // Check for lead info
       const email = extractContactInfo(userMessage);
-      if (email) {
+      if (email && leadConsent) {
         await createLead({
           name: "Playground User", // We could ask for this too
           email,
           projectType: `AI Niche - ${selectedNiche.name}`,
           message: userMessage,
-          niche: selectedNiche.id
+          niche: selectedNiche.id,
+          privacyConsent: true,
+          privacyConsentAt: Date.now(),
+          privacyConsentVersion: PRIVACY_CONSENT_VERSION,
         });
         setMessages(prev => [...prev, { role: "agent", content: "Great! I've saved your info for the team to reach out." }]);
+      } else if (email && !leadConsent) {
+        setMessages(prev => [
+          ...prev,
+          { role: "agent", content: "I detected an email, but I will not store it until you enable the privacy consent option below." },
+        ]);
       }
     } catch {
       setMessages(prev => [...prev, { role: "agent", content: "I'm sorry, I had an error. Please try again." }]);
@@ -204,6 +216,16 @@ export default function AIPlayground() {
             <Send size={20} />
           </button>
         </div>
+        <label className={styles.consentRow}>
+          <input type="checkbox" checked={leadConsent} onChange={(e) => setLeadConsent(e.target.checked)} />
+          <span>
+            Allow saving my email from chat when detected. I have read the{" "}
+            <LocaleLink href="/privacy" className={styles.privacyLink}>
+              Privacy Policy
+            </LocaleLink>
+            .
+          </span>
+        </label>
       </section>
     </main>
   );

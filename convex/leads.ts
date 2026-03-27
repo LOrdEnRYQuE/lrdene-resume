@@ -13,6 +13,9 @@ export const create = mutation({
     company: v.optional(v.string()),
     timeline: v.optional(v.string()),
     niche: v.optional(v.string()),
+    privacyConsent: v.optional(v.boolean()),
+    privacyConsentAt: v.optional(v.number()),
+    privacyConsentVersion: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const leadId = await ctx.db.insert("leads", {
