@@ -6,27 +6,23 @@ import ConvexClientProvider from "@/components/ConvexClientProvider";
 import DesignTokensRuntime from "@/components/DesignTokensRuntime";
 import LocaleDocumentSync from "@/components/I18n/LocaleDocumentSync";
 import DeferredEnhancements from "@/components/Runtime/DeferredEnhancements";
-import { getLanguageAlternates } from "@/lib/seo/alternates";
+import CookieConsent from "@/components/Cookies/CookieConsent";
 import { getPageContentCached, getSiteSettingsCached } from "@/lib/server/cachedQueries";
+import { BUSINESS_PROFILE } from "@/lib/businessProfile";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://lrdene.com"),
+  metadataBase: new URL("https://lordenryque.com"),
   title: {
     template: "%s | LOrdEnRYQuE",
     default: "LOrdEnRYQuE | Generative AI & Architecture",
   },
   description: "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",
   keywords: ["AI Engineer", "Software Architect", "Next.js Developer", "React", "TypeScript", "Startups"],
-  authors: [{ name: "Attila Lazar", url: "https://lrdene.com" }],
+  authors: [{ name: "Attila Lazar", url: "https://lordenryque.com" }],
   creator: "Attila Lazar",
-  alternates: {
-    canonical: "/en",
-    languages: getLanguageAlternates("/"),
-  },
   openGraph: {
     title: "LOrdEnRYQuE | Generative AI & Architecture",
     description: "Premium Portfolio & Insights. Engineering AI products and highly scalable systems.",
-    url: "https://lrdene.com",
     siteName: "LOrdEnRYQuE Portfolio",
     locale: "en_US",
     type: "website",
@@ -55,9 +51,12 @@ const globalStructuredData = {
   "@graph": [
     {
       "@type": "Organization",
-      name: "LOrdEnRYQuE",
-      url: "https://lrdene.com",
-      logo: "https://lrdene.com/assets/LOGO.png",
+      name: BUSINESS_PROFILE.name,
+      url: "https://lordenryque.com",
+      logo: "https://lordenryque.com/assets/LOGO.png",
+      description: BUSINESS_PROFILE.description,
+      slogan: BUSINESS_PROFILE.brandLine,
+      knowsAbout: BUSINESS_PROFILE.services,
       sameAs: [
         "https://github.com/LOrdEnRYQuE",
         "https://www.linkedin.com/in/LOrdEnRQuE",
@@ -67,17 +66,43 @@ const globalStructuredData = {
     },
     {
       "@type": "WebSite",
-      name: "LOrdEnRYQuE",
-      url: "https://lrdene.com",
+      name: BUSINESS_PROFILE.name,
+      url: "https://lordenryque.com",
       inLanguage: "en",
     },
     {
       "@type": "LocalBusiness",
-      name: "LOrdEnRYQuE | Advanced Digital Solution",
-      url: "https://lrdene.com",
-      image: "https://lrdene.com/assets/LOGO.png",
+      name: `${BUSINESS_PROFILE.name} | ${BUSINESS_PROFILE.brandLine}`,
+      url: "https://lordenryque.com",
+      image: "https://lordenryque.com/assets/LOGO.png",
+      description: BUSINESS_PROFILE.description,
       telephone: "+49 1722620671",
       email: "lordenryque.dev@gmail.com",
+      areaServed: [
+        { "@type": "Country", name: "Germany" },
+        { "@type": "Place", name: "Remote (online)" },
+      ],
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: BUSINESS_PROFILE.hours.days,
+          opens: BUSINESS_PROFILE.hours.opens,
+          closes: BUSINESS_PROFILE.hours.closes,
+        },
+      ],
+      serviceType: BUSINESS_PROFILE.services,
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Core Services",
+        itemListElement: BUSINESS_PROFILE.services.map((service, index) => ({
+          "@type": "Offer",
+          position: index + 1,
+          itemOffered: {
+            "@type": "Service",
+            name: service,
+          },
+        })),
+      },
       address: {
         "@type": "PostalAddress",
         streetAddress: "Nahensteig 188E",
@@ -91,6 +116,17 @@ const globalStructuredData = {
         "https://www.facebook.com/LOrdEnRYQuEit",
         "https://www.tiktok.com/@LOrdEnRYQuE",
       ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: BUSINESS_PROFILE.faq.map((entry) => ({
+        "@type": "Question",
+        name: entry.q,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: entry.a,
+        },
+      })),
     },
   ],
 };
@@ -127,6 +163,7 @@ export default async function RootLayout({
             dangerouslySetInnerHTML={{ __html: JSON.stringify(globalStructuredData) }}
           />
           <DesignTokensRuntime />
+          <CookieConsent />
           <DeferredEnhancements />
           <Navbar cmsContent={navbarCms} />
           {children}

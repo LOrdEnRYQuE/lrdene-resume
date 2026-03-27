@@ -18,6 +18,13 @@ function withSecurityHeaders(response: NextResponse) {
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
+  response.headers.set("Cross-Origin-Resource-Policy", "same-site");
+  response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+  response.headers.set(
+    "Content-Security-Policy",
+    "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; img-src 'self' data: blob: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; connect-src 'self' https: wss:; font-src 'self' data: https:; form-action 'self'; upgrade-insecure-requests",
+  );
   return response;
 }
 
@@ -46,6 +53,14 @@ function continueWithOptionalLocaleRewrite(
 }
 
 export async function middleware(request: NextRequest) {
+  const hostHeader = request.headers.get("host")?.toLowerCase();
+  if (hostHeader === "www.lordenryque.com") {
+    const canonicalUrl = request.nextUrl.clone();
+    canonicalUrl.protocol = "https:";
+    canonicalUrl.host = "lordenryque.com";
+    return withSecurityHeaders(NextResponse.redirect(canonicalUrl, 301));
+  }
+
   const pathname = request.nextUrl.pathname;
   const localeInPath = getLocalePrefixFromPathname(pathname);
   const normalizedPathname = localeInPath ? stripLocalePrefix(pathname) : pathname;

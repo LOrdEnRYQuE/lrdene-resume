@@ -12,6 +12,7 @@ export const ANALYTICS_EVENTS = {
   SUBMIT_CONTACT_FORM: "submit_contact_form",
   ATTRIBUTION: "attribution",
   CONVERSION: "conversion",
+  WEB_VITAL: "web_vital",
 } as const;
 
 export type AnalyticsEventType = (typeof ANALYTICS_EVENTS)[keyof typeof ANALYTICS_EVENTS];

@@ -18,6 +18,7 @@ function sortCounter(counter: Record<string, number>) {
 }
 
 export const AnalyticsDashboard = () => {
+  const [consentRangeDays, setConsentRangeDays] = React.useState<number | null>(30);
   const stats = useAdminQuery(api.analytics.getOverview) as
     | {
         totalViews: number;
@@ -74,6 +75,29 @@ export const AnalyticsDashboard = () => {
     projectViews: 0,
     demoOpens: 0,
   };
+  const consent = {
+    total: 0,
+    analyticsAccepted: 0,
+    analyticsRejected: 0,
+    marketingAccepted: 0,
+    marketingRejected: 0,
+    analyticsOptInRate: 0,
+    marketingOptInRate: 0,
+    bySource: {},
+    byLocale: {},
+    byDevice: {},
+    recent: [] as Array<{
+      _id: string;
+      timestamp: number;
+      source: string;
+      locale: string;
+      analytics: boolean;
+      marketing: boolean;
+      device?: string;
+    }>,
+  };
+  const consentRangeLabel =
+    consentRangeDays === null ? "All time" : `Last ${consentRangeDays} days`;
 
   return (
     <div className={ui.shell}>
@@ -220,6 +244,114 @@ export const AnalyticsDashboard = () => {
             <div className={ui.listRow}><span className={ui.listRowLabel}>Contact Step Views</span><span className={ui.pill}>{funnel.formStepViews}</span></div>
             <div className={ui.listRow}><span className={ui.listRowLabel}>Contact Submissions</span><span className={ui.pill}>{funnel.formSubmissions}</span></div>
           </div>
+        </div>
+      </div>
+
+      <div className={ui.grid2}>
+        <div className={ui.card}>
+          <div className={ui.sectionHeader}>
+            <h3 className={ui.title}><Users size={18} className="gold-text" /> Consent Signals</h3>
+            <div className={ui.chipGroup}>
+              <button
+                type="button"
+                onClick={() => setConsentRangeDays(7)}
+                className={`${ui.chipButton} ${consentRangeDays === 7 ? ui.chipButtonActive : ""}`}
+              >
+                7d
+              </button>
+              <button
+                type="button"
+                onClick={() => setConsentRangeDays(30)}
+                className={`${ui.chipButton} ${consentRangeDays === 30 ? ui.chipButtonActive : ""}`}
+              >
+                30d
+              </button>
+              <button
+                type="button"
+                onClick={() => setConsentRangeDays(90)}
+                className={`${ui.chipButton} ${consentRangeDays === 90 ? ui.chipButtonActive : ""}`}
+              >
+                90d
+              </button>
+              <button
+                type="button"
+                onClick={() => setConsentRangeDays(null)}
+                className={`${ui.chipButton} ${consentRangeDays === null ? ui.chipButtonActive : ""}`}
+              >
+                All
+              </button>
+            </div>
+          </div>
+          <p className={ui.subtitle}>
+            {consentRangeLabel} · Consent stats are temporarily unavailable in this build.
+          </p>
+          <div className={ui.list}>
+            <div className={ui.listRow}>
+              <span className={ui.listRowLabel}>Total Consent Events</span>
+              <span className={ui.pill}>{consent.total}</span>
+            </div>
+            <div className={ui.listRow}>
+              <span className={ui.listRowLabel}>Analytics Accepted</span>
+              <span className={ui.pill}>{consent.analyticsAccepted}</span>
+            </div>
+            <div className={ui.listRow}>
+              <span className={ui.listRowLabel}>Analytics Rejected</span>
+              <span className={ui.pill}>{consent.analyticsRejected}</span>
+            </div>
+            <div className={ui.listRow}>
+              <span className={ui.listRowLabel}>Marketing Accepted</span>
+              <span className={ui.pill}>{consent.marketingAccepted}</span>
+            </div>
+            <div className={ui.listRow}>
+              <span className={ui.listRowLabel}>Marketing Rejected</span>
+              <span className={ui.pill}>{consent.marketingRejected}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className={ui.card}>
+          <h3 className={ui.title}><BarChart3 size={18} className="gold-text" /> Consent Segments</h3>
+          <div className={ui.list}>
+            {sortCounter(consent.bySource).slice(0, 4).map(([source, count]) => (
+              <div key={`source-${source}`} className={ui.listRow}>
+                <span className={ui.listRowLabel}>Source: {source}</span>
+                <span className={ui.pill}>{count}</span>
+              </div>
+            ))}
+            {sortCounter(consent.byLocale).slice(0, 4).map(([locale, count]) => (
+              <div key={`locale-${locale}`} className={ui.listRow}>
+                <span className={ui.listRowLabel}>Locale: {locale}</span>
+                <span className={ui.pill}>{count}</span>
+              </div>
+            ))}
+            {sortCounter(consent.byDevice).slice(0, 4).map(([device, count]) => (
+              <div key={`device-${device}`} className={ui.listRow}>
+                <span className={ui.listRowLabel}>Device: {device}</span>
+                <span className={ui.pill}>{count}</span>
+              </div>
+            ))}
+            {consent.total === 0 && (
+              <p className={ui.subtitle}>No consent logs yet.</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className={ui.card}>
+        <h3 className={ui.title}><Clock size={18} className="gold-text" /> Recent Consent Changes</h3>
+        <div className={ui.list}>
+          {consent.recent.map((entry) => (
+            <div key={entry._id} className={ui.listRow}>
+              <span className={ui.listRowLabel}>
+                {entry.locale.toUpperCase()} · {entry.source} · analytics {entry.analytics ? "on" : "off"} · marketing{" "}
+                {entry.marketing ? "on" : "off"}
+              </span>
+              <span className={ui.pill}>
+                {new Date(entry.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </span>
+            </div>
+          ))}
+          {consent.recent.length === 0 && <p className={ui.subtitle}>No recent consent changes.</p>}
         </div>
       </div>
     </div>

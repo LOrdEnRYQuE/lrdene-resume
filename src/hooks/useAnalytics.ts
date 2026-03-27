@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useReportWebVitals } from "next/web-vitals";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/taxonomy";
+import { COOKIE_CONSENT_EVENT, hasAnalyticsConsent } from "@/lib/cookies/consent";
 
 const SESSION_KEY = "lrdene_session_id";
 const FIRST_TOUCH_KEY = "lrdene_first_touch";
@@ -15,8 +17,44 @@ export const useAnalytics = () => {
   const pathname = usePathname();
   const recordPageView = useMutation(api.analytics.recordPageView);
   const recordEvent = useMutation(api.analytics.recordEvent);
+  const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
+
+  useReportWebVitals((metric) => {
+    if (!hasAnalyticsConsent()) return;
+
+    const sessionId =
+      (typeof window !== "undefined" && localStorage.getItem(SESSION_KEY)) || "unknown";
+    const normalizedPath = normalizeLocalizedPath(pathname || "/");
+    const template = resolveTemplateName(normalizedPath);
+
+    if (!["LCP", "INP", "CLS", "FCP", "TTFB"].includes(metric.name)) return;
+
+    recordEvent({
+      type: ANALYTICS_EVENTS.WEB_VITAL,
+      label: formatEventLabel(`Web vital ${metric.name}`, {
+        template,
+        metric: metric.name,
+        value: typeof metric.value === "number" ? metric.value.toFixed(2) : String(metric.value),
+        rating: metric.rating,
+      }),
+      route: pathname || "/",
+      sessionId,
+      value: typeof metric.value === "number" ? Number(metric.value.toFixed(2)) : undefined,
+    });
+  });
 
   useEffect(() => {
+    const onConsentChanged = () => {
+      setAnalyticsEnabled(hasAnalyticsConsent());
+    };
+    setAnalyticsEnabled(hasAnalyticsConsent());
+    window.addEventListener(COOKIE_CONSENT_EVENT, onConsentChanged as EventListener);
+    return () => window.removeEventListener(COOKIE_CONSENT_EVENT, onConsentChanged as EventListener);
+  }, []);
+
+  useEffect(() => {
+    if (!analyticsEnabled) return;
+
     // 1. Manage Session Identity
     let sessionId = localStorage.getItem(SESSION_KEY);
     if (!sessionId) {
@@ -103,9 +141,10 @@ export const useAnalytics = () => {
     return () => {
       document.removeEventListener("click", handleTrackedClick);
     };
-  }, [pathname, recordPageView, recordEvent]);
+  }, [analyticsEnabled, pathname, recordPageView, recordEvent]);
 
   const trackEvent = (type: string, label: string, meta?: Record<string, string | number | undefined>) => {
+    if (!hasAnalyticsConsent()) return;
     const sessionId = localStorage.getItem(SESSION_KEY) || "unknown";
     const campaign = getCampaignContext();
     const landingPage = localStorage.getItem(LANDING_PAGE_KEY) || pathname || "/";
@@ -126,6 +165,7 @@ export const useAnalytics = () => {
   };
 
   const trackConversion = (conversionType: string, value: number = 0) => {
+    if (!hasAnalyticsConsent()) return;
     const sessionId = localStorage.getItem(SESSION_KEY) || "unknown";
     const campaign = getCampaignContext();
     const landingPage = localStorage.getItem(LANDING_PAGE_KEY) || pathname || "/";
@@ -242,6 +282,25 @@ function formatEventLabel(label: string, meta: Record<string, string | number | 
   }
 
   return `${label} | ${tags.join(" | ")}`;
+}
+
+function normalizeLocalizedPath(path: string) {
+  if (path === "/") return "/";
+  const segments = path.split("/").filter(Boolean);
+  const first = segments[0];
+  if (first === "en" || first === "de") {
+    const rest = segments.slice(1);
+    return rest.length === 0 ? "/" : `/${rest.join("/")}`;
+  }
+  return path;
+}
+
+function resolveTemplateName(path: string) {
+  if (path === "/") return "home";
+  if (path.startsWith("/services")) return "service";
+  if (path.startsWith("/blog")) return "blog";
+  if (path.startsWith("/contact")) return "contact";
+  return "other";
 }
 
 function generateSessionId() {

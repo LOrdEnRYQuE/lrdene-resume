@@ -110,6 +110,36 @@
   flex-wrap: wrap;
 }
 
+.chipGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.chipButton {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.58rem;
+  cursor: pointer;
+  transition: border-color 140ms ease, background-color 140ms ease;
+}
+
+.chipButton:hover {
+  border-color: rgba(255, 255, 255, 0.36);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.chipButtonActive {
+  border-color: rgba(215, 176, 108, 0.72);
+  background: rgba(215, 176, 108, 0.18);
+  color: #fff8e8;
+}
+
 .card {
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 14px;

@@ -4,6 +4,7 @@ import { ADMIN_TOKEN, requireAdminToken } from "./adminAuth";
 
 const ANALYTICS_SAMPLE_LIMIT = 5000;
 const EVENTS_SAMPLE_LIMIT = 2000;
+const CONSENT_SAMPLE_LIMIT = 2000;
 
 const EMPTY_OVERVIEW = {
   totalViews: 0,
@@ -83,6 +84,26 @@ export const recordEvent = mutation({
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert("events", {
+      ...args,
+      timestamp: Date.now(),
+    });
+  },
+});
+
+export const recordCookieConsent = mutation({
+  args: {
+    consentVersion: v.string(),
+    essential: v.boolean(),
+    analytics: v.boolean(),
+    marketing: v.boolean(),
+    source: v.string(),
+    locale: v.string(),
+    route: v.optional(v.string()),
+    anonymizedSession: v.optional(v.string()),
+    device: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.insert("cookieConsentLogs", {
       ...args,
       timestamp: Date.now(),
     });
@@ -185,5 +206,67 @@ export const getOverview = query({
       console.error("analytics.getOverview failed, returning safe defaults", error);
       return EMPTY_OVERVIEW;
     }
+  },
+});
+
+export const getConsentOverview = query({
+  args: {
+    adminToken: ADMIN_TOKEN,
+    days: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    await requireAdminToken(args.adminToken);
+
+    const normalizedDays =
+      typeof args.days === "number" && Number.isFinite(args.days) && args.days > 0
+        ? Math.min(Math.floor(args.days), 365)
+        : null;
+    const cutoff = normalizedDays ? Date.now() - normalizedDays * 24 * 60 * 60 * 1000 : null;
+
+    const consentLogs = await ctx.db
+      .query("cookieConsentLogs")
+      .withIndex("by_timestamp", (q) => (cutoff ? q.gte("timestamp", cutoff) : q))
+      .order("desc")
+      .take(CONSENT_SAMPLE_LIMIT);
+
+    const bySource: Record<string, number> = {};
+    const byLocale: Record<string, number> = {};
+    const byDevice: Record<string, number> = {};
+
+    let analyticsAccepted = 0;
+    let analyticsRejected = 0;
+    let marketingAccepted = 0;
+    let marketingRejected = 0;
+
+    for (const log of consentLogs) {
+      incrementCounter(bySource, log.source || "unknown");
+      incrementCounter(byLocale, log.locale || "unknown");
+      incrementCounter(byDevice, log.device || "unknown");
+
+      if (log.analytics) analyticsAccepted += 1;
+      else analyticsRejected += 1;
+
+      if (log.marketing) marketingAccepted += 1;
+      else marketingRejected += 1;
+    }
+
+    const total = consentLogs.length;
+    const analyticsOptInRate = total > 0 ? Number(((analyticsAccepted / total) * 100).toFixed(2)) : 0;
+    const marketingOptInRate = total > 0 ? Number(((marketingAccepted / total) * 100).toFixed(2)) : 0;
+
+    return {
+      total,
+      analyticsAccepted,
+      analyticsRejected,
+      marketingAccepted,
+      marketingRejected,
+      analyticsOptInRate,
+      marketingOptInRate,
+      bySource,
+      byLocale,
+      byDevice,
+      recent: consentLogs.slice(0, 12),
+      sampled: consentLogs.length === CONSENT_SAMPLE_LIMIT,
+    };
   },
 });

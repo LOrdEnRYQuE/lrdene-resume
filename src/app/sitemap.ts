@@ -28,7 +28,7 @@ function toLocalizedEntries(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://lrdene.com";
+  const baseUrl = "https://lordenryque.com";
 
   const [posts, projects, services, demos, topicClusterContent] = await Promise.all([
     fetchQuery(api.posts.list, { onlyPublished: true }),
@@ -100,6 +100,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/qr-solutions", lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.85 },
     { path: "/demos", lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
     { path: "/contact", lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.8 },
+    { path: "/privacy", lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.4 },
+    { path: "/terms", lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.4 },
+    { path: "/imprint", lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.4 },
+    { path: "/cookies", lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.4 },
   ];
 
   return toLocalizedEntries(baseUrl, [

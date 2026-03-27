@@ -170,6 +170,20 @@ export default defineSchema({
     timestamp: v.number(),
     sessionId: v.string(),
   }).index("by_type", ["type"]).index("by_timestamp", ["timestamp"]),
+  cookieConsentLogs: defineTable({
+    consentVersion: v.string(),
+    essential: v.boolean(),
+    analytics: v.boolean(),
+    marketing: v.boolean(),
+    source: v.string(),
+    locale: v.string(),
+    route: v.optional(v.string()),
+    anonymizedSession: v.optional(v.string()),
+    device: v.optional(v.string()),
+    timestamp: v.number(),
+  })
+    .index("by_timestamp", ["timestamp"])
+    .index("by_locale_and_timestamp", ["locale", "timestamp"]),
   clientPortals: defineTable({
     leadId: v.id("leads"),
     projectId: v.optional(v.id("projects")),
