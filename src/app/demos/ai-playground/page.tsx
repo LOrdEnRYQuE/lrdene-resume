@@ -8,7 +8,10 @@ import {
   Scissors, 
   Sparkles, 
   Send, 
-  ArrowRight
+  ArrowRight,
+  HeartPulse,
+  Truck,
+  ShoppingBag
 } from "lucide-react";
 import { useAction, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
@@ -46,6 +49,27 @@ const NICHES = [
     description: "Explains cleaning packages and bookings.",
     icon: <Sparkles size={24} />,
     color: "#3b82f6"
+  },
+  {
+    id: "clinic",
+    name: "Medical Clinic",
+    description: "Handles appointment intake and patient pre-screening.",
+    icon: <HeartPulse size={24} />,
+    color: "#22c55e"
+  },
+  {
+    id: "logistics",
+    name: "Logistics Dispatcher",
+    description: "Supports shipment updates and dispatch requests.",
+    icon: <Truck size={24} />,
+    color: "#f59e0b"
+  },
+  {
+    id: "retail",
+    name: "E-Commerce Advisor",
+    description: "Assists product selection and checkout questions.",
+    icon: <ShoppingBag size={24} />,
+    color: "#e879f9"
   }
 ];
 

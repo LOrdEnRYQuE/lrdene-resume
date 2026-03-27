@@ -17,6 +17,9 @@ export const chat = action({
         "broker": "Real Estate Assistant",
         "salon": "Salon Assistant",
         "detailing": "Detailing Assistant",
+        "clinic": "Clinic Assistant",
+        "logistics": "Logistics Assistant",
+        "retail": "E-Commerce Assistant",
         "general": "AI Assistant"
       };
       const name = nicheNames[niche] || "AI Assistant";

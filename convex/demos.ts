@@ -124,6 +124,29 @@ export const seedAllDemos = mutation({
   args: { adminToken: ADMIN_TOKEN },
   handler: async (ctx, args) => {
     await requireAdminToken(args.adminToken);
+    const globalStack = ["Next.js", "TypeScript", "Convex", "Responsive UI"];
+    const categoryStackBoost: Record<string, string[]> = {
+      Hospitality: ["Booking UX", "CMS"],
+      "Beauty & Wellness": ["Calendar Flow", "CRM Integrations"],
+      "Real Estate": ["Map Integrations", "Search Indexing"],
+      "Legal & Consulting": ["Secure Portals", "Document Workflows"],
+      "Home Services": ["Field Ops", "Payments"],
+      "E-commerce": ["Checkout Flows", "Catalog SEO", "Stripe"],
+      "AI & Analytics": ["Realtime Dashboards", "LLM Workflows"],
+      EduTech: ["Auth", "Progress Tracking"],
+      HealthTech: ["HIPAA-aware UX", "Role-based Access"],
+      Logistics: ["Route Logic", "Tracking"],
+      Business: ["Conversion CRO", "Landing Optimization"],
+      "AI & Neural Agencies": ["Agent Orchestration", "Knowledge Retrieval"],
+      "Architecture & Design": ["3D Preview", "Design Systems"],
+      Automotive: ["Lead Qualification", "Inventory Flows"],
+      "Automotive Service": ["Booking Automation", "Pricing Logic"],
+      "Finance & Brokerage": ["Compliance UX", "Lead Routing"],
+      "Construction & Engineering": ["Project Pipeline", "Service Area Mapping"],
+      Commerce: ["Sustainability Data", "Marketplace Ops"],
+      "AI & Tech": ["DevTools", "API Integrations"],
+      "Marketing Tech": ["GEO/SEO Analytics", "Content Intelligence"],
+    };
     const demoItems = [
       {
         name: "LaMaison Fine Dining",
@@ -414,6 +437,19 @@ export const seedAllDemos = mutation({
     ];
 
     for (const demo of demoItems) {
+      const enrichedStack = Array.from(
+        new Set([
+          ...demo.techStack,
+          ...globalStack,
+          ...(categoryStackBoost[demo.category] ?? []),
+        ]),
+      );
+      const normalizedBranch = demo.branch === "main" ? `demo/${demo.slug}` : demo.branch;
+      const upsertPayload = {
+        ...demo,
+        techStack: enrichedStack,
+        branch: normalizedBranch,
+      };
       const existing = await ctx.db
         .query("demos")
         .withIndex("by_slug", (q) => q.eq("slug", demo.slug))
@@ -421,9 +457,11 @@ export const seedAllDemos = mutation({
       
       if (!existing) {
         await ctx.db.insert("demos", {
-          ...demo,
+          ...upsertPayload,
           createdAt: Date.now(),
         });
+      } else {
+        await ctx.db.patch(existing._id, upsertPayload);
       }
     }
   },
