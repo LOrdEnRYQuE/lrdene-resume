@@ -4,6 +4,7 @@ import { api } from "../../../../convex/_generated/api";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
+import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
 
 export const runtime = "edge";
 
@@ -17,7 +18,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
 
-  const canonical = `/blog/${post.slug}`;
+  const basePath = `/blog/${post.slug}`;
+  const locale = await getRequestLocale();
+  const canonical = toLocaleCanonical(basePath, locale);
 
   return {
     title: `${post.title} | LOrdEnRYQuE`,
@@ -25,13 +28,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     keywords: [post.category, ...(post.tags ?? [])],
     alternates: {
       canonical,
-      languages: getLanguageAlternates(canonical),
+      languages: getLanguageAlternates(basePath),
     },
     openGraph: {
       title: post.title,
       description: post.excerpt,
       type: "article",
-      url: `https://lrdene.com${canonical}`,
+      url: `https://lordenryque.com${canonical}`,
       images: [post.coverImage],
       publishedTime: new Date(post.date).toISOString(),
       authors: [post.author],
@@ -89,16 +92,16 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       name: "LOrdEnRYQuE",
     },
     datePublished: new Date(post.date).toISOString(),
-    mainEntityOfPage: `https://lrdene.com/blog/${post.slug}`,
+    mainEntityOfPage: `https://lordenryque.com/blog/${post.slug}`,
   };
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://lrdene.com" },
-      { "@type": "ListItem", position: 2, name: "Blog", item: "https://lrdene.com/blog" },
-      { "@type": "ListItem", position: 3, name: post.title, item: `https://lrdene.com/blog/${post.slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://lordenryque.com" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://lordenryque.com/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://lordenryque.com/blog/${post.slug}` },
     ],
   };
 

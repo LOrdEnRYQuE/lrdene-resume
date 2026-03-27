@@ -6,43 +6,74 @@ import Link from "next/link";
 import { SERVICE_LOCATIONS } from "@/utils/serviceLocations";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { TOPIC_CLUSTER_CONTENT_KEY, resolveTopicClusters } from "@/lib/seo/topicClusters";
+import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
+import { FALLBACK_SERVICES } from "@/lib/servicesFallback";
 
 export const runtime = "edge";
 
-export const metadata: Metadata = {
-  title: "Services",
-  description:
-    "Premium AI engineering, full-stack architecture, and high-performance digital product services.",
-  alternates: {
-    canonical: "/services",
-    languages: getLanguageAlternates("/services"),
-  },
-  openGraph: {
-    title: "Services | LOrdEnRYQuE",
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const canonical = toLocaleCanonical("/services", locale);
+
+  return {
+    title: "Services",
     description:
       "Premium AI engineering, full-stack architecture, and high-performance digital product services.",
-    url: "https://lrdene.com/services",
-    type: "website",
-  },
-};
+    alternates: {
+      canonical,
+      languages: getLanguageAlternates("/services"),
+    },
+    openGraph: {
+      title: "Services | LOrdEnRYQuE",
+      description:
+        "Premium AI engineering, full-stack architecture, and high-performance digital product services.",
+      url: `https://lordenryque.com${canonical}`,
+      type: "website",
+    },
+  };
+}
 
 export default async function ServicesPage() {
-  const [services, topicClusterContent] = await Promise.all([
+  const [servicesRaw, topicClusterContent] = await Promise.all([
     fetchQuery(api.services.list, {}),
     fetchQuery(api.pages.getPageContent, { key: TOPIC_CLUSTER_CONTENT_KEY, fallbackToEnglish: true }),
   ]);
+  const services = servicesRaw.length > 0 ? servicesRaw : FALLBACK_SERVICES;
   const topicClusters = resolveTopicClusters(topicClusterContent?.data);
+  const localSeoTargets = [
+    { slug: "web-development-landshut", label: "Web Development in Landshut" },
+    { slug: "ai-integration-landshut", label: "AI Integration in Landshut" },
+    { slug: "ui-ux-design-landshut", label: "UI/UX Design in Landshut" },
+  ];
+
   return (
     <>
       <ServicesPageClient services={services} />
       <section className="container" style={{ marginTop: "2rem", marginBottom: "5rem" }}>
+        <h2 style={{ marginBottom: "1rem" }}>Local SEO Focus Pages</h2>
+        <p style={{ color: "var(--text-secondary)", marginBottom: "1rem" }}>
+          Intent-specific landing pages optimized for service + city searches.
+        </p>
+        <div style={{ display: "grid", gap: "0.5rem" }}>
+          {localSeoTargets.map((entry) => (
+            <Link
+              key={entry.slug}
+              href={`/services/${entry.slug}`}
+              data-track-event="internal_link_click"
+              data-track-label={`Local SEO page: ${entry.label}`}
+            >
+              {entry.label}
+            </Link>
+          ))}
+        </div>
+
         <h2 style={{ marginBottom: "1rem" }}>Location Landing Pages</h2>
         <p style={{ color: "var(--text-secondary)", marginBottom: "1rem" }}>
           Region-specific delivery pages for local-intent search visibility.
         </p>
         <div style={{ display: "grid", gap: "0.5rem" }}>
-          {services.slice(0, 4).flatMap((service) =>
-            SERVICE_LOCATIONS.slice(0, 2).map((location) => (
+          {services.flatMap((service) =>
+            SERVICE_LOCATIONS.map((location) => (
               <Link
                 key={`${service._id}-${location.slug}`}
                 href={`/services/${service.slug}-${location.slug}`}

@@ -8,9 +8,9 @@ import { api } from "../../../../convex/_generated/api";
 import {
   getTopicClusterBySlug,
   TOPIC_CLUSTER_CONTENT_KEY,
-  TOPIC_CLUSTERS,
   resolveTopicClusters,
 } from "@/lib/seo/topicClusters";
+import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
 
 type PageProps = {
   params: Promise<{ cluster: string }>;
@@ -34,20 +34,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const canonical = `/insights/${data.slug}`;
+  const basePath = `/insights/${data.slug}`;
+  const locale = await getRequestLocale();
+  const canonical = toLocaleCanonical(basePath, locale);
 
   return {
     title: `${data.title} Insights | LOrdEnRYQuE`,
     description: data.description,
     alternates: {
       canonical,
-      languages: getLanguageAlternates(canonical),
+      languages: getLanguageAlternates(basePath),
     },
     openGraph: {
       title: `${data.title} Insights | LOrdEnRYQuE`,
       description: data.description,
       type: "website",
-      url: `https://lrdene.com${canonical}`,
+      url: `https://lordenryque.com${canonical}`,
     },
   };
 }
@@ -69,9 +71,9 @@ export default async function ClusterPage({ params }: PageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://lrdene.com" },
-      { "@type": "ListItem", position: 2, name: "Insights", item: "https://lrdene.com/insights" },
-      { "@type": "ListItem", position: 3, name: data.title, item: `https://lrdene.com/insights/${data.slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://lordenryque.com" },
+      { "@type": "ListItem", position: 2, name: "Insights", item: "https://lordenryque.com/insights" },
+      { "@type": "ListItem", position: 3, name: data.title, item: `https://lordenryque.com/insights/${data.slug}` },
     ],
   };
 
@@ -80,11 +82,11 @@ export default async function ClusterPage({ params }: PageProps) {
     "@type": "CollectionPage",
     name: `${data.title} Topic Cluster`,
     description: data.description,
-    url: `https://lrdene.com/insights/${data.slug}`,
+    url: `https://lordenryque.com/insights/${data.slug}`,
     hasPart: data.topics.map((topic) => ({
       "@type": "Article",
       headline: topic.title,
-      url: `https://lrdene.com/insights/${data.slug}/${topic.slug}`,
+      url: `https://lordenryque.com/insights/${data.slug}/${topic.slug}`,
       description: topic.summary,
     })),
   };
@@ -115,6 +117,8 @@ export default async function ClusterPage({ params }: PageProps) {
           <article key={topic.slug} className={styles.card}>
             <h2>{topic.title}</h2>
             <p>{topic.summary}</p>
+            <p><strong>Target Query:</strong> {topic.targetQuery}</p>
+            <p><strong>Support Queries:</strong> {topic.supportQueries.join(", ")}</p>
             <div className={styles.meta}>
               {topic.intentKeywords.map((keyword) => (
                 <span className={styles.pill} key={keyword}>{keyword}</span>

@@ -105,7 +105,7 @@ const TEMPLATE_PRESETS: Record<TemplatePresetKey, Partial<EmailTemplatePage> & {
     headerTitle: "Quick update for {{firstName}}",
     intro: "Here is a clear summary for your {{projectType}} request with practical next steps.",
     ctaLabel: "Review Next Steps",
-    ctaUrl: "https://lrdene.com/contact",
+    ctaUrl: "https://lordenryque.com/contact",
     signatureRole: "Founder",
     signatureCompany: "LOrdEnRYQuE",
     footerNote: "You received this because you contacted LOrdEnRYQuE.",
@@ -117,7 +117,7 @@ const TEMPLATE_PRESETS: Record<TemplatePresetKey, Partial<EmailTemplatePage> & {
     headerTitle: "Project briefing for {{firstName}}",
     intro: "Thank you for your inquiry about {{projectType}}. This email outlines the scope, timeline, and execution path.",
     ctaLabel: "Schedule Strategy Call",
-    ctaUrl: "https://lrdene.com/contact",
+    ctaUrl: "https://lordenryque.com/contact",
     signatureRole: "Solutions Architect",
     signatureCompany: "LOrdEnRYQuE Studio",
     footerNote: "Confidential business communication intended for project planning.",
@@ -129,7 +129,7 @@ const TEMPLATE_PRESETS: Record<TemplatePresetKey, Partial<EmailTemplatePage> & {
     headerTitle: "A premium proposal for {{firstName}}",
     intro: "Your {{projectType}} concept deserves meticulous execution. This message details a polished, high-conversion direction.",
     ctaLabel: "Reserve a Private Consultation",
-    ctaUrl: "https://lrdene.com/contact",
+    ctaUrl: "https://lordenryque.com/contact",
     signatureRole: "Creative & Technical Director",
     signatureCompany: "LOrdEnRYQuE Atelier",
     footerNote: "Premium advisory communication from LOrdEnRYQuE.",
@@ -141,7 +141,7 @@ const TEMPLATE_PRESETS: Record<TemplatePresetKey, Partial<EmailTemplatePage> & {
     headerTitle: "{{firstName}}, your next high-converting website is ready",
     intro: "Limited build window for {{projectType}} clients. Fast launch, premium visuals, conversion-first structure.",
     ctaLabel: "Claim Your Slot",
-    ctaUrl: "https://lrdene.com/contact",
+    ctaUrl: "https://lordenryque.com/contact",
     signatureRole: "Creative Director",
     signatureCompany: "LOrdEnRYQuE Studio",
     footerNote: "Promotional communication from LOrdEnRYQuE.",
@@ -484,7 +484,7 @@ export function InboxDesk() {
   const [templateHeaderTitle, setTemplateHeaderTitle] = useState("Premium update for {{firstName}}");
   const [templateIntro, setTemplateIntro] = useState("Thanks for your interest in {{projectType}}. Here is your tailored overview and next steps.");
   const [templateCtaLabel, setTemplateCtaLabel] = useState("Book a Call");
-  const [templateCtaUrl, setTemplateCtaUrl] = useState("https://lrdene.com/contact");
+  const [templateCtaUrl, setTemplateCtaUrl] = useState("https://lordenryque.com/contact");
   const [templateSignatureName, setTemplateSignatureName] = useState("Attila Lazar");
   const [templateSignatureRole, setTemplateSignatureRole] = useState("Founder");
   const [templateSignatureCompany, setTemplateSignatureCompany] = useState("LOrdEnRYQuE");
@@ -731,7 +731,7 @@ export function InboxDesk() {
     setTemplateHeaderTitle("Premium update for {{firstName}}");
     setTemplateIntro("Thanks for your interest in {{projectType}}. Here is your tailored overview and next steps.");
     setTemplateCtaLabel("Book a Call");
-    setTemplateCtaUrl("https://lrdene.com/contact");
+    setTemplateCtaUrl("https://lordenryque.com/contact");
     setTemplateSignatureName("Attila Lazar");
     setTemplateSignatureRole("Founder");
     setTemplateSignatureCompany("LOrdEnRYQuE");
@@ -863,7 +863,7 @@ export function InboxDesk() {
     setTemplateHeaderTitle(preset.headerTitle);
     setTemplateIntro(preset.intro);
     setTemplateCtaLabel(preset.ctaLabel || "Book a Call");
-    setTemplateCtaUrl(preset.ctaUrl || "https://lrdene.com/contact");
+    setTemplateCtaUrl(preset.ctaUrl || "https://lordenryque.com/contact");
     setTemplateSignatureRole(preset.signatureRole || "Founder");
     setTemplateSignatureCompany(preset.signatureCompany || "LOrdEnRYQuE");
     setTemplateFooterNote(preset.footerNote || "You are receiving this email because you contacted LOrdEnRYQuE.");

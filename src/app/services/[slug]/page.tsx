@@ -4,8 +4,11 @@ import { api } from "../../../../convex/_generated/api";
 import { ServiceDetail } from "@/components/Services/ServiceDetail";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { resolveServiceLocationSlug } from "@/utils/serviceLocations";
+import { getServiceSlugCandidates, resolveServiceLocationSlug } from "@/utils/serviceLocations";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
+import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
+import { TOPIC_CLUSTERS } from "@/lib/seo/topicClusters";
+import { findFallbackServiceBySlug } from "@/lib/servicesFallback";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -13,13 +16,38 @@ type PageProps = {
 
 export const runtime = "edge";
 
+async function getServiceBySlugCandidates(initialSlug: string) {
+  const candidates = getServiceSlugCandidates(initialSlug);
+
+  for (const candidate of candidates) {
+    const service = await fetchQuery(api.services.getBySlug, { slug: candidate });
+    if (service) {
+      return service;
+    }
+  }
+
+  for (const candidate of candidates) {
+    const fallback = findFallbackServiceBySlug(candidate);
+    if (fallback) {
+      return fallback;
+    }
+  }
+
+  return null;
+}
+
+function normalizeSlugParam(value: string) {
+  return decodeURIComponent(value.split("?")[0] || value).trim().toLowerCase();
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  let service = await fetchQuery(api.services.getBySlug, { slug });
+  const { slug: rawSlug } = await params;
+  const slug = normalizeSlugParam(rawSlug);
+  let service = await getServiceBySlugCandidates(slug);
   const locationResolution = !service ? resolveServiceLocationSlug(slug) : null;
 
   if (!service && locationResolution) {
-    service = await fetchQuery(api.services.getBySlug, { slug: locationResolution.serviceSlug });
+    service = await getServiceBySlugCandidates(locationResolution.serviceSlug);
   }
 
   if (!service) {
@@ -35,22 +63,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const description = locationResolution
     ? `${service.description} Delivery for ${locationResolution.location.city}, ${locationResolution.location.country}.`
     : service.description;
+  const locale = await getRequestLocale();
   const canonical = locationResolution
     ? `/services/${service.slug}-${locationResolution.location.slug}`
     : `/services/${service.slug}`;
+  const localeCanonical = toLocaleCanonical(canonical, locale);
 
   return {
     title,
     description,
     keywords: [service.category, service.title, "service", "digital solutions"],
     alternates: {
-      canonical,
+      canonical: localeCanonical,
       languages: getLanguageAlternates(canonical),
     },
     openGraph: {
       title: `${service.title} | LOrdEnRYQuE`,
       description,
-      url: `https://lrdene.com${canonical}`,
+      url: `https://lordenryque.com${localeCanonical}`,
       type: "article",
       tags: [service.category, service.title],
     },
@@ -63,12 +93,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ServicePage({ params }: PageProps) {
-  const { slug } = await params;
-  let service = await fetchQuery(api.services.getBySlug, { slug });
+  const { slug: rawSlug } = await params;
+  const slug = normalizeSlugParam(rawSlug);
+  let service = await getServiceBySlugCandidates(slug);
   const locationResolution = !service ? resolveServiceLocationSlug(slug) : null;
 
   if (!service && locationResolution) {
-    service = await fetchQuery(api.services.getBySlug, { slug: locationResolution.serviceSlug });
+    service = await getServiceBySlugCandidates(locationResolution.serviceSlug);
   }
 
   if (!service) {
@@ -87,6 +118,40 @@ export default async function ServicePage({ params }: PageProps) {
   const relatedProjects = projects
     .filter((project) => project.category.toLowerCase() === service.category.toLowerCase())
     .slice(0, 3);
+  const serviceTokens = [service.slug, service.title, service.category]
+    .join(" ")
+    .toLowerCase();
+  const tokenMatchers = [
+    "web",
+    "develop",
+    "ai",
+    "automat",
+    "ecom",
+    "commerce",
+    "seo",
+    "analytics",
+  ].filter((token) => serviceTokens.includes(token));
+  const topicMatcherRegex =
+    tokenMatchers.length > 0 ? new RegExp(tokenMatchers.join("|"), "i") : null;
+
+  const relatedTopicLinks = TOPIC_CLUSTERS.flatMap((cluster) =>
+    cluster.topics
+      .filter((topic) =>
+        topicMatcherRegex
+          ? Boolean(
+        [cluster.slug, topic.slug, topic.title, ...(topic.intentKeywords ?? [])]
+          .join(" ")
+          .toLowerCase()
+          .match(topicMatcherRegex),
+            )
+          : false,
+      )
+      .slice(0, 2)
+      .map((topic) => ({
+        href: `/insights/${cluster.slug}/${topic.slug}`,
+        label: topic.title,
+      })),
+  ).slice(0, 4);
 
   const canonicalPath = locationResolution
     ? `/services/${service.slug}-${locationResolution.location.slug}`
@@ -115,19 +180,19 @@ export default async function ServicePage({ params }: PageProps) {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://lrdene.com",
+        item: "https://lordenryque.com",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Services",
-        item: "https://lrdene.com/services",
+        item: "https://lordenryque.com/services",
       },
       {
         "@type": "ListItem",
         position: 3,
         name: locationResolution ? `${service.title} in ${locationResolution.location.city}` : service.title,
-        item: `https://lrdene.com${canonicalPath}`,
+        item: `https://lordenryque.com${canonicalPath}`,
       },
     ],
   };
@@ -140,7 +205,7 @@ export default async function ServicePage({ params }: PageProps) {
     provider: {
       "@type": "Organization",
       name: "LOrdEnRYQuE",
-      url: "https://lrdene.com",
+      url: "https://lordenryque.com",
     },
     areaServed: locationResolution
       ? {
@@ -151,7 +216,7 @@ export default async function ServicePage({ params }: PageProps) {
           "@type": "Country",
           name: "Germany",
         },
-    url: `https://lrdene.com${canonicalPath}`,
+    url: `https://lordenryque.com${canonicalPath}`,
   };
 
   const faqItems = locationData.faqQuestion && locationData.faqAnswer
@@ -265,6 +330,16 @@ export default async function ServicePage({ params }: PageProps) {
           {relatedPosts.length === 0 && relatedProjects.length === 0 ? (
             <Link href="/blog">Read the latest implementation insights</Link>
           ) : null}
+          {relatedTopicLinks.map((topic) => (
+            <Link
+              key={topic.href}
+              href={topic.href}
+              data-track-event="internal_link_click"
+              data-track-label={`Service->Insights: ${service.title} ${topic.label}`}
+            >
+              {topic.label}
+            </Link>
+          ))}
         </div>
       </section>
     </>

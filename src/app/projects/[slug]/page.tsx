@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
+import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
 
 export const runtime = "edge";
 
@@ -19,7 +20,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
 
-  const canonical = `/projects/${project.slug}`;
+  const basePath = `/projects/${project.slug}`;
+  const locale = await getRequestLocale();
+  const canonical = toLocaleCanonical(basePath, locale);
 
   return {
     title: `${project.title} | Case Study`,
@@ -27,13 +30,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     keywords: [project.category, ...project.stack, "case study"],
     alternates: {
       canonical,
-      languages: getLanguageAlternates(canonical),
+      languages: getLanguageAlternates(basePath),
     },
     openGraph: {
       title: `${project.title} | Case Study`,
       description: project.summary,
       type: "article",
-      url: `https://lrdene.com${canonical}`,
+      url: `https://lordenryque.com${canonical}`,
       images: [project.coverImage],
       tags: project.stack,
     },
@@ -83,7 +86,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     "@type": "CreativeWork",
     name: project.title,
     description: project.summary,
-    url: `https://lrdene.com/projects/${project.slug}`,
+    url: `https://lordenryque.com/projects/${project.slug}`,
     creator: {
       "@type": "Person",
       name: "Attila Lazar",
@@ -109,9 +112,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://lrdene.com" },
-      { "@type": "ListItem", position: 2, name: "Projects", item: "https://lrdene.com/projects" },
-      { "@type": "ListItem", position: 3, name: project.title, item: `https://lrdene.com/projects/${project.slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://lordenryque.com" },
+      { "@type": "ListItem", position: 2, name: "Projects", item: "https://lordenryque.com/projects" },
+      { "@type": "ListItem", position: 3, name: project.title, item: `https://lordenryque.com/projects/${project.slug}` },
     ],
   };
 

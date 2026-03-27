@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { Hero, type HeroData } from "@/components/Hero/Hero";
 import { TrustStrip } from "@/components/TrustStrip/TrustStrip";
 import { Promotions } from "@/components/Promotions/Promotions";
+import { DemoBranches } from "@/components/DemoBranches/DemoBranches";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { LOCALE_HEADER_NAME, type Locale, isLocale } from "@/lib/i18n/config";
 import {
@@ -13,9 +14,6 @@ import {
   getPublishedPostsCached,
 } from "@/lib/server/cachedQueries";
 
-const DemoBranches = dynamic(
-  () => import("@/components/DemoBranches/DemoBranches").then((m) => m.DemoBranches),
-);
 const ServicesGrid = dynamic(
   () => import("@/components/ServicesGrid/ServicesGrid").then((m) => m.ServicesGrid),
 );
@@ -40,21 +38,27 @@ const FinalCTA = dynamic(
 
 export const runtime = "edge";
 
-export const metadata: Metadata = {
-  title: "LOrdEnRYQuE | Generative AI & Architecture",
-  description:
-    "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",
-  alternates: {
-    canonical: "/",
-    languages: getLanguageAlternates("/"),
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const requestHeaders = await headers();
+  const localeHeader = requestHeaders.get(LOCALE_HEADER_NAME);
+  const locale: Locale = isLocale(localeHeader) ? localeHeader : "en";
+
+  return {
+    title: "LOrdEnRYQuE | Generative AI & Architecture",
+    description:
+      "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",
+    alternates: {
+      canonical: `/${locale}`,
+      languages: getLanguageAlternates("/"),
+    },
+  };
+}
 
 const homeJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Attila Lazar",
-  url: "https://lrdene.com",
+  url: "https://lordenryque.com",
   jobTitle: "Senior Full-Stack Engineer",
   description:
     "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",

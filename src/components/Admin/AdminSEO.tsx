@@ -82,7 +82,7 @@ export const AdminSEO = () => {
             ) : (
               <div className={styles.preview}>
                 <div className={styles.googlePreview}>
-                  <p className={styles.googleUrl}>https://lrdene.com{item.route}</p>
+                  <p className={styles.googleUrl}>https://lordenryque.com{item.route}</p>
                   <h4 className={styles.googleTitle}>{item.title}</h4>
                   <p className={styles.googleDesc}>{item.description}</p>
                 </div>

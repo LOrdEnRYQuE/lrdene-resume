@@ -5,25 +5,31 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../convex/_generated/api";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { TOPIC_CLUSTER_CONTENT_KEY, resolveTopicClusters } from "@/lib/seo/topicClusters";
+import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
 
 export const runtime = "edge";
 
-export const metadata: Metadata = {
-  title: "Insights | Topic Clusters",
-  description:
-    "Template-driven topic clusters for web development, AI automation, analytics, SEO, and growth operations.",
-  alternates: {
-    canonical: "/insights",
-    languages: getLanguageAlternates("/insights"),
-  },
-  openGraph: {
-    title: "Insights | LOrdEnRYQuE",
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const canonical = toLocaleCanonical("/insights", locale);
+
+  return {
+    title: "Insights | Topic Clusters",
     description:
       "Template-driven topic clusters for web development, AI automation, analytics, SEO, and growth operations.",
-    url: "https://lrdene.com/insights",
-    type: "website",
-  },
-};
+    alternates: {
+      canonical,
+      languages: getLanguageAlternates("/insights"),
+    },
+    openGraph: {
+      title: "Insights | LOrdEnRYQuE",
+      description:
+        "Template-driven topic clusters for web development, AI automation, analytics, SEO, and growth operations.",
+      url: `https://lordenryque.com${canonical}`,
+      type: "website",
+    },
+  };
+}
 
 export default async function InsightsPage() {
   const content = await fetchQuery(api.pages.getPageContent, {
@@ -36,11 +42,11 @@ export default async function InsightsPage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: "Insights Topic Clusters",
-    url: "https://lrdene.com/insights",
+    url: "https://lordenryque.com/insights",
     hasPart: clusters.map((cluster) => ({
       "@type": "CollectionPage",
       name: cluster.title,
-      url: `https://lrdene.com/insights/${cluster.slug}`,
+      url: `https://lordenryque.com/insights/${cluster.slug}`,
     })),
   };
 

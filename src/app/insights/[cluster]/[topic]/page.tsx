@@ -6,12 +6,11 @@ import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../../convex/_generated/api";
 import {
-  getAllTopicClusterPaths,
   getTopicBySlugs,
   TOPIC_CLUSTER_CONTENT_KEY,
-  TOPIC_CLUSTERS,
   resolveTopicClusters,
 } from "@/lib/seo/topicClusters";
+import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
 
 type PageProps = {
   params: Promise<{ cluster: string; topic: string }>;
@@ -35,7 +34,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const canonical = `/insights/${data.cluster.slug}/${data.topic.slug}`;
+  const basePath = `/insights/${data.cluster.slug}/${data.topic.slug}`;
+  const locale = await getRequestLocale();
+  const canonical = toLocaleCanonical(basePath, locale);
 
   return {
     title: `${data.topic.title} | ${data.cluster.title}`,
@@ -43,13 +44,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     keywords: [...data.topic.intentKeywords, data.cluster.title, "implementation guide"],
     alternates: {
       canonical,
-      languages: getLanguageAlternates(canonical),
+      languages: getLanguageAlternates(basePath),
     },
     openGraph: {
       title: `${data.topic.title} | ${data.cluster.title}`,
       description: data.topic.summary,
       type: "article",
-      url: `https://lrdene.com${canonical}`,
+      url: `https://lordenryque.com${canonical}`,
       tags: data.topic.intentKeywords,
     },
     twitter: {
@@ -79,19 +80,19 @@ export default async function TopicPage({ params }: PageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://lrdene.com" },
-      { "@type": "ListItem", position: 2, name: "Insights", item: "https://lrdene.com/insights" },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://lordenryque.com" },
+      { "@type": "ListItem", position: 2, name: "Insights", item: "https://lordenryque.com/insights" },
       {
         "@type": "ListItem",
         position: 3,
         name: data.cluster.title,
-        item: `https://lrdene.com/insights/${data.cluster.slug}`,
+        item: `https://lordenryque.com/insights/${data.cluster.slug}`,
       },
       {
         "@type": "ListItem",
         position: 4,
         name: data.topic.title,
-        item: `https://lrdene.com${path}`,
+        item: `https://lordenryque.com${path}`,
       },
     ],
   };
@@ -101,15 +102,16 @@ export default async function TopicPage({ params }: PageProps) {
     "@type": "Article",
     headline: data.topic.title,
     description: data.topic.summary,
-    mainEntityOfPage: `https://lrdene.com${path}`,
+    mainEntityOfPage: `https://lordenryque.com${path}`,
     author: {
-      "@type": "Organization",
-      name: "LOrdEnRYQuE",
+      "@type": "Person",
+      name: data.topic.author.name,
     },
     publisher: {
       "@type": "Organization",
       name: "LOrdEnRYQuE",
     },
+    dateModified: data.topic.updatedAt,
     keywords: data.topic.intentKeywords.join(", "),
   };
 
@@ -150,6 +152,11 @@ export default async function TopicPage({ params }: PageProps) {
         <span className={styles.eyebrow}>{data.cluster.title}</span>
         <h1 className={styles.title}>{data.topic.title}</h1>
         <p className={styles.subtitle}>{data.topic.summary}</p>
+        <div className={styles.metaBlock}>
+          <span><strong>Author:</strong> {data.topic.author.name}</span>
+          <span><strong>Role:</strong> {data.topic.author.title}</span>
+          <span><strong>Updated:</strong> {data.topic.updatedAt}</span>
+        </div>
       </section>
 
       <section className={styles.grid}>
@@ -169,6 +176,8 @@ export default async function TopicPage({ params }: PageProps) {
 
         <article className={styles.card}>
           <h2>Intent Keywords</h2>
+          <p><strong>Target Query:</strong> {data.topic.targetQuery}</p>
+          <p><strong>Support Queries:</strong> {data.topic.supportQueries.join(", ")}</p>
           <div className={styles.meta}>
             {data.topic.intentKeywords.map((keyword) => (
               <span className={styles.pill} key={keyword}>{keyword}</span>
@@ -182,6 +191,42 @@ export default async function TopicPage({ params }: PageProps) {
           >
             {data.topic.ctaLabel}
           </Link>
+        </article>
+      </section>
+
+      <section className={styles.longForm}>
+        <h2>Case Guide</h2>
+        {data.topic.caseGuide.map((section) => (
+          <article key={section.heading} className={styles.card}>
+            <h3>{section.heading}</h3>
+            {section.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </article>
+        ))}
+      </section>
+
+      <section className={styles.grid}>
+        <article className={styles.card}>
+          <h2>Proof Signals</h2>
+          <ul className={styles.list}>
+            {data.topic.proofSignals.map((signal) => (
+              <li key={`${signal.label}-${signal.value}`}>
+                <strong>{signal.label}:</strong> {signal.value}
+              </li>
+            ))}
+          </ul>
+        </article>
+        <article className={styles.card}>
+          <h2>Testimonials</h2>
+          {data.topic.testimonials.map((testimonial) => (
+            <blockquote key={`${testimonial.author}-${testimonial.quote}`} className={styles.testimonial}>
+              “{testimonial.quote}”
+              <footer>
+                {testimonial.author} · {testimonial.role}
+              </footer>
+            </blockquote>
+          ))}
         </article>
       </section>
 

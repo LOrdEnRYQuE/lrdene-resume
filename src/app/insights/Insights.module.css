@@ -31,6 +31,14 @@
   max-width: 70ch;
 }
 
+.metaBlock {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 0.9rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -95,6 +103,24 @@
   display: grid;
   gap: 0.7rem;
   margin-top: 1rem;
+}
+
+.longForm {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.testimonial {
+  margin: 0 0 0.75rem;
+  color: var(--text-secondary);
+}
+
+.testimonial footer {
+  margin-top: 0.45rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
 }
 
 @media (max-width: 980px) {
