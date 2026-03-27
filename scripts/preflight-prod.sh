@@ -16,6 +16,7 @@ admin_env=(
 )
 
 optional_env=(
+  "NEXT_PUBLIC_GA_ID"
   "OPENAI_API_KEY"
   "RESEND_API_KEY"
   "EMAIL_FROM"
