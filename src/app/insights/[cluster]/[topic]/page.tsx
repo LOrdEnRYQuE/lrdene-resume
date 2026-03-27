@@ -11,6 +11,7 @@ import {
   resolveTopicClusters,
 } from "@/lib/seo/topicClusters";
 import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
+import { localizeHref } from "@/lib/i18n/path";
 
 type PageProps = {
   params: Promise<{ cluster: string; topic: string }>;
@@ -20,8 +21,10 @@ export const runtime = "edge";
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { cluster, topic } = await params;
+  const locale = await getRequestLocale();
   const content = await fetchQuery(api.pages.getPageContent, {
     key: TOPIC_CLUSTER_CONTENT_KEY,
+    locale,
     fallbackToEnglish: true,
   });
   const clusters = resolveTopicClusters(content?.data);
@@ -35,7 +38,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const basePath = `/insights/${data.cluster.slug}/${data.topic.slug}`;
-  const locale = await getRequestLocale();
   const canonical = toLocaleCanonical(basePath, locale);
 
   return {
@@ -69,8 +71,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function TopicPage({ params }: PageProps) {
   const { cluster, topic } = await params;
+  const locale = await getRequestLocale();
   const content = await fetchQuery(api.pages.getPageContent, {
     key: TOPIC_CLUSTER_CONTENT_KEY,
+    locale,
     fallbackToEnglish: true,
   });
   const clusters = resolveTopicClusters(content?.data);
@@ -80,25 +84,28 @@ export default async function TopicPage({ params }: PageProps) {
     notFound();
   }
 
-  const path = `/insights/${data.cluster.slug}/${data.topic.slug}`;
+  const homePath = localizeHref("/", locale);
+  const insightsPath = localizeHref("/insights", locale);
+  const clusterPath = localizeHref(`/insights/${data.cluster.slug}`, locale);
+  const topicPath = localizeHref(`/insights/${data.cluster.slug}/${data.topic.slug}`, locale);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://lordenryque.com" },
-      { "@type": "ListItem", position: 2, name: "Insights", item: "https://lordenryque.com/insights" },
+      { "@type": "ListItem", position: 1, name: "Home", item: `https://lordenryque.com${homePath}` },
+      { "@type": "ListItem", position: 2, name: "Insights", item: `https://lordenryque.com${insightsPath}` },
       {
         "@type": "ListItem",
         position: 3,
         name: data.cluster.title,
-        item: `https://lordenryque.com/insights/${data.cluster.slug}`,
+        item: `https://lordenryque.com${clusterPath}`,
       },
       {
         "@type": "ListItem",
         position: 4,
         name: data.topic.title,
-        item: `https://lordenryque.com${path}`,
+        item: `https://lordenryque.com${topicPath}`,
       },
     ],
   };
@@ -108,7 +115,7 @@ export default async function TopicPage({ params }: PageProps) {
     "@type": "Article",
     headline: data.topic.title,
     description: data.topic.summary,
-    mainEntityOfPage: `https://lordenryque.com${path}`,
+    mainEntityOfPage: `https://lordenryque.com${topicPath}`,
     author: {
       "@type": "Person",
       name: data.topic.author.name,
@@ -150,8 +157,8 @@ export default async function TopicPage({ params }: PageProps) {
       />
 
       <nav className={styles.breadcrumb}>
-        <Link href="/insights" className={styles.link}>Insights</Link> /{" "}
-        <Link href={`/insights/${data.cluster.slug}`} className={styles.link}>{data.cluster.title}</Link> / {data.topic.title}
+        <Link href={insightsPath} className={styles.link}>Insights</Link> /{" "}
+        <Link href={clusterPath} className={styles.link}>{data.cluster.title}</Link> / {data.topic.title}
       </nav>
 
       <section className={styles.hero}>
@@ -190,7 +197,7 @@ export default async function TopicPage({ params }: PageProps) {
             ))}
           </div>
           <Link
-            href="/contact"
+            href={localizeHref("/contact", locale)}
             className={styles.link}
             data-track-event="click_cta"
             data-track-label={`Insights CTA: ${data.topic.title}`}

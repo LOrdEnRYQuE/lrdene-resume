@@ -6,6 +6,7 @@ import { api } from "../../../convex/_generated/api";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { TOPIC_CLUSTER_CONTENT_KEY, resolveTopicClusters } from "@/lib/seo/topicClusters";
 import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
+import { localizeHref } from "@/lib/i18n/path";
 
 export const runtime = "edge";
 
@@ -45,21 +46,24 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function InsightsPage() {
+  const locale = await getRequestLocale();
   const content = await fetchQuery(api.pages.getPageContent, {
     key: TOPIC_CLUSTER_CONTENT_KEY,
+    locale,
     fallbackToEnglish: true,
   });
   const clusters = resolveTopicClusters(content?.data);
+  const insightsPath = localizeHref("/insights", locale);
 
   const collectionJsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: "Insights Topic Clusters",
-    url: "https://lordenryque.com/insights",
+    url: `https://lordenryque.com${insightsPath}`,
     hasPart: clusters.map((cluster) => ({
       "@type": "CollectionPage",
       name: cluster.title,
-      url: `https://lordenryque.com/insights/${cluster.slug}`,
+      url: `https://lordenryque.com${localizeHref(`/insights/${cluster.slug}`, locale)}`,
     })),
   };
 
@@ -87,7 +91,7 @@ export default async function InsightsPage() {
                 <li key={topic.slug}>
                   <Link
                     className={styles.link}
-                    href={`/insights/${cluster.slug}/${topic.slug}`}
+                    href={localizeHref(`/insights/${cluster.slug}/${topic.slug}`, locale)}
                     data-track-event="internal_link_click"
                     data-track-label={`Insights index->topic: ${cluster.title} ${topic.title}`}
                   >
@@ -98,7 +102,7 @@ export default async function InsightsPage() {
             </ul>
             <Link
               className={styles.link}
-              href={`/insights/${cluster.slug}`}
+              href={localizeHref(`/insights/${cluster.slug}`, locale)}
               data-track-event="internal_link_click"
               data-track-label={`Insights index->cluster: ${cluster.title}`}
             >

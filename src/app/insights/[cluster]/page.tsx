@@ -11,6 +11,7 @@ import {
   resolveTopicClusters,
 } from "@/lib/seo/topicClusters";
 import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
+import { localizeHref } from "@/lib/i18n/path";
 
 type PageProps = {
   params: Promise<{ cluster: string }>;
@@ -20,8 +21,10 @@ export const runtime = "edge";
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { cluster } = await params;
+  const locale = await getRequestLocale();
   const content = await fetchQuery(api.pages.getPageContent, {
     key: TOPIC_CLUSTER_CONTENT_KEY,
+    locale,
     fallbackToEnglish: true,
   });
   const clusters = resolveTopicClusters(content?.data);
@@ -35,7 +38,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const basePath = `/insights/${data.slug}`;
-  const locale = await getRequestLocale();
   const canonical = toLocaleCanonical(basePath, locale);
 
   return {
@@ -67,8 +69,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ClusterPage({ params }: PageProps) {
   const { cluster } = await params;
+  const locale = await getRequestLocale();
   const content = await fetchQuery(api.pages.getPageContent, {
     key: TOPIC_CLUSTER_CONTENT_KEY,
+    locale,
     fallbackToEnglish: true,
   });
   const clusters = resolveTopicClusters(content?.data);
@@ -78,13 +82,17 @@ export default async function ClusterPage({ params }: PageProps) {
     notFound();
   }
 
+  const homePath = localizeHref("/", locale);
+  const insightsPath = localizeHref("/insights", locale);
+  const clusterPath = localizeHref(`/insights/${data.slug}`, locale);
+
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://lordenryque.com" },
-      { "@type": "ListItem", position: 2, name: "Insights", item: "https://lordenryque.com/insights" },
-      { "@type": "ListItem", position: 3, name: data.title, item: `https://lordenryque.com/insights/${data.slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: `https://lordenryque.com${homePath}` },
+      { "@type": "ListItem", position: 2, name: "Insights", item: `https://lordenryque.com${insightsPath}` },
+      { "@type": "ListItem", position: 3, name: data.title, item: `https://lordenryque.com${clusterPath}` },
     ],
   };
 
@@ -93,11 +101,11 @@ export default async function ClusterPage({ params }: PageProps) {
     "@type": "CollectionPage",
     name: `${data.title} Topic Cluster`,
     description: data.description,
-    url: `https://lordenryque.com/insights/${data.slug}`,
+    url: `https://lordenryque.com${clusterPath}`,
     hasPart: data.topics.map((topic) => ({
       "@type": "Article",
       headline: topic.title,
-      url: `https://lordenryque.com/insights/${data.slug}/${topic.slug}`,
+      url: `https://lordenryque.com${localizeHref(`/insights/${data.slug}/${topic.slug}`, locale)}`,
       description: topic.summary,
     })),
   };
@@ -114,7 +122,7 @@ export default async function ClusterPage({ params }: PageProps) {
       />
 
       <nav className={styles.breadcrumb}>
-        <Link href="/insights" className={styles.link}>Insights</Link> / {data.title}
+        <Link href={insightsPath} className={styles.link}>Insights</Link> / {data.title}
       </nav>
 
       <section className={styles.hero}>
@@ -136,7 +144,7 @@ export default async function ClusterPage({ params }: PageProps) {
               ))}
             </div>
             <Link
-              href={`/insights/${data.slug}/${topic.slug}`}
+              href={localizeHref(`/insights/${data.slug}/${topic.slug}`, locale)}
               className={styles.link}
               data-track-event="internal_link_click"
               data-track-label={`Insights cluster->topic: ${data.title} ${topic.title}`}
