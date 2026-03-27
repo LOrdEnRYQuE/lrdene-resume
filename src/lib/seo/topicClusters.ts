@@ -278,6 +278,144 @@ export const TOPIC_CLUSTERS: TopicCluster[] = [
           },
         ],
       },
+      {
+        slug: "web-development-in-munich",
+        title: "Web Development in Munich: Commercial Site Blueprint",
+        summary:
+          "A conversion-driven website blueprint for Munich service and product businesses that need measurable inbound growth.",
+        intentKeywords: ["web development in munich", "next.js developer munich", "business website munich"],
+        targetQuery: "web development in munich",
+        supportQueries: ["next.js developer munich", "business website munich"],
+        businessOutcome: "More qualified inbound leads from high-intent local search and clearer CTA progression.",
+        implementationPath: [
+          "Define revenue pages by offer and buying stage.",
+          "Implement high-performance templates with proof-first layout blocks.",
+          "Track attribution, CTA engagement, and lead quality by route.",
+        ],
+        ctaLabel: "Plan Your Munich Website",
+        updatedAt: "2026-03-27",
+        author: {
+          name: "Attila Lazar",
+          title: "Founder, LOrdEnRYQuE | Full-Stack & AI Engineer",
+        },
+        proofSignals: [
+          { label: "Launch model", value: "MVP-first with measurable release checkpoints" },
+          { label: "Performance target", value: "Sub-2.5s LCP on core templates" },
+          { label: "Funnel visibility", value: "Track source-to-submit quality signals" },
+        ],
+        testimonials: [
+          {
+            quote: "The new architecture made acquisition measurable and improved lead quality in the first month.",
+            author: "Managing Director",
+            role: "Munich Service Business",
+          },
+        ],
+        caseGuide: [
+          {
+            heading: "Problem",
+            paragraphs: [
+              "Many local websites underperform because they are designed without intent mapping and measurable conversion flow.",
+            ],
+          },
+          {
+            heading: "Process",
+            paragraphs: [
+              "Map user intent to page templates, then structure proof and action hierarchy for each stage of decision-making.",
+            ],
+          },
+          {
+            heading: "Stack",
+            paragraphs: [
+              "Use a performance-first Next.js stack with schema coverage, canonical discipline, and tracked CTA pathways.",
+            ],
+          },
+          {
+            heading: "Measurable Result",
+            paragraphs: [
+              "Higher intent-match conversion and stronger channel-level decision quality for ongoing growth operations.",
+            ],
+          },
+        ],
+        faqs: [
+          {
+            question: "How long does this type of rollout usually take?",
+            answer: "Most focused local-business builds launch in 2-6 weeks depending on content and review cycles.",
+          },
+          {
+            question: "Can this framework work for multilingual markets?",
+            answer: "Yes, if route-level localization and canonical strategy are defined from the start.",
+          },
+        ],
+      },
+      {
+        slug: "web-development-in-berlin",
+        title: "Web Development in Berlin: Scalable Conversion Framework",
+        summary:
+          "A framework for Berlin-based businesses that need high-performance web delivery with reliable conversion instrumentation.",
+        intentKeywords: ["web development in berlin", "next.js developer berlin", "conversion website berlin"],
+        targetQuery: "web development in berlin",
+        supportQueries: ["next.js developer berlin", "conversion website berlin"],
+        businessOutcome: "Improved conversion consistency and clearer pipeline visibility for growth teams.",
+        implementationPath: [
+          "Define commercial template system and offer hierarchy.",
+          "Implement speed, metadata, and schema standards on every route.",
+          "Launch with event taxonomy tied to pipeline quality.",
+        ],
+        ctaLabel: "Build Berlin Growth Site",
+        updatedAt: "2026-03-27",
+        author: {
+          name: "Attila Lazar",
+          title: "Founder, LOrdEnRYQuE | Full-Stack & AI Engineer",
+        },
+        proofSignals: [
+          { label: "Template quality", value: "Offer, proof, and CTA standards by page type" },
+          { label: "Measurement depth", value: "Page intent and conversion-stage tracking" },
+          { label: "Operational fit", value: "Designed for iterative campaign updates" },
+        ],
+        testimonials: [
+          {
+            quote: "The framework gave us stronger page clarity and better lead qualification from organic traffic.",
+            author: "Growth Lead",
+            role: "Berlin B2B Company",
+          },
+        ],
+        caseGuide: [
+          {
+            heading: "Problem",
+            paragraphs: [
+              "Sites built without technical and commercial alignment struggle to scale content while preserving conversion quality.",
+            ],
+          },
+          {
+            heading: "Process",
+            paragraphs: [
+              "Align service and trust templates to buyer intent, then standardize internal linking and CTA transitions.",
+            ],
+          },
+          {
+            heading: "Stack",
+            paragraphs: [
+              "Production-ready Next.js architecture with deterministic metadata output and structured event tracking.",
+            ],
+          },
+          {
+            heading: "Measurable Result",
+            paragraphs: [
+              "Cleaner indexing, better on-page progression, and stronger source-level performance decisions.",
+            ],
+          },
+        ],
+        faqs: [
+          {
+            question: "Is this framework suitable for fast-moving startups?",
+            answer: "Yes. It is designed for iterative shipping while preserving technical SEO and measurement quality.",
+          },
+          {
+            question: "What is the first KPI to monitor after launch?",
+            answer: "Track qualified submit rate by landing template and acquisition channel.",
+          },
+        ],
+      },
     ],
   },
   {
@@ -492,6 +630,75 @@ export const TOPIC_CLUSTERS: TopicCluster[] = [
           },
         ],
       },
+      {
+        slug: "ai-automation-agency-frankfurt",
+        title: "AI Automation Agency Frankfurt: Revenue Ops Playbook",
+        summary:
+          "A practical playbook for Frankfurt teams deploying AI-assisted qualification, routing, and follow-up workflows.",
+        intentKeywords: ["ai automation agency frankfurt", "ai lead qualification frankfurt", "workflow automation consulting"],
+        targetQuery: "ai automation agency frankfurt",
+        supportQueries: ["ai lead qualification frankfurt", "workflow automation consulting"],
+        businessOutcome: "Faster lead response and improved qualification consistency across channels.",
+        implementationPath: [
+          "Standardize inbound fields and qualification criteria.",
+          "Implement AI-assisted routing with human override checkpoints.",
+          "Track SLA and conversion-quality outcomes by segment.",
+        ],
+        ctaLabel: "Plan Frankfurt AI Workflow",
+        updatedAt: "2026-03-27",
+        author: {
+          name: "Attila Lazar",
+          title: "Founder, LOrdEnRYQuE | Full-Stack & AI Engineer",
+        },
+        proofSignals: [
+          { label: "SLA objective", value: "First response under 10 minutes for high-intent leads" },
+          { label: "Governance", value: "Documented rule sets and escalation paths" },
+          { label: "Visibility", value: "End-to-end tracking from source to status updates" },
+        ],
+        testimonials: [
+          {
+            quote: "Response speed improved immediately and sales spent less time on low-fit inquiries.",
+            author: "Head of Operations",
+            role: "Frankfurt Services Team",
+          },
+        ],
+        caseGuide: [
+          {
+            heading: "Problem",
+            paragraphs: [
+              "Manual triage introduces variability and latency, especially when inbound volume increases across channels.",
+            ],
+          },
+          {
+            heading: "Process",
+            paragraphs: [
+              "Translate qualification logic into structured automation with clear ownership and exception handling.",
+            ],
+          },
+          {
+            heading: "Stack",
+            paragraphs: [
+              "Combine form capture, scoring, routing, and reporting modules with robust event governance.",
+            ],
+          },
+          {
+            heading: "Measurable Result",
+            paragraphs: [
+              "Higher fit-rate conversations and more predictable commercial throughput.",
+            ],
+          },
+        ],
+        faqs: [
+          {
+            question: "Do we need a CRM migration first?",
+            answer: "No. Start with integration adapters and controlled workflows before larger system changes.",
+          },
+          {
+            question: "What should be automated first?",
+            answer: "Begin with intake, qualification scoring, and first-touch routing for highest immediate impact.",
+          },
+        ],
+      },
     ],
   },
   {
@@ -703,6 +910,144 @@ export const TOPIC_CLUSTERS: TopicCluster[] = [
           {
             question: "How often should category metadata be reviewed?",
             answer: "Review monthly and after major catalog or campaign changes.",
+          },
+        ],
+      },
+      {
+        slug: "ecommerce-development-in-hamburg",
+        title: "E-Commerce Development in Hamburg: Conversion Engineering",
+        summary:
+          "A conversion engineering blueprint for Hamburg e-commerce teams focused on catalog discovery and checkout reliability.",
+        intentKeywords: ["e-commerce development in hamburg", "shop development hamburg", "checkout optimization hamburg"],
+        targetQuery: "e-commerce development in hamburg",
+        supportQueries: ["shop development hamburg", "checkout optimization hamburg"],
+        businessOutcome: "Higher checkout completion and improved product-list engagement.",
+        implementationPath: [
+          "Align category architecture with demand clusters.",
+          "Reduce checkout friction through stage-level diagnostics.",
+          "Measure conversion uplift by channel and device cohort.",
+        ],
+        ctaLabel: "Plan Hamburg E-Commerce Build",
+        updatedAt: "2026-03-27",
+        author: {
+          name: "Attila Lazar",
+          title: "Founder, LOrdEnRYQuE | Full-Stack & AI Engineer",
+        },
+        proofSignals: [
+          { label: "Checkout monitoring", value: "Track abandonment at each payment stage" },
+          { label: "Catalog quality", value: "Intent-aligned category and product templates" },
+          { label: "Commercial lens", value: "Revenue-oriented release prioritization" },
+        ],
+        testimonials: [
+          {
+            quote: "We improved checkout progression and gained clearer insight into product-page performance.",
+            author: "E-Commerce Lead",
+            role: "Hamburg Retail Brand",
+          },
+        ],
+        caseGuide: [
+          {
+            heading: "Problem",
+            paragraphs: [
+              "Revenue losses often come from unmeasured checkout friction and weak product discovery structure.",
+            ],
+          },
+          {
+            heading: "Process",
+            paragraphs: [
+              "Model intent by category, then apply stage-level instrumentation and prioritized friction fixes.",
+            ],
+          },
+          {
+            heading: "Stack",
+            paragraphs: [
+              "Template-driven architecture with strong metadata control and event-based conversion monitoring.",
+            ],
+          },
+          {
+            heading: "Measurable Result",
+            paragraphs: [
+              "Improved conversion rate stability and better forecasting confidence for campaign operations.",
+            ],
+          },
+        ],
+        faqs: [
+          {
+            question: "Where should we start optimization first?",
+            answer: "Start with the highest-drop checkout step and highest-traffic category entry pages.",
+          },
+          {
+            question: "Can we improve conversion without a full rebuild?",
+            answer: "Yes. Structured instrumentation and targeted fixes usually deliver fast gains before full redesign.",
+          },
+        ],
+      },
+      {
+        slug: "ecommerce-development-in-stuttgart",
+        title: "E-Commerce Development in Stuttgart: Scale-Ready Store Framework",
+        summary:
+          "A scale-ready framework for Stuttgart e-commerce teams that need faster iteration and conversion-safe growth.",
+        intentKeywords: ["e-commerce development in stuttgart", "shopify development stuttgart", "ecommerce performance stuttgart"],
+        targetQuery: "e-commerce development in stuttgart",
+        supportQueries: ["shopify development stuttgart", "ecommerce performance stuttgart"],
+        businessOutcome: "More reliable conversion growth with lower operational rework.",
+        implementationPath: [
+          "Define scalable category and product template standards.",
+          "Instrument checkout and post-purchase events for decision quality.",
+          "Ship prioritized CRO iterations with cohort-level measurement.",
+        ],
+        ctaLabel: "Build Stuttgart Store Roadmap",
+        updatedAt: "2026-03-27",
+        author: {
+          name: "Attila Lazar",
+          title: "Founder, LOrdEnRYQuE | Full-Stack & AI Engineer",
+        },
+        proofSignals: [
+          { label: "Iteration cadence", value: "Weekly measured CRO releases" },
+          { label: "Performance target", value: "Fast category and PDP load across devices" },
+          { label: "Reporting", value: "Cohort-level conversion and abandonment insights" },
+        ],
+        testimonials: [
+          {
+            quote: "The framework made optimization predictable and reduced random experimentation.",
+            author: "Growth Manager",
+            role: "Stuttgart Commerce Team",
+          },
+        ],
+        caseGuide: [
+          {
+            heading: "Problem",
+            paragraphs: [
+              "Teams struggle to scale when storefront changes are shipped without structured priorities and reliable measurement.",
+            ],
+          },
+          {
+            heading: "Process",
+            paragraphs: [
+              "Set template and instrumentation standards first, then iterate via impact-scored optimization backlog.",
+            ],
+          },
+          {
+            heading: "Stack",
+            paragraphs: [
+              "Use a composable storefront model with robust analytics and controlled deployment flow.",
+            ],
+          },
+          {
+            heading: "Measurable Result",
+            paragraphs: [
+              "Stronger conversion trend stability and clearer ROI from ongoing development sprints.",
+            ],
+          },
+        ],
+        faqs: [
+          {
+            question: "How do we prioritize CRO work?",
+            answer: "Use impact and confidence scoring tied to measured drop-off points and revenue contribution.",
+          },
+          {
+            question: "What KPI should lead weekly reviews?",
+            answer: "Track conversion by device and step-level abandonment with channel breakdowns.",
           },
         ],
       },
