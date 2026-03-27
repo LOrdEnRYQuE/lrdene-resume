@@ -146,8 +146,23 @@ export const seedAllDemos = mutation({
       Commerce: ["Sustainability Data", "Marketplace Ops"],
       "AI & Tech": ["DevTools", "API Integrations"],
       "Marketing Tech": ["GEO/SEO Analytics", "Content Intelligence"],
+      SaaS: ["Subscription UX", "Growth Loops"],
     };
     const demoItems = [
+      {
+        name: "uTraLink",
+        slug: "utralink",
+        imageUrl: "",
+        featured: true,
+        category: "SaaS",
+        description:
+          "uTraLink is a QR code platform for digital business cards, BioLinks, and dynamic QR workflows for real businesses.",
+        techStack: ["Laravel", "PHP", "QR Platform", "Link Management"],
+        url: "https://utralink.com",
+        branch: "saas/utralink",
+        status: "active",
+        features: ["Virtual Business Cards", "BioLinks", "Dynamic QR Codes"],
+      },
       {
         name: "LaMaison Fine Dining",
         slug: "restaurant",
