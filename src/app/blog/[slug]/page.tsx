@@ -5,12 +5,13 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
+import { FALLBACK_POSTS, findFallbackPostBySlug } from "@/lib/postsFallback";
 
 export const runtime = "edge";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await fetchQuery(api.posts.getBySlug, { slug });
+  const post = (await fetchQuery(api.posts.getBySlug, { slug })) ?? findFallbackPostBySlug(slug);
   if (!post) {
     return {
       title: "Post Not Found",
@@ -52,14 +53,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = await fetchQuery(api.posts.getBySlug, { slug });
+  const post = (await fetchQuery(api.posts.getBySlug, { slug })) ?? findFallbackPostBySlug(slug);
   if (!post) notFound();
 
-  const [allPosts, allProjects, allServices] = await Promise.all([
+  const [allPostsRaw, allProjects, allServices] = await Promise.all([
     fetchQuery(api.posts.list, { onlyPublished: true }),
     fetchQuery(api.projects.list, { category: undefined }),
     fetchQuery(api.services.list, {}),
   ]);
+  const allPosts = allPostsRaw.length > 0 ? allPostsRaw : FALLBACK_POSTS;
 
   const postTokens = [post.category, ...(post.tags ?? [])].map((token) => token.toLowerCase());
   const relatedPosts = allPosts

@@ -9,6 +9,7 @@ import { Calendar, Clock, ArrowRight, Search } from "lucide-react";
 import LocaleLink from "@/components/I18n/LocaleLink";
 import Image from "next/image";
 import { useLocale } from "@/lib/i18n/useLocale";
+import { FALLBACK_POSTS } from "@/lib/postsFallback";
 
 const FormattedDate = ({ date, locale }: { date: string | number; locale: "en-US" | "de-DE" }) => {
   const isoDate = new Date(date).toISOString().slice(0, 10);
@@ -60,11 +61,7 @@ export const BlogArchive = () => {
           dateLocale: "en-US" as const,
         };
   
-  const categoryFilter = selectedCategory === "All" ? undefined : selectedCategory;
-  const posts = useQuery(api.posts.list, { 
-    category: categoryFilter,
-    onlyPublished: true 
-  });
+  const posts = useQuery(api.posts.list, { onlyPublished: true });
 
   if (posts === undefined) {
     return (
@@ -74,10 +71,17 @@ export const BlogArchive = () => {
     );
   }
 
-  const filteredPosts = posts.filter(p => 
-    p.title.toLowerCase().includes(search.toLowerCase()) ||
-    p.excerpt.toLowerCase().includes(search.toLowerCase())
-  );
+  const postsToRender = posts.length > 0 ? posts : FALLBACK_POSTS;
+  const normalizedSearch = search.trim().toLowerCase();
+  const filteredPosts = postsToRender.filter((post) => {
+    const categoryMatches = selectedCategory === "All" ? true : post.category === selectedCategory;
+    const searchMatches =
+      normalizedSearch.length === 0
+        ? true
+        : post.title.toLowerCase().includes(normalizedSearch) ||
+          post.excerpt.toLowerCase().includes(normalizedSearch);
+    return categoryMatches && searchMatches;
+  });
 
   return (
     <div className={styles.archive}>
