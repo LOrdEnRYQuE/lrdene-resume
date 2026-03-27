@@ -41,7 +41,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${data.topic.title} | ${data.cluster.title}`,
     description: data.topic.summary,
-    keywords: [...data.topic.intentKeywords, data.cluster.title, "implementation guide"],
+    keywords: [
+      ...data.topic.intentKeywords,
+      ...data.topic.supportQueries,
+      data.cluster.title,
+      "implementation guide",
+      "business outcome",
+    ],
     alternates: {
       canonical,
       languages: getLanguageAlternates(basePath),

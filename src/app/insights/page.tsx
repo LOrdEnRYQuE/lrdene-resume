@@ -17,6 +17,13 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Insights | Topic Clusters",
     description:
       "Template-driven topic clusters for web development, AI automation, analytics, SEO, and growth operations.",
+    keywords: [
+      "topic clusters",
+      "programmatic SEO content",
+      "AI automation insights",
+      "web development strategy",
+      "growth operations playbooks",
+    ],
     alternates: {
       canonical,
       languages: getLanguageAlternates("/insights"),
@@ -27,6 +34,12 @@ export async function generateMetadata(): Promise<Metadata> {
         "Template-driven topic clusters for web development, AI automation, analytics, SEO, and growth operations.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Insights | LOrdEnRYQuE",
+      description:
+        "Template-driven topic clusters for web development, AI automation, analytics, SEO, and growth operations.",
     },
   };
 }

@@ -41,6 +41,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${data.title} Insights | LOrdEnRYQuE`,
     description: data.description,
+    keywords: [
+      data.title,
+      ...data.topics.flatMap((topic) => topic.intentKeywords.slice(0, 2)),
+      "insights cluster",
+      "implementation playbook",
+    ],
     alternates: {
       canonical,
       languages: getLanguageAlternates(basePath),
@@ -50,6 +56,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: data.description,
       type: "website",
       url: `https://lordenryque.com${canonical}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${data.title} Insights | LOrdEnRYQuE`,
+      description: data.description,
     },
   };
 }
