@@ -18,7 +18,18 @@ const FormattedDate = ({ date, locale }: { date: string | number; locale: "en-US
 
 const CATEGORIES = ["All", "Strategy", "Development", "Design", "AI", "Insights"];
 
-export const BlogArchive = () => {
+type BlogArchivePost = {
+  _id: string;
+  title: string;
+  slug: string;
+  category: string;
+  excerpt: string;
+  coverImage: string;
+  readTime: string;
+  date: number;
+};
+
+export const BlogArchive = ({ initialPosts = [] }: { initialPosts?: BlogArchivePost[] }) => {
   const locale = useLocale();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [search, setSearch] = useState("");
@@ -62,8 +73,9 @@ export const BlogArchive = () => {
         };
   
   const posts = useQuery(api.posts.list, { onlyPublished: true });
+  const hydratedPosts = posts ?? initialPosts;
 
-  if (posts === undefined) {
+  if (hydratedPosts.length === 0 && initialPosts.length === 0 && posts === undefined) {
     return (
       <div className={styles.loading}>
         <div className="gold-text">{copy.loading}</div>
@@ -71,7 +83,7 @@ export const BlogArchive = () => {
     );
   }
 
-  const postsToRender = posts.length > 0 ? posts : FALLBACK_POSTS;
+  const postsToRender = hydratedPosts.length > 0 ? hydratedPosts : FALLBACK_POSTS;
   const normalizedSearch = search.trim().toLowerCase();
   const filteredPosts = postsToRender.filter((post) => {
     const categoryMatches = selectedCategory === "All" ? true : post.category === selectedCategory;

@@ -30,14 +30,32 @@ function toLocalizedEntries(
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://lordenryque.com";
 
-  const [posts, projects, services, demos, topicClusterContent] = await Promise.all([
-    fetchQuery(api.posts.list, { onlyPublished: true }),
-    fetchQuery(api.projects.list, { category: undefined }),
-    fetchQuery(api.services.list, {}),
-    fetchQuery(api.demos.list, {}),
-    fetchQuery(api.pages.getPageContent, { key: TOPIC_CLUSTER_CONTENT_KEY, fallbackToEnglish: true }),
-  ]);
-  const topicClusters = resolveTopicClusters(topicClusterContent?.data);
+  let posts: Awaited<ReturnType<typeof fetchQuery<typeof api.posts.list>>> = [];
+  let projects: Awaited<ReturnType<typeof fetchQuery<typeof api.projects.list>>> = [];
+  let services: Awaited<ReturnType<typeof fetchQuery<typeof api.services.list>>> = [];
+  let demos: Awaited<ReturnType<typeof fetchQuery<typeof api.demos.list>>> = [];
+  let topicClusters: ReturnType<typeof resolveTopicClusters> = [];
+
+  try {
+    const [postsResult, projectsResult, servicesResult, demosResult, topicClusterContent] = await Promise.all([
+      fetchQuery(api.posts.list, { onlyPublished: true }),
+      fetchQuery(api.projects.list, { category: undefined }),
+      fetchQuery(api.services.list, {}),
+      fetchQuery(api.demos.list, {}),
+      fetchQuery(api.pages.getPageContent, { key: TOPIC_CLUSTER_CONTENT_KEY, fallbackToEnglish: true }),
+    ]);
+    posts = postsResult;
+    projects = projectsResult;
+    services = servicesResult;
+    demos = demosResult;
+    topicClusters = resolveTopicClusters(topicClusterContent?.data);
+  } catch {
+    posts = [];
+    projects = [];
+    services = [];
+    demos = [];
+    topicClusters = [];
+  }
 
   const postEntries = posts.map((post) => ({
     path: `/blog/${post.slug}`,
