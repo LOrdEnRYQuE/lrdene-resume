@@ -14,6 +14,7 @@ import { BUSINESS_PROFILE } from "@/lib/businessProfile";
 import { SERVICE_LOCATIONS } from "@/utils/serviceLocations";
 
 const DEFAULT_GA_ID = "G-R3P3P44GWT";
+const ICON_VERSION = "20260327";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://lordenryque.com"),
@@ -47,9 +48,12 @@ export const metadata: Metadata = {
     images: ["/assets/LOGO.png"],
   },
   icons: {
-    icon: [{ url: "/favicon.ico", sizes: "any" }, { url: "/icon.png", type: "image/png", sizes: "512x512" }],
-    shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: [
+      { url: `/favicon.ico?v=${ICON_VERSION}`, sizes: "any" },
+      { url: `/icon.png?v=${ICON_VERSION}`, type: "image/png", sizes: "512x512" },
+    ],
+    shortcut: `/favicon.ico?v=${ICON_VERSION}`,
+    apple: `/apple-touch-icon.png?v=${ICON_VERSION}`,
   },
   other: {
     "geo.region": "DE-BY",
