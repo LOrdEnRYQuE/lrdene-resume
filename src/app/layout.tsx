@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "@/styles/globals.css";
 import { Navbar } from "@/components/Navbar/Navbar";
 import { Footer } from "@/components/Footer/Footer";
@@ -199,11 +200,46 @@ export default async function RootLayout({
           <LocaleDocumentSync />
           <AnalyticsTracker />
           {gaId ? (
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `window.__LRDENE_GA_ID=${JSON.stringify(gaId)};`,
-              }}
-            />
+            <>
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `window.__LRDENE_GA_ID=${JSON.stringify(gaId)};`,
+                }}
+              />
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({
+  event: "gtm.init_consent",
+  analytics_storage: "denied",
+  ad_storage: "denied",
+  ad_user_data: "denied",
+  ad_personalization: "denied"
+});
+function gtag(){dataLayer.push(arguments);}
+window.gtag = window.gtag || gtag;
+gtag('consent', 'default', {
+  analytics_storage: 'denied',
+  ad_storage: 'denied',
+  ad_user_data: 'denied',
+  ad_personalization: 'denied'
+});
+gtag('js', new Date());
+gtag('config', ${JSON.stringify(gaId)}, {
+  send_page_view: false,
+  anonymize_ip: true,
+  allow_google_signals: false
+});
+                  `,
+                }}
+              />
+              <Script
+                id="lrdene-ga4-loader"
+                src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`}
+                strategy="afterInteractive"
+              />
+            </>
           ) : null}
           <script
             type="application/ld+json"
