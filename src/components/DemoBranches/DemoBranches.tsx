@@ -11,7 +11,8 @@ import {
   BookOpen,
   PieChart,
   Navigation,
-  Rocket
+  Rocket,
+  QrCode
 } from "lucide-react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/config";
@@ -58,6 +59,13 @@ const demos = [
     icon: <ShoppingBag size={24} />,
     slug: "ecommerce",
     stack: ["Checkout", "Catalog", "Analytics"],
+  },
+  {
+    title: "uTraLink QR SaaS",
+    description: "Digital business cards, BioLinks, and dynamic QR workflows.",
+    icon: <QrCode size={24} />,
+    slug: "utralink",
+    stack: ["Laravel", "PHP", "QR Platform"],
   },
   {
     title: "AI Dashboard",
