@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale: Locale = isLocale(localeHeader) ? localeHeader : "en";
 
   return {
-    title: "LOrdEnRYQuE | Generative AI & Architecture",
+    title: "LOrdEnRYQuE | Advanced Digital Solution",
     description:
       "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",
     alternates: {

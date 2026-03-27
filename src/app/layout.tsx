@@ -19,14 +19,14 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://lordenryque.com"),
   title: {
     template: "%s | LOrdEnRYQuE",
-    default: "LOrdEnRYQuE | Generative AI & Architecture",
+    default: "LOrdEnRYQuE | Advanced Digital Solution",
   },
   description: "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",
   keywords: ["AI Engineer", "Software Architect", "Next.js Developer", "React", "TypeScript", "Startups"],
   authors: [{ name: "Attila Lazar", url: "https://lordenryque.com" }],
   creator: "Attila Lazar",
   openGraph: {
-    title: "LOrdEnRYQuE | Generative AI & Architecture",
+    title: "LOrdEnRYQuE | Advanced Digital Solution",
     description: "Premium Portfolio & Insights. Engineering AI products and highly scalable systems.",
     siteName: "LOrdEnRYQuE Portfolio",
     locale: "en_US",
@@ -42,12 +42,14 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "LOrdEnRYQuE | Generative AI",
+    title: "LOrdEnRYQuE | Advanced Digital Solution",
     description: "Engineering AI products and highly scalable systems.",
     images: ["/assets/LOGO.png"],
   },
   icons: {
     icon: "/assets/LOGO.png",
+    shortcut: "/assets/LOGO.png",
+    apple: "/assets/LOGO.png",
   },
   other: {
     "geo.region": "DE-BY",
