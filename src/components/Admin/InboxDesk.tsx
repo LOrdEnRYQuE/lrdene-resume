@@ -1381,19 +1381,25 @@ export function InboxDesk() {
         <section className={styles.mainPane}>
           {activePane === "incoming" ? (
             <>
-              <div className={styles.incomingMetrics}>
-                <article className={styles.metricCard}>
-                  <span className={styles.metricLabel}>Threads</span>
-                  <strong>{(threads ?? []).length}</strong>
-                </article>
-                <article className={styles.metricCard}>
-                  <span className={styles.metricLabel}>Unread</span>
-                  <strong>{unreadThreads}</strong>
-                </article>
-                <article className={styles.metricCard}>
-                  <span className={styles.metricLabel}>Follow-up Due</span>
-                  <strong>{dueFollowUps}</strong>
-                </article>
+              <div className={styles.mailTopbar}>
+                <div className={styles.mailTopbarTitle}>
+                  <strong>Inbox</strong>
+                  <span className={styles.sub}>Triaged conversations and replies</span>
+                </div>
+                <div className={styles.incomingMetrics}>
+                  <article className={styles.metricCard}>
+                    <span className={styles.metricLabel}>Threads</span>
+                    <strong>{(threads ?? []).length}</strong>
+                  </article>
+                  <article className={styles.metricCard}>
+                    <span className={styles.metricLabel}>Unread</span>
+                    <strong>{unreadThreads}</strong>
+                  </article>
+                  <article className={styles.metricCard}>
+                    <span className={styles.metricLabel}>Follow-up Due</span>
+                    <strong>{dueFollowUps}</strong>
+                  </article>
+                </div>
               </div>
               <div className={styles.mobileToolbar}>
                 <button
@@ -1411,57 +1417,59 @@ export function InboxDesk() {
                   {mobileShowConversation ? "Hide Conversation" : "Show Conversation"}
                 </button>
               </div>
-              <div className={styles.mainToolbar}>
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search contact, email, subject..."
-                />
-                <select
-                  value={threadStatus}
-                  onChange={(e) => setThreadStatus(e.target.value as (typeof THREAD_STATUS)[number])}
-                >
-                  {THREAD_STATUS.map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className={styles.queueToolbar}>
-                <div className={styles.queueChips}>
-                  <button
-                    type="button"
-                    className={`${styles.queueChip} ${queueFilter === "all" ? styles.queueChipActive : ""}`}
-                    onClick={() => setQueueFilter("all")}
+              <div className={styles.mailFilterBar}>
+                <div className={styles.mainToolbar}>
+                  <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search contact, email, subject..."
+                  />
+                  <select
+                    value={threadStatus}
+                    onChange={(e) => setThreadStatus(e.target.value as (typeof THREAD_STATUS)[number])}
                   >
-                    All ({(threads ?? []).length})
-                  </button>
-                  <button
-                    type="button"
-                    className={`${styles.queueChip} ${queueFilter === "unread" ? styles.queueChipActive : ""}`}
-                    onClick={() => setQueueFilter("unread")}
-                  >
-                    Unread ({unreadThreads})
-                  </button>
-                  <button
-                    type="button"
-                    className={`${styles.queueChip} ${queueFilter === "followup" ? styles.queueChipActive : ""}`}
-                    onClick={() => setQueueFilter("followup")}
-                  >
-                    Follow-up ({dueFollowUps})
-                  </button>
+                    {THREAD_STATUS.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                <select value={queueSort} onChange={(e) => setQueueSort(e.target.value as typeof queueSort)}>
-                  <option value="priority">Sort: Triage priority</option>
-                  <option value="recent">Sort: Most recent</option>
-                  <option value="name">Sort: Contact name</option>
-                </select>
+                <div className={styles.queueToolbar}>
+                  <div className={styles.queueChips}>
+                    <button
+                      type="button"
+                      className={`${styles.queueChip} ${queueFilter === "all" ? styles.queueChipActive : ""}`}
+                      onClick={() => setQueueFilter("all")}
+                    >
+                      All ({(threads ?? []).length})
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.queueChip} ${queueFilter === "unread" ? styles.queueChipActive : ""}`}
+                      onClick={() => setQueueFilter("unread")}
+                    >
+                      Unread ({unreadThreads})
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.queueChip} ${queueFilter === "followup" ? styles.queueChipActive : ""}`}
+                      onClick={() => setQueueFilter("followup")}
+                    >
+                      Follow-up ({dueFollowUps})
+                    </button>
+                  </div>
+                  <select value={queueSort} onChange={(e) => setQueueSort(e.target.value as typeof queueSort)}>
+                    <option value="priority">Sort: Triage priority</option>
+                    <option value="recent">Sort: Most recent</option>
+                    <option value="name">Sort: Contact name</option>
+                  </select>
+                </div>
               </div>
               <div className={styles.incomingLayout}>
                 <aside className={`${styles.listPane} ${!mobileShowThreads ? styles.mobileCollapsed : ""}`}>
                   <div className={styles.paneHeader}>
-                    <strong>Triage Queue</strong>
+                    <strong>Threads</strong>
                     <span className={styles.meta}>{queueThreads.length} threads</span>
                   </div>
                   {queueThreads.length === 0 ? (
@@ -1480,9 +1488,8 @@ export function InboxDesk() {
                         </div>
                         <span className={styles.threadEmail}>{thread.participantEmail}</span>
                         <span className={styles.threadSubject}>{thread.subject}</span>
-                        <span className={styles.threadMetaLine}>
-                          {thread.status} · last activity {formatRelativeTime(thread.lastMessageAt)}
-                        </span>
+                        <span className={styles.threadMetaLine}>{thread.status}</span>
+                        <span className={styles.threadMetaLine}>Last activity {formatRelativeTime(thread.lastMessageAt)}</span>
                         <span className={styles.preview}>{thread.preview}</span>
                       </button>
                     ))
