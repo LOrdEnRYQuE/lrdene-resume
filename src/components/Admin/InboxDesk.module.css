@@ -87,6 +87,36 @@
   gap: 0.75rem;
 }
 
+.queueToolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(170px, 220px);
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.queueChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.38rem;
+}
+
+.queueChip {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.28rem 0.58rem;
+  cursor: pointer;
+}
+
+.queueChipActive {
+  border-color: rgba(232, 232, 232, 0.72);
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
 .incomingMetrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -545,6 +575,10 @@
   }
 
   .mainToolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .queueToolbar {
     grid-template-columns: 1fr;
   }
 }

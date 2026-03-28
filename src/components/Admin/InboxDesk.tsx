@@ -458,6 +458,8 @@ export function InboxDesk() {
   const [mobileComposerOpen, setMobileComposerOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [threadStatus, setThreadStatus] = useState<(typeof THREAD_STATUS)[number]>("all");
+  const [queueFilter, setQueueFilter] = useState<"all" | "unread" | "followup">("all");
+  const [queueSort, setQueueSort] = useState<"recent" | "priority" | "name">("priority");
   const [selectedThreadId, setSelectedThreadId] = useState<Id<"emailThreads"> | null>(null);
   const [showCampaignLab, setShowCampaignLab] = useState(false);
 
@@ -683,6 +685,25 @@ export function InboxDesk() {
     () => (threads ?? []).filter((thread) => thread.unreadCount > 0).length,
     [threads],
   );
+  const queueThreads = useMemo(() => {
+    const filtered = (threads ?? []).filter((thread) => {
+      if (queueFilter === "unread") return thread.unreadCount > 0;
+      if (queueFilter === "followup") return thread.status !== "closed" && thread.latestDirection === "incoming";
+      return true;
+    });
+    const score = (thread: any) => {
+      const unreadWeight = Math.min(thread.unreadCount || 0, 6) * 30;
+      const waitingWeight = thread.status === "waiting" ? 18 : thread.status === "open" ? 10 : 0;
+      const followupWeight = thread.status !== "closed" && thread.latestDirection === "incoming" ? 24 : 0;
+      const freshness = Math.floor(((thread.lastMessageAt || 0) / 1000) % 97);
+      return unreadWeight + waitingWeight + followupWeight + freshness;
+    };
+    return [...filtered].sort((a, b) => {
+      if (queueSort === "name") return (a.participantName ?? a.participantEmail).localeCompare(b.participantName ?? b.participantEmail);
+      if (queueSort === "recent") return (b.lastMessageAt || 0) - (a.lastMessageAt || 0);
+      return score(b) - score(a);
+    });
+  }, [queueFilter, queueSort, threads]);
 
   const activeTemplate = useMemo(
     () => (templates ?? []).find((template) => template._id === selectedTemplateId) ?? null,
@@ -1370,16 +1391,46 @@ export function InboxDesk() {
                   ))}
                 </select>
               </div>
+              <div className={styles.queueToolbar}>
+                <div className={styles.queueChips}>
+                  <button
+                    type="button"
+                    className={`${styles.queueChip} ${queueFilter === "all" ? styles.queueChipActive : ""}`}
+                    onClick={() => setQueueFilter("all")}
+                  >
+                    All ({(threads ?? []).length})
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.queueChip} ${queueFilter === "unread" ? styles.queueChipActive : ""}`}
+                    onClick={() => setQueueFilter("unread")}
+                  >
+                    Unread ({unreadThreads})
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.queueChip} ${queueFilter === "followup" ? styles.queueChipActive : ""}`}
+                    onClick={() => setQueueFilter("followup")}
+                  >
+                    Follow-up ({dueFollowUps})
+                  </button>
+                </div>
+                <select value={queueSort} onChange={(e) => setQueueSort(e.target.value as typeof queueSort)}>
+                  <option value="priority">Sort: Triage priority</option>
+                  <option value="recent">Sort: Most recent</option>
+                  <option value="name">Sort: Contact name</option>
+                </select>
+              </div>
               <div className={styles.incomingLayout}>
                 <aside className={`${styles.listPane} ${!mobileShowThreads ? styles.mobileCollapsed : ""}`}>
                   <div className={styles.paneHeader}>
-                    <strong>Incoming</strong>
-                    <span className={styles.meta}>{(threads ?? []).length} threads</span>
+                    <strong>Triage Queue</strong>
+                    <span className={styles.meta}>{queueThreads.length} threads</span>
                   </div>
-                  {(threads ?? []).length === 0 ? (
+                  {queueThreads.length === 0 ? (
                     <p className={styles.empty}>No threads yet. Run Sync Leads to initialize from form submissions.</p>
                   ) : (
-                    (threads ?? []).map((thread) => (
+                    queueThreads.map((thread) => (
                       <button
                         key={thread._id}
                         type="button"
