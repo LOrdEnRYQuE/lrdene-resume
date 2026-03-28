@@ -97,8 +97,8 @@ export const AdminDashboard = () => {
     },
     {
       href: "/admin/portals",
-      title: "Delivery Desk",
-      subtitle: "Manage active client spaces and handoffs.",
+      title: "Portal Architect",
+      subtitle: "Provision secure project environments for your clients.",
       icon: FolderOpen,
     },
     {

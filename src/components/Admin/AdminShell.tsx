@@ -14,7 +14,7 @@ const PAGE_LABELS: Record<string, { title: string; subtitle: string }> = {
   "/admin/health": { title: "System Health", subtitle: "Operational checks and delivery readiness." },
   "/admin/leads": { title: "Leads", subtitle: "Lead triage, status flow, and close-priority tracking." },
   "/admin/inbox": { title: "Inbox", subtitle: "Inbound conversations, templates, and campaigns." },
-  "/admin/portals": { title: "Portals", subtitle: "Client spaces, access control, and collaboration state." },
+  "/admin/portals": { title: "Portal Architect", subtitle: "Provision secure project environments for your clients." },
   "/admin/media": { title: "Media", subtitle: "Asset library, alt-text hygiene, and governance." },
   "/admin/projects": { title: "Projects", subtitle: "Case studies, status, and showcase pipeline." },
   "/admin/demos": { title: "Demos", subtitle: "Demo inventory and niche positioning." },

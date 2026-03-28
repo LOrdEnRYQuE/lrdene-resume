@@ -4,7 +4,7 @@ import AdminPage from "@/components/Admin/AdminPage";
 import { PortalManager } from "@/components/Admin/PortalManager";
 
 export const metadata: Metadata = {
-  title: "Portals",
+  title: "Portal Architect",
 };
 
 export default function AdminPortalsPage() {
