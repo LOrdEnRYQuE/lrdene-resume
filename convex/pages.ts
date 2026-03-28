@@ -4,6 +4,7 @@ import { ADMIN_TOKEN, requireAdminToken } from "./adminAuth";
 
 const SECTION_STATUS = v.union(v.literal("draft"), v.literal("published"));
 const LOCALE = v.union(v.literal("en"), v.literal("de"));
+const ADMIN_PAGE_SECTIONS_LIMIT = 2000;
 
 const LEGACY_SECTION_BRIDGE: Record<string, { page: string; sectionKey: string; type: string }> = {
   navbar: { page: "global", sectionKey: "navbar", type: "navigation" },
@@ -157,13 +158,13 @@ export const getPageSections = query({
       return await ctx.db
         .query("pageSections")
         .withIndex("by_page_and_order", (q) => q.eq("page", args.page))
-        .take(200);
+        .take(ADMIN_PAGE_SECTIONS_LIMIT);
     }
 
     return await ctx.db
       .query("pageSections")
       .withIndex("by_page_and_status_and_order", (q) => q.eq("page", args.page).eq("status", "published"))
-      .take(200);
+      .take(ADMIN_PAGE_SECTIONS_LIMIT);
   },
 });
 
