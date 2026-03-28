@@ -1338,6 +1338,7 @@ export function InboxDesk() {
       <div className={styles.workspace}>
         <aside className={styles.navRail}>
           <h1 className={styles.railTitle}>Inbox OS</h1>
+          <p className={styles.meta}>UX Build: v2</p>
           <p className={styles.meta}>Follow-up due: {dueFollowUps}</p>
           <button
             type="button"
