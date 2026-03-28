@@ -7,7 +7,6 @@ import styles from "./QRSolutionsPage.module.css";
 import Image from "next/image";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { motion, useScroll, useTransform } from "framer-motion";
 
 const PRIVACY_CONSENT_VERSION = "qr_solutions_form_v1";
 
@@ -530,32 +529,6 @@ export default function QRSolutionsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const orbAY = useTransform(scrollYProgress, [0, 1], [0, 140]);
-  const orbBY = useTransform(scrollYProgress, [0, 1], [0, -120]);
-  const heroLift = useTransform(scrollYProgress, [0, 0.35], [0, -18]);
-  const sectionReveal = {
-    hidden: { opacity: 0, y: 20 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  };
-  const staggerWrap = {
-    hidden: {},
-    show: {
-      transition: { staggerChildren: 0.08, delayChildren: 0.06 },
-    },
-  };
-  const staggerItem = {
-    hidden: { opacity: 0, y: 14 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.42 },
-    },
-  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -607,11 +580,11 @@ export default function QRSolutionsPage() {
   return (
     <main className={styles.page}>
       <div className={styles.ambientLayer} aria-hidden="true">
-        <motion.span className={styles.ambientOrbA} style={{ y: orbAY }} />
-        <motion.span className={styles.ambientOrbB} style={{ y: orbBY }} />
+        <span className={styles.ambientOrbA} />
+        <span className={styles.ambientOrbB} />
       </div>
       <div className="container">
-        <motion.section className={styles.hero} style={{ y: heroLift }}>
+        <section className={styles.hero}>
           <div className={styles.heroLayout}>
             <div className={styles.heroMain}>
               <span className={styles.eyebrow}>{copy.eyebrow}</span>
@@ -647,32 +620,27 @@ export default function QRSolutionsPage() {
               </div>
             </aside>
           </div>
-        </motion.section>
+        </section>
 
-        <motion.section
+        <section
           className={styles.grid}
-          variants={staggerWrap}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
         >
           {copy.cards.map((card, index) => (
-            <motion.article key={card.title} className={styles.card} variants={staggerItem}>
+            <article key={card.title} className={styles.card}>
               <span className={styles.cardIndex}>0{index + 1}</span>
               <h3>{card.title}</h3>
               <p>{card.text}</p>
-            </motion.article>
+            </article>
           ))}
-        </motion.section>
+        </section>
 
-        <motion.section className={styles.section} variants={sectionReveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+        <section className={styles.section}>
           <h2>{copy.showcaseTitle}</h2>
-          <motion.div className={styles.showcaseGrid} variants={staggerWrap} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
+          <div className={styles.showcaseGrid}>
             {copy.showcaseItems.map((item, index) => (
-              <motion.article
+              <article
                 key={item.title}
                 className={`${styles.showcaseCard} ${index === 0 ? styles.showcaseFeatured : ""}`}
-                variants={staggerItem}
               >
                 <div className={styles.showcaseImageWrap}>
                   <Image src="/assets/uTraLink-icon.png" alt={item.title} fill className={styles.showcaseImage} sizes="(max-width: 960px) 100vw, 33vw" />
@@ -685,34 +653,32 @@ export default function QRSolutionsPage() {
                 </div>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
-              </motion.article>
+              </article>
             ))}
-          </motion.div>
-        </motion.section>
+          </div>
+        </section>
 
-        <motion.section className={styles.section} variants={sectionReveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+        <section className={styles.section}>
           <h2>{copy.workflowTitle}</h2>
-          <motion.div className={styles.workflowGrid} variants={staggerWrap} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
+          <div className={styles.workflowGrid}>
             {copy.workflowSteps.map((item) => (
-              <motion.article key={item.step} className={styles.workflowCard} variants={staggerItem}>
+              <article key={item.step} className={styles.workflowCard}>
                 <span className={styles.workflowStep}>{item.step}</span>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
-              </motion.article>
+              </article>
             ))}
-          </motion.div>
-        </motion.section>
+          </div>
+        </section>
 
-        <motion.section className={styles.section} variants={sectionReveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+        <section className={styles.section}>
           <h2>{copy.emulatorTitle}</h2>
           <p className={styles.subtitle}>{copy.emulatorDesc}</p>
-          <motion.div className={styles.emulatorGrid} variants={staggerWrap} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+          <div className={styles.emulatorGrid}>
             {copy.frames.map((frame, index) => (
-              <motion.article
+              <article
                 key={frame.title}
                 className={`${styles.phoneFrame} ${index === 0 ? styles.frameA : index === 1 ? styles.frameB : styles.frameC}`}
-                variants={staggerItem}
-                whileHover={{ y: -4 }}
               >
                 <div className={styles.frameBadge}>
                   <span>{index === 0 ? "vCard" : index === 1 ? "BioLink" : "Business"}</span>
@@ -784,19 +750,18 @@ export default function QRSolutionsPage() {
                     </a>
                   </div>
                 </div>
-              </motion.article>
+              </article>
             ))}
-          </motion.div>
-        </motion.section>
+          </div>
+        </section>
 
-        <motion.section className={styles.section} variants={sectionReveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+        <section className={styles.section}>
           <h2>{copy.liveTitle}</h2>
-          <motion.div className={styles.liveGrid} variants={staggerWrap} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
+          <div className={styles.liveGrid}>
             {copy.liveGroups.map((group, index) => (
-              <motion.article
+              <article
                 key={group.label}
                 className={`${styles.liveCard} ${index === 0 ? styles.liveFeatured : ""}`}
-                variants={staggerItem}
               >
                 <h3>{group.label}</h3>
                 <div className={styles.liveLinks}>
@@ -807,12 +772,12 @@ export default function QRSolutionsPage() {
                     </a>
                   ))}
                 </div>
-              </motion.article>
+              </article>
             ))}
-          </motion.div>
-        </motion.section>
+          </div>
+        </section>
 
-        <motion.section className={styles.section} variants={sectionReveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+        <section className={styles.section}>
           <h2>{copy.comparisonTitle}</h2>
           <div className={styles.compareTable}>
             <div className={`${styles.compareRow} ${styles.compareHead}`}>
@@ -828,22 +793,22 @@ export default function QRSolutionsPage() {
               </div>
             ))}
           </div>
-        </motion.section>
+        </section>
 
-        <motion.section className={styles.section} variants={sectionReveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+        <section className={styles.section}>
           <h2>{copy.testimonialsTitle}</h2>
-          <motion.div className={styles.testimonialGrid} variants={staggerWrap} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
+          <div className={styles.testimonialGrid}>
             {copy.testimonials.map((item) => (
-              <motion.article key={`${item.name}-${item.role}`} className={styles.testimonialCard} variants={staggerItem}>
+              <article key={`${item.name}-${item.role}`} className={styles.testimonialCard}>
                 <p>"{item.quote}"</p>
                 <strong>{item.name}</strong>
                 <span>{item.role}</span>
-              </motion.article>
+              </article>
             ))}
-          </motion.div>
-        </motion.section>
+          </div>
+        </section>
 
-        <motion.section className={styles.section} variants={sectionReveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+        <section className={styles.section}>
           <h2>{copy.benefitTitle}</h2>
           <div className={styles.list}>
             {copy.benefits.map((item) => (
@@ -852,9 +817,9 @@ export default function QRSolutionsPage() {
               </div>
             ))}
           </div>
-        </motion.section>
+        </section>
 
-        <motion.section className={styles.section} variants={sectionReveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+        <section className={styles.section}>
           <h2>{copy.useCasesTitle}</h2>
           <div className={styles.list}>
             {copy.useCases.map((item) => (
@@ -863,9 +828,9 @@ export default function QRSolutionsPage() {
               </div>
             ))}
           </div>
-        </motion.section>
+        </section>
 
-        <motion.section className={styles.section} variants={sectionReveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+        <section className={styles.section}>
           <div className={styles.leadCard}>
             <h2>{copy.leadTitle}</h2>
             <p>{copy.leadDesc}</p>
@@ -945,9 +910,9 @@ export default function QRSolutionsPage() {
               </form>
             )}
           </div>
-        </motion.section>
+        </section>
 
-        <motion.section className={styles.section} variants={sectionReveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+        <section className={styles.section}>
           <h2>{copy.checklistTitle}</h2>
           <p className={styles.subtitle}>{copy.checklistIntro}</p>
           <div className={styles.accordionStack}>
@@ -962,19 +927,19 @@ export default function QRSolutionsPage() {
               </details>
             ))}
           </div>
-        </motion.section>
+        </section>
 
-        <motion.section className={styles.section} variants={sectionReveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+        <section className={styles.section}>
           <h2>{copy.tipsTitle}</h2>
-          <motion.div className={styles.tipGrid} variants={staggerWrap} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
+          <div className={styles.tipGrid}>
             {copy.tipsItems.map((tip) => (
-              <motion.article key={tip.title} className={styles.tipCard} variants={staggerItem}>
+              <article key={tip.title} className={styles.tipCard}>
                 <h3>{tip.title}</h3>
                 <p>{tip.text}</p>
-              </motion.article>
+              </article>
             ))}
-          </motion.div>
-        </motion.section>
+          </div>
+        </section>
       </div>
       <div className={styles.stickyCtaBar}>
         <p>{copy.stickyCta}</p>
