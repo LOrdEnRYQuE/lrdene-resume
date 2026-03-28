@@ -77,6 +77,7 @@ export default function QRSolutionsPage() {
         emulatorTitle: "Mobile Frame Emulator",
         emulatorDesc:
           "Drei unterschiedliche Mobile-Frames zeigen, wie deine QR-Ziele als VCard, BioLink und Business Profile auf echten Smartphones wirken.",
+        emulatorLoadPreview: "Live-Vorschau laden",
         frames: [
           {
             title: "vCard Experience",
@@ -326,6 +327,7 @@ export default function QRSolutionsPage() {
         emulatorTitle: "Mobile Frame Emulator",
         emulatorDesc:
           "Three different mobile frames simulate how your QR destinations appear as vCard, BioLink, and Business Profile experiences.",
+        emulatorLoadPreview: "Load live preview",
         frames: [
           {
             title: "vCard Experience",
@@ -515,6 +517,7 @@ export default function QRSolutionsPage() {
         ],
       };
   const [selectedFrameUrlIndex, setSelectedFrameUrlIndex] = useState<Record<number, number>>({});
+  const [loadedFramePreview, setLoadedFramePreview] = useState<Record<number, boolean>>({});
   const createLead = useMutation(api.leads.create);
   const [formData, setFormData] = useState({
     name: "",
@@ -749,14 +752,29 @@ export default function QRSolutionsPage() {
                       </select>
                     </div>
                     <div className={styles.frameViewport}>
-                      <iframe
-                        title={`${frame.title} live preview`}
-                        src={(frame.urls ?? [frame.sampleUrl])[selectedFrameUrlIndex[index] ?? 0]}
-                        className={styles.liveFrame}
-                        loading="lazy"
-                        referrerPolicy="no-referrer"
-                        sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin"
-                      />
+                      {loadedFramePreview[index] ? (
+                        <iframe
+                          title={`${frame.title} live preview`}
+                          src={(frame.urls ?? [frame.sampleUrl])[selectedFrameUrlIndex[index] ?? 0]}
+                          className={styles.liveFrame}
+                          loading="lazy"
+                          referrerPolicy="no-referrer"
+                          sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin"
+                        />
+                      ) : (
+                        <button
+                          type="button"
+                          className={styles.frameLoadBtn}
+                          onClick={() =>
+                            setLoadedFramePreview((prev) => ({
+                              ...prev,
+                              [index]: true,
+                            }))
+                          }
+                        >
+                          {copy.emulatorLoadPreview}
+                        </button>
+                      )}
                     </div>
                     <p className={styles.frameHint}>
                       Live preview is embedded where allowed by the destination site.
