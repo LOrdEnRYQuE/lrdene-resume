@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import styles from "./ServiceManager.module.css";
@@ -93,6 +93,7 @@ export const ServiceManager = () => {
   const [matrixFilter, setMatrixFilter] = useState<"all" | "complete" | "incomplete" | "missingFaq">("incomplete");
   const [selectedMatrixKeys, setSelectedMatrixKeys] = useState<string[]>([]);
   const [isBulkUpdating, setIsBulkUpdating] = useState(false);
+  const locationEditorRef = useRef<HTMLElement | null>(null);
 
   const handleOpenCreate = () => {
     setEditingService(null);
@@ -181,20 +182,24 @@ export const ServiceManager = () => {
     ? sections.find((section) => section.sectionKey === locationSectionKey)
     : null;
 
-  const preloadLocationForm = () => {
-    const existingData = (existingLocationSection?.data ?? {}) as Partial<LocationContentForm>;
+  const preloadLocationForm = (
+    serviceOverride = selectedLocationService,
+    locationOverride = selectedLocation,
+    sectionOverride = existingLocationSection,
+  ) => {
+    const existingData = (sectionOverride?.data ?? {}) as Partial<LocationContentForm>;
     setLocationForm({
       headline:
         existingData.headline ||
-        `${selectedLocationService?.title || "Service"} in ${selectedLocation?.city || "Berlin"}`,
+        `${serviceOverride?.title || "Service"} in ${locationOverride?.city || "Berlin"}`,
       intro:
         existingData.intro ||
-        `Premium delivery for teams in ${selectedLocation?.city || "Berlin"} looking for measurable growth and modern execution.`,
-      proofPoint: existingData.proofPoint || selectedLocation?.proofPoint || "",
+        `Premium delivery for teams in ${locationOverride?.city || "Berlin"} looking for measurable growth and modern execution.`,
+      proofPoint: existingData.proofPoint || locationOverride?.proofPoint || "",
       testimonial:
         existingData.testimonial ||
         "Execution was clean, fast, and exactly what our growth plan needed.",
-      faqQuestion: existingData.faqQuestion || `How does ${selectedLocationService?.title || "this service"} delivery work?`,
+      faqQuestion: existingData.faqQuestion || `How does ${serviceOverride?.title || "this service"} delivery work?`,
       faqAnswer:
         existingData.faqAnswer ||
         "We scope outcomes first, define milestones, and ship in iterative weekly cycles.",
@@ -231,9 +236,14 @@ export const ServiceManager = () => {
     }
   };
 
-  const openEditorForLocation = (serviceId: string, locationSlug: string) => {
+  const openEditorForLocation = (serviceId: string, locationSlug: string, sectionKey?: string) => {
     setSelectedLocationServiceId(serviceId);
     setSelectedLocationSlug(locationSlug);
+    const service = services.find((entry) => entry._id === serviceId);
+    const location = SERVICE_LOCATIONS.find((entry) => entry.slug === locationSlug);
+    const section = sectionKey ? sections.find((entry) => entry.sectionKey === sectionKey) : null;
+    preloadLocationForm(service, location, section);
+    locationEditorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const locationRows = services.flatMap((service) =>
@@ -410,7 +420,7 @@ export const ServiceManager = () => {
         ))}
       </div>
 
-      <section className={styles.locationSection}>
+      <section className={styles.locationSection} ref={locationEditorRef}>
         <h2>Service-Location SEO Landing Editor</h2>
         <p>Create and maintain unique SEO copy for routes like <code>/services/ai-automation-berlin</code>.</p>
 
@@ -441,7 +451,7 @@ export const ServiceManager = () => {
               ))}
             </select>
           </div>
-          <button type="button" className={styles.syncBtn} onClick={preloadLocationForm}>
+          <button type="button" className={styles.syncBtn} onClick={() => preloadLocationForm()}>
             Load Suggested Copy
           </button>
         </div>
@@ -622,8 +632,7 @@ export const ServiceManager = () => {
                   type="button"
                   className={styles.editBtn}
                   onClick={() => {
-                    openEditorForLocation(row.serviceId, row.location.slug);
-                    setTimeout(preloadLocationForm, 0);
+                    openEditorForLocation(row.serviceId, row.location.slug, row.key);
                   }}
                 >
                   Edit
