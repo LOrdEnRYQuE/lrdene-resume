@@ -5,7 +5,7 @@ import styles from "./LeadPipeline.module.css";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { motion, AnimatePresence } from "framer-motion";
-import { Activity, Mail, MessageSquare, DollarSign, Clock, Search, BrainCircuit, Star } from "lucide-react";
+import { Activity, Mail, MessageSquare, DollarSign, Clock, Search, BrainCircuit, Star, Users, Target } from "lucide-react";
 import { useAdminMutation } from "@/hooks/useAdminMutation";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
 
@@ -47,6 +47,8 @@ export const LeadPipeline = () => {
 
   const [search, setSearch] = useState("");
   const [nichePreset, setNichePreset] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<"priority" | "score" | "recent" | "name">("priority");
   const [viewMode, setViewMode] = useState<"list" | "kanban">("kanban");
   const hasAppliedServerPreset = useRef(false);
   const lastPersistedPreset = useRef<string>("all");
@@ -100,9 +102,32 @@ export const LeadPipeline = () => {
     return counts;
   }, [searchMatchedLeads]);
 
-  const filteredLeads = searchMatchedLeads?.filter((l) =>
-    nichePreset === "all" ? true : (l.niche || "").toLowerCase() === nichePreset
-  );
+  const filteredLeads = useMemo(() => {
+    const stageFiltered = (searchMatchedLeads || []).filter((l) => {
+      const nicheMatch = nichePreset === "all" ? true : (l.niche || "").toLowerCase() === nichePreset;
+      const statusMatch = statusFilter === "all" ? true : l.status === statusFilter;
+      return nicheMatch && statusMatch;
+    });
+
+    const priorityRank: Record<string, number> = { High: 3, Medium: 2, Low: 1 };
+    return [...stageFiltered].sort((a, b) => {
+      if (sortBy === "name") return a.name.localeCompare(b.name);
+      if (sortBy === "score") return (b.aiScore || 0) - (a.aiScore || 0);
+      if (sortBy === "recent") return (b._creationTime || 0) - (a._creationTime || 0);
+      const prioDiff = (priorityRank[b.aiPriority || "Low"] || 1) - (priorityRank[a.aiPriority || "Low"] || 1);
+      if (prioDiff !== 0) return prioDiff;
+      return (b.aiScore || 0) - (a.aiScore || 0);
+    });
+  }, [searchMatchedLeads, nichePreset, statusFilter, sortBy]);
+
+  const pipelineMetrics = useMemo(() => {
+    const total = leads.length;
+    const highPriority = leads.filter((lead) => lead.aiPriority === "High").length;
+    const active = leads.filter((lead) => lead.status !== "Won" && lead.status !== "Lost").length;
+    const avgScore = total > 0 ? Math.round(leads.reduce((sum, lead) => sum + (lead.aiScore || 0), 0) / total) : 0;
+    const conversion = total > 0 ? Math.round((leads.filter((lead) => lead.status === "Won").length / total) * 100) : 0;
+    return { total, highPriority, active, avgScore, conversion };
+  }, [leads]);
 
   const selectedLead = leads?.find(l => l._id === selectedLeadId);
 
@@ -157,6 +182,25 @@ export const LeadPipeline = () => {
               onChange={e => setSearch(e.target.value)}
             />
           </div>
+          <div className={styles.statusFilterBar}>
+            <button
+              type="button"
+              className={`${styles.statusFilterBtn} ${statusFilter === "all" ? styles.activeStatusFilter : ""}`}
+              onClick={() => setStatusFilter("all")}
+            >
+              All Stages
+            </button>
+            {KANBAN_STAGES.map((stage) => (
+              <button
+                key={stage}
+                type="button"
+                className={`${styles.statusFilterBtn} ${statusFilter === stage ? styles.activeStatusFilter : ""}`}
+                onClick={() => setStatusFilter(stage)}
+              >
+                {stage}
+              </button>
+            ))}
+          </div>
           <div className={styles.nicheFilterBar}>
             {NICHE_PRESETS.map((preset) => (
               <button
@@ -169,11 +213,45 @@ export const LeadPipeline = () => {
               </button>
             ))}
           </div>
+          <select className={styles.sortSelect} value={sortBy} onChange={(e) => setSortBy(e.target.value as typeof sortBy)}>
+            <option value="priority">Sort: Priority</option>
+            <option value="score">Sort: AI Score</option>
+            <option value="recent">Sort: Most Recent</option>
+            <option value="name">Sort: Name</option>
+          </select>
           <button className={styles.addBtn} onClick={() => setIsAddModalOpen(true)}>
             <Star size={18} /> Add Lead
           </button>
         </div>
       </header>
+
+      <section className={styles.metricGrid}>
+        <div className={styles.metricCard}>
+          <Users size={16} className="gold-text" />
+          <span>Total Leads</span>
+          <strong>{pipelineMetrics.total}</strong>
+        </div>
+        <div className={styles.metricCard}>
+          <Star size={16} className="gold-text" />
+          <span>High Priority</span>
+          <strong>{pipelineMetrics.highPriority}</strong>
+        </div>
+        <div className={styles.metricCard}>
+          <Target size={16} className="gold-text" />
+          <span>Active Deals</span>
+          <strong>{pipelineMetrics.active}</strong>
+        </div>
+        <div className={styles.metricCard}>
+          <BrainCircuit size={16} className="gold-text" />
+          <span>Avg AI Score</span>
+          <strong>{pipelineMetrics.avgScore}%</strong>
+        </div>
+        <div className={styles.metricCard}>
+          <DollarSign size={16} className="gold-text" />
+          <span>Win Rate</span>
+          <strong>{pipelineMetrics.conversion}%</strong>
+        </div>
+      </section>
 
       <div className={viewMode === "list" ? styles.mainLayout : styles.kanbanLayout}>
         {viewMode === "list" ? (
@@ -204,6 +282,11 @@ export const LeadPipeline = () => {
                   </div>
                 </motion.div>
               ))}
+              {filteredLeads?.length === 0 && (
+                <div className={styles.emptySidebar}>
+                  <p>No leads match this filter.</p>
+                </div>
+              )}
             </div>
 
             <div className={styles.content}>
@@ -301,6 +384,14 @@ export const LeadPipeline = () => {
                     <div className={styles.messageBox}>
                       <h3>Original Message</h3>
                       <p>{selectedLead.message}</p>
+                      <div className={styles.fitInsight}>
+                        <strong>Pipeline Insight:</strong>{" "}
+                        {selectedLead.aiPriority === "High"
+                          ? "High-priority lead. Reply within the next business hour and push to qualification."
+                          : selectedLead.status === "Proposal"
+                            ? "Proposal stage active. Add next-step note and close-loop follow-up date."
+                            : "Capture decision blockers and keep a scheduled follow-up note cadence."}
+                      </div>
                     </div>
 
                     <div className={styles.notesSection}>
@@ -366,6 +457,9 @@ export const LeadPipeline = () => {
                       </div>
                     </motion.div>
                   ))}
+                  {filteredLeads?.filter(l => l.status === stage).length === 0 && (
+                    <p className={styles.emptyColumn}>No leads in this stage</p>
+                  )}
                 </div>
               </div>
             ))}
