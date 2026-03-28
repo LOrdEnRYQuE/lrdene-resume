@@ -229,11 +229,22 @@
   overflow: hidden;
 }
 
+.threadMetaLine {
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 0.72rem;
+}
+
 .preview {
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.8rem;
   line-height: 1.4;
   margin-top: 0.18rem;
+}
+
+.threadHealth {
+  margin: 0.16rem 0 0;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.75rem;
 }
 
 .active {

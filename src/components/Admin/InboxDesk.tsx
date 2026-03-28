@@ -172,6 +172,18 @@ function formatTimestamp(timestamp: number) {
   return `${new Date(timestamp).toISOString().slice(0, 16).replace("T", " ")} UTC`;
 }
 
+function formatRelativeTime(timestamp?: number) {
+  if (!timestamp) return "n/a";
+  const deltaMs = Date.now() - timestamp;
+  const minutes = Math.floor(deltaMs / (1000 * 60));
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
+
 function escapeHtml(text: string) {
   return text
     .replaceAll("&", "&amp;")
@@ -460,6 +472,7 @@ export function InboxDesk() {
   const [threadStatus, setThreadStatus] = useState<(typeof THREAD_STATUS)[number]>("all");
   const [queueFilter, setQueueFilter] = useState<"all" | "unread" | "followup">("all");
   const [queueSort, setQueueSort] = useState<"recent" | "priority" | "name">("priority");
+  const [messageFilter, setMessageFilter] = useState<"all" | "incoming" | "outgoing">("all");
   const [selectedThreadId, setSelectedThreadId] = useState<Id<"emailThreads"> | null>(null);
   const [showCampaignLab, setShowCampaignLab] = useState(false);
 
@@ -473,6 +486,7 @@ export function InboxDesk() {
   const [selectedTemplateId, setSelectedTemplateId] = useState<Id<"emailTemplates"> | null>(null);
   const [isSending, setIsSending] = useState(false);
   const uploadInputRef = useRef<HTMLInputElement | null>(null);
+  const composerSectionRef = useRef<HTMLElement | null>(null);
 
   const [templateDraftId, setTemplateDraftId] = useState<Id<"emailTemplates"> | null>(null);
   const [templateKey, setTemplateKey] = useState("");
@@ -662,7 +676,24 @@ export function InboxDesk() {
 
   const selectedThread = selectedThreadData?.thread ?? null;
   const selectedMessages = useMemo(() => selectedThreadData?.messages ?? [], [selectedThreadData]);
+  const filteredSelectedMessages = useMemo(
+    () =>
+      messageFilter === "all"
+        ? selectedMessages
+        : selectedMessages.filter((message) => message.direction === messageFilter),
+    [messageFilter, selectedMessages],
+  );
   const threadEvents = selectedThreadEvents ?? [];
+  const latestSelectedMessage = selectedMessages[0] ?? null;
+  const selectedThreadUrgency = useMemo(() => {
+    if (!selectedThread) return "No thread selected";
+    const needsReply = selectedThread.status !== "closed" && selectedThread.latestDirection === "incoming";
+    if (selectedThread.unreadCount > 0) return `Urgent · ${selectedThread.unreadCount} unread`;
+    if (needsReply) return "Follow-up due";
+    if (selectedThread.status === "waiting") return "Waiting on recipient";
+    if (selectedThread.status === "closed") return "Thread closed";
+    return "Open conversation";
+  }, [selectedThread]);
 
   useEffect(() => {
     if (!selectedThread) {
@@ -737,6 +768,11 @@ export function InboxDesk() {
     setComposerBody(applyTemplateVars(activeTemplate.body, selectedThreadVars));
     setComposerHtml("");
     setComposerTemplateBlockSignature("");
+  };
+
+  const focusComposer = () => {
+    setMobileComposerOpen(true);
+    composerSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const resetTemplateDraft = () => {
@@ -1443,6 +1479,9 @@ export function InboxDesk() {
                         </div>
                         <span className={styles.threadEmail}>{thread.participantEmail}</span>
                         <span className={styles.threadSubject}>{thread.subject}</span>
+                        <span className={styles.threadMetaLine}>
+                          {thread.status} · last activity {formatRelativeTime(thread.lastMessageAt)}
+                        </span>
                         <span className={styles.preview}>{thread.preview}</span>
                       </button>
                     ))
@@ -1451,7 +1490,7 @@ export function InboxDesk() {
                 <article className={`${styles.detailPane} ${!mobileShowConversation ? styles.mobileCollapsed : ""}`}>
                   <div className={styles.paneHeader}>
                     <strong>Conversation</strong>
-                    <span className={styles.meta}>{selectedMessages.length} messages</span>
+                    <span className={styles.meta}>{filteredSelectedMessages.length} messages</span>
                   </div>
                   {!selectedThread ? (
                     <p className={styles.empty}>Select a thread to open the timeline.</p>
@@ -1461,14 +1500,46 @@ export function InboxDesk() {
                         <div>
                           <h3>{selectedThread.participantName ?? selectedThread.participantEmail}</h3>
                           <p className={styles.sub}>{selectedThread.participantEmail}</p>
+                          <p className={styles.threadHealth}>{selectedThreadUrgency}</p>
                         </div>
-                        <span className={styles.meta}>{selectedThread.status}</span>
+                        <div className={styles.inlineActions}>
+                          <span className={styles.meta}>{selectedThread.status}</span>
+                          <button type="button" className={styles.ghostBtn} onClick={focusComposer}>
+                            Reply
+                          </button>
+                        </div>
+                      </div>
+                      <div className={styles.inlineActions}>
+                        <button
+                          type="button"
+                          className={`${styles.ghostBtn} ${messageFilter === "all" ? styles.railBtnActive : ""}`}
+                          onClick={() => setMessageFilter("all")}
+                        >
+                          All
+                        </button>
+                        <button
+                          type="button"
+                          className={`${styles.ghostBtn} ${messageFilter === "incoming" ? styles.railBtnActive : ""}`}
+                          onClick={() => setMessageFilter("incoming")}
+                        >
+                          Incoming
+                        </button>
+                        <button
+                          type="button"
+                          className={`${styles.ghostBtn} ${messageFilter === "outgoing" ? styles.railBtnActive : ""}`}
+                          onClick={() => setMessageFilter("outgoing")}
+                        >
+                          Outgoing
+                        </button>
+                        <span className={styles.meta}>
+                          last message {formatRelativeTime(latestSelectedMessage?.createdAt)}
+                        </span>
                       </div>
                       <div className={styles.timeline}>
-                        {selectedMessages.length === 0 ? (
+                        {filteredSelectedMessages.length === 0 ? (
                           <p className={styles.empty}>No messages in this thread yet.</p>
                         ) : (
-                          selectedMessages
+                          filteredSelectedMessages
                             .slice()
                             .reverse()
                             .map((message) => (
@@ -2238,7 +2309,7 @@ export function InboxDesk() {
         onChange={(event) => void handleTemplateAssetUpload(event, "hero")}
       />
 
-      <section className={styles.composerDock}>
+      <section className={styles.composerDock} ref={composerSectionRef}>
           <div className={styles.cardHeader}>
             <strong>Email Composer</strong>
             <div className={styles.inlineActions}>
