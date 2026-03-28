@@ -760,6 +760,17 @@ export function InboxDesk() {
     if (selectedThread.status === "closed") return "Thread closed";
     return "Open conversation";
   }, [selectedThread]);
+  const recentThreadEvents = useMemo(() => threadEvents.slice(0, 6), [threadEvents]);
+  const latestThreadEvent = recentThreadEvents[0] ?? null;
+  const transportHealth = useMemo(() => {
+    if (architectureTelemetry.failedEvents > 0) {
+      return "At risk";
+    }
+    if (architectureTelemetry.deliveredEvents > 0) {
+      return "Healthy";
+    }
+    return "Monitoring";
+  }, [architectureTelemetry.deliveredEvents, architectureTelemetry.failedEvents]);
 
   useEffect(() => {
     if (!selectedThread) {
@@ -1609,31 +1620,6 @@ export function InboxDesk() {
                           last message {formatRelativeTime(latestSelectedMessage?.createdAt)}
                         </span>
                       </div>
-                      <div className={styles.architectureCard}>
-                        <div className={styles.architectureHeader}>
-                          <strong>Email System Architecture</strong>
-                          <span className={styles.meta}>Live thread telemetry</span>
-                        </div>
-                        <div className={styles.protocolChips}>
-                          <span className={styles.queueChip}>UA: Admin Inbox active</span>
-                          <span className={styles.queueChip}>MTA: {architectureTelemetry.mtaStatus}</span>
-                          <span className={styles.queueChip}>MDA: {architectureTelemetry.mdaStatus}</span>
-                          <span className={styles.queueChip}>MAA: {architectureTelemetry.maaStatus}</span>
-                        </div>
-                        <div className={styles.workflowLine}>
-                          <span>1. Compose (UA): {latestOutgoingMessage ? "active" : "pending"}</span>
-                          <span>2. Relay (SMTP + DNS/MX): {architectureTelemetry.dnsRouting}</span>
-                          <span>3. Deliver (MDA): {architectureTelemetry.deliveredEvents} delivered / {architectureTelemetry.failedEvents} failed</span>
-                          <span>4. Access (IMAP/POP3): {latestIncomingMessage ? "retrieved" : "not retrieved"}</span>
-                        </div>
-                        <div className={styles.workflowLine}>
-                          <span>Sender: {architectureTelemetry.senderEmail}</span>
-                          <span>{architectureTelemetry.authStatus}</span>
-                          <span>{architectureTelemetry.webhookStatus}</span>
-                          <span>Engagement: {architectureTelemetry.openedEvents} opens / {architectureTelemetry.clickedEvents} clicks</span>
-                        </div>
-                        <p className={styles.sub}>Security layer target: SPF, DKIM, and DMARC records validated on sender domain DNS.</p>
-                      </div>
                       <div className={styles.timeline}>
                         {filteredSelectedMessages.length === 0 ? (
                           <p className={styles.empty}>No messages in this thread yet.</p>
@@ -1662,6 +1648,89 @@ export function InboxDesk() {
                     </div>
                   )}
                 </article>
+                <aside className={`${styles.inspectorPane} ${!selectedThread ? styles.mobileCollapsed : ""}`}>
+                  <div className={styles.paneHeader}>
+                    <strong>Operations</strong>
+                    <span className={styles.meta}>{selectedThread ? "active thread" : "no thread"}</span>
+                  </div>
+                  {!selectedThread ? (
+                    <p className={styles.empty}>Select a thread to inspect delivery, routing, and provider telemetry.</p>
+                  ) : (
+                    <>
+                      <div className={styles.card}>
+                        <div className={styles.cardHeader}>
+                          <strong>Thread Health</strong>
+                        </div>
+                        <div className={styles.healthGrid}>
+                          <span>Status: {selectedThread.status}</span>
+                          <span>Unread: {selectedThread.unreadCount}</span>
+                          <span>Health: {transportHealth}</span>
+                          <span>Latest event: {latestThreadEvent?.eventType ?? "none"}</span>
+                        </div>
+                        <div className={styles.inlineActions}>
+                          <button type="button" className={styles.ghostBtn} onClick={focusComposer}>
+                            Reply Now
+                          </button>
+                          <button type="button" className={styles.ghostBtn} onClick={() => setActivePane("events")}>
+                            Open Events
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className={styles.architectureCard}>
+                        <div className={styles.architectureHeader}>
+                          <strong>Email System Architecture</strong>
+                          <span className={styles.meta}>Live thread telemetry</span>
+                        </div>
+                        <div className={styles.protocolChips}>
+                          <span className={styles.queueChip}>UA: Admin Inbox active</span>
+                          <span className={styles.queueChip}>MTA: {architectureTelemetry.mtaStatus}</span>
+                          <span className={styles.queueChip}>MDA: {architectureTelemetry.mdaStatus}</span>
+                          <span className={styles.queueChip}>MAA: {architectureTelemetry.maaStatus}</span>
+                        </div>
+                        <div className={styles.workflowLine}>
+                          <span>1. Compose (UA): {latestOutgoingMessage ? "active" : "pending"}</span>
+                          <span>2. Relay (SMTP + DNS/MX): {architectureTelemetry.dnsRouting}</span>
+                          <span>3. Deliver (MDA): {architectureTelemetry.deliveredEvents} delivered / {architectureTelemetry.failedEvents} failed</span>
+                          <span>4. Access (IMAP/POP3): {latestIncomingMessage ? "retrieved" : "not retrieved"}</span>
+                        </div>
+                        <div className={styles.workflowLine}>
+                          <span>Sender: {architectureTelemetry.senderEmail}</span>
+                          <span>{architectureTelemetry.authStatus}</span>
+                          <span>{architectureTelemetry.webhookStatus}</span>
+                          <span>Engagement: {architectureTelemetry.openedEvents} opens / {architectureTelemetry.clickedEvents} clicks</span>
+                        </div>
+                        <p className={styles.sub}>Security layer target: SPF, DKIM, and DMARC records validated on sender domain DNS.</p>
+                      </div>
+
+                      <div className={styles.card}>
+                        <div className={styles.cardHeader}>
+                          <strong>Recent Provider Events</strong>
+                          <span className={styles.meta}>{recentThreadEvents.length}</span>
+                        </div>
+                        {recentThreadEvents.length === 0 ? (
+                          <p className={styles.empty}>No provider events received yet.</p>
+                        ) : (
+                          <div className={styles.eventList}>
+                            {recentThreadEvents.map((event) => (
+                              <div key={event._id} className={styles.eventItem}>
+                                <div className={styles.messageTop}>
+                                  <strong>{event.eventType}</strong>
+                                  <span className={styles.meta}>{formatRelativeTime(event.createdAt)}</span>
+                                </div>
+                                <span className={styles.sub}>
+                                  {event.provider}
+                                  {event.status ? ` · ${event.status}` : ""}
+                                  {event.to ? ` · to: ${event.to}` : ""}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </aside>
               </div>
             </>
           ) : null}

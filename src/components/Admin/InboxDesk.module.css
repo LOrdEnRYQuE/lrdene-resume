@@ -180,7 +180,7 @@
 
 .incomingLayout {
   display: grid;
-  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  grid-template-columns: minmax(280px, 350px) minmax(0, 1fr) minmax(280px, 340px);
   gap: 0.7rem;
   align-items: start;
   min-width: 0;
@@ -203,6 +203,20 @@
   max-height: min(74vh, 780px);
   overflow-y: auto;
   min-width: 0;
+}
+
+.inspectorPane {
+  padding: 0.62rem;
+  display: grid;
+  gap: 0.52rem;
+  min-height: 0;
+  max-height: min(74vh, 780px);
+  overflow-y: auto;
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.25);
 }
 
 .paneHeader {
@@ -396,6 +410,21 @@
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
+}
+
+.healthGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+}
+
+.healthGrid span {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.35rem 0.45rem;
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .architectureCard {
@@ -649,7 +678,8 @@
   }
 
   .detailPane,
-  .listPane {
+  .listPane,
+  .inspectorPane {
     max-height: none;
     min-height: 0;
     overflow: visible;
@@ -718,6 +748,7 @@
   .mainPane,
   .listPane,
   .detailPane,
+  .inspectorPane,
   .card {
     padding: 0.58rem;
   }
@@ -763,6 +794,10 @@
   }
 
   .workflowLine {
+    grid-template-columns: 1fr;
+  }
+
+  .healthGrid {
     grid-template-columns: 1fr;
   }
 
