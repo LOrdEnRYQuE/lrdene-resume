@@ -683,8 +683,74 @@ export function InboxDesk() {
         : selectedMessages.filter((message) => message.direction === messageFilter),
     [messageFilter, selectedMessages],
   );
-  const threadEvents = selectedThreadEvents ?? [];
+  const threadEvents = useMemo(() => selectedThreadEvents ?? [], [selectedThreadEvents]);
   const latestSelectedMessage = selectedMessages[0] ?? null;
+  const latestOutgoingMessage = useMemo(
+    () => selectedMessages.find((message) => message.direction === "outgoing") ?? null,
+    [selectedMessages],
+  );
+  const latestIncomingMessage = useMemo(
+    () => selectedMessages.find((message) => message.direction === "incoming") ?? null,
+    [selectedMessages],
+  );
+  const architectureTelemetry = useMemo(() => {
+    const deliveredEvents = threadEvents.filter((event) =>
+      String(event.eventType ?? "").toLowerCase().includes("deliver"),
+    ).length;
+    const openedEvents = threadEvents.filter((event) =>
+      String(event.eventType ?? "").toLowerCase().includes("open"),
+    ).length;
+    const clickedEvents = threadEvents.filter((event) =>
+      String(event.eventType ?? "").toLowerCase().includes("click"),
+    ).length;
+    const failedEvents = threadEvents.filter((event) => {
+      const type = String(event.eventType ?? "").toLowerCase();
+      const status = String(event.status ?? "").toLowerCase();
+      return type.includes("bounce") || type.includes("fail") || status === "failed";
+    }).length;
+
+    const senderEmail = settings?.emailConfig?.senderEmail?.trim() ?? "";
+    const senderDomain = senderEmail.includes("@") ? senderEmail.split("@")[1] : "";
+    const recipientDomain = selectedThread?.participantEmail?.includes("@")
+      ? selectedThread.participantEmail.split("@")[1]
+      : "";
+
+    const mtaStatus =
+      latestOutgoingMessage?.status === "failed"
+        ? "Degraded"
+        : latestOutgoingMessage
+          ? `Operational (${latestOutgoingMessage.status})`
+          : "Idle";
+    const mdaStatus =
+      failedEvents > 0
+        ? `Issues detected (${failedEvents} failed)`
+        : deliveredEvents > 0
+          ? `Delivered (${deliveredEvents})`
+          : "Pending delivery events";
+    const maaStatus = latestIncomingMessage
+      ? `Mailbox active (${formatRelativeTime(latestIncomingMessage.createdAt)})`
+      : "No inbound access yet";
+
+    const dnsRouting = recipientDomain ? `MX lookup target: ${recipientDomain}` : "MX target unavailable";
+    const authStatus = senderDomain
+      ? `Sender domain: ${senderDomain}`
+      : "Sender domain not configured";
+    const webhookStatus = settings?.emailConfig?.webhookSecret ? "Webhook auth: configured" : "Webhook auth: missing";
+
+    return {
+      mtaStatus,
+      mdaStatus,
+      maaStatus,
+      deliveredEvents,
+      openedEvents,
+      clickedEvents,
+      failedEvents,
+      dnsRouting,
+      authStatus,
+      webhookStatus,
+      senderEmail: senderEmail || "default runtime sender",
+    };
+  }, [latestIncomingMessage, latestOutgoingMessage, selectedThread, settings, threadEvents]);
   const selectedThreadUrgency = useMemo(() => {
     if (!selectedThread) return "No thread selected";
     const needsReply = selectedThread.status !== "closed" && selectedThread.latestDirection === "incoming";
@@ -1546,21 +1612,27 @@ export function InboxDesk() {
                       <div className={styles.architectureCard}>
                         <div className={styles.architectureHeader}>
                           <strong>Email System Architecture</strong>
-                          <span className={styles.meta}>SMTP relay + mailbox access</span>
+                          <span className={styles.meta}>Live thread telemetry</span>
                         </div>
                         <div className={styles.protocolChips}>
-                          <span className={styles.queueChip}>UA: Admin Inbox</span>
-                          <span className={styles.queueChip}>MTA: SMTP Transport</span>
-                          <span className={styles.queueChip}>MDA: Mailbox Delivery</span>
-                          <span className={styles.queueChip}>MAA: IMAP/POP Access</span>
+                          <span className={styles.queueChip}>UA: Admin Inbox active</span>
+                          <span className={styles.queueChip}>MTA: {architectureTelemetry.mtaStatus}</span>
+                          <span className={styles.queueChip}>MDA: {architectureTelemetry.mdaStatus}</span>
+                          <span className={styles.queueChip}>MAA: {architectureTelemetry.maaStatus}</span>
                         </div>
                         <div className={styles.workflowLine}>
-                          <span>1. Compose (UA)</span>
-                          <span>2. Relay (SMTP + DNS/MX)</span>
-                          <span>3. Deliver (MDA)</span>
-                          <span>4. Access (IMAP/POP3)</span>
+                          <span>1. Compose (UA): {latestOutgoingMessage ? "active" : "pending"}</span>
+                          <span>2. Relay (SMTP + DNS/MX): {architectureTelemetry.dnsRouting}</span>
+                          <span>3. Deliver (MDA): {architectureTelemetry.deliveredEvents} delivered / {architectureTelemetry.failedEvents} failed</span>
+                          <span>4. Access (IMAP/POP3): {latestIncomingMessage ? "retrieved" : "not retrieved"}</span>
                         </div>
-                        <p className={styles.sub}>Security layer: SPF, DKIM, DMARC validation should stay enabled.</p>
+                        <div className={styles.workflowLine}>
+                          <span>Sender: {architectureTelemetry.senderEmail}</span>
+                          <span>{architectureTelemetry.authStatus}</span>
+                          <span>{architectureTelemetry.webhookStatus}</span>
+                          <span>Engagement: {architectureTelemetry.openedEvents} opens / {architectureTelemetry.clickedEvents} clicks</span>
+                        </div>
+                        <p className={styles.sub}>Security layer target: SPF, DKIM, and DMARC records validated on sender domain DNS.</p>
                       </div>
                       <div className={styles.timeline}>
                         {filteredSelectedMessages.length === 0 ? (
