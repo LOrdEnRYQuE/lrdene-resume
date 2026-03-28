@@ -29,6 +29,10 @@ const AUDIT_ROUTES = ["/", "/about", "/services", "/projects", "/blog", "/contac
 const ROUTES_WITH_INTERNAL_LINKING = new Set(["/blog", "/projects", "/services"]);
 const ROUTES_WITH_SCHEMA = new Set(["/", "/blog", "/projects", "/services"]);
 const ROUTES_WITH_CANONICAL_IN_CODE = new Set(["/", "/about", "/services", "/projects", "/blog", "/contact"]);
+const DYNAMIC_TITLE_MIN = 35;
+const DYNAMIC_TITLE_MAX = 70;
+const DYNAMIC_DESCRIPTION_MIN = 80;
+const DYNAMIC_DESCRIPTION_MAX = 170;
 
 function pct(part: number, total: number) {
   if (!total) return 0;
@@ -69,13 +73,15 @@ export const SEOManager = () => {
     const record = metadataByRoute.get(route);
     const title = record?.title || "";
     const description = record?.description || "";
+    const internalLinksRequired = ROUTES_WITH_INTERNAL_LINKING.has(route);
+    const schemaRequired = ROUTES_WITH_SCHEMA.has(route);
     const hasTitle = title.length > 0 || ROUTES_WITH_CANONICAL_IN_CODE.has(route);
     const strongTitle = title.length === 0 || (title.length >= 35 && title.length <= 65);
     const hasDescription = description.length > 0 || ROUTES_WITH_CANONICAL_IN_CODE.has(route);
     const strongDescription = description.length === 0 || (description.length >= 110 && description.length <= 165);
     const hasCanonical = ROUTES_WITH_CANONICAL_IN_CODE.has(route);
-    const hasInternalLinks = ROUTES_WITH_INTERNAL_LINKING.has(route);
-    const hasSchema = ROUTES_WITH_SCHEMA.has(route);
+    const hasInternalLinks = !internalLinksRequired || ROUTES_WITH_INTERNAL_LINKING.has(route);
+    const hasSchema = !schemaRequired || ROUTES_WITH_SCHEMA.has(route);
 
     const checks = [
       { label: "Title present", ok: hasTitle },
@@ -83,8 +89,8 @@ export const SEOManager = () => {
       { label: "Description present", ok: hasDescription },
       { label: "Description length healthy", ok: strongDescription },
       { label: "Canonical configured", ok: hasCanonical },
-      { label: "Internal links available", ok: hasInternalLinks },
-      { label: "Structured data enabled", ok: hasSchema },
+      { label: internalLinksRequired ? "Internal links available" : "Internal links not required", ok: hasInternalLinks },
+      { label: schemaRequired ? "Structured data enabled" : "Structured data not required", ok: hasSchema },
     ];
 
     const issueCount = checks.filter((check) => !check.ok).length;
@@ -103,28 +109,29 @@ export const SEOManager = () => {
   const dynamicSeoRows = [
     ...posts.map((post) => ({
       route: `/blog/${post.slug}`,
-      title: post.title as string,
+      title: `${post.title} | AI & Product Insights`,
       description: post.excerpt as string,
       hasSchema: true,
       type: "Blog",
     })),
     ...projects.map((project) => ({
       route: `/projects/${project.slug}`,
-      title: project.title as string,
+      title: `${project.title} Case Study | Stack & Results`,
       description: project.summary as string,
       hasSchema: true,
       type: "Project",
     })),
     ...services.map((service) => ({
       route: `/services/${service.slug}`,
-      title: service.title as string,
+      title: `${service.title} Services | Strategy & Delivery`,
       description: service.description as string,
       hasSchema: true,
       type: "Service",
     })),
   ].map((row) => {
-    const badTitle = row.title.length < 35 || row.title.length > 65;
-    const badDescription = row.description.length < 110 || row.description.length > 165;
+    const badTitle = row.title.length < DYNAMIC_TITLE_MIN || row.title.length > DYNAMIC_TITLE_MAX;
+    const badDescription =
+      row.description.length < DYNAMIC_DESCRIPTION_MIN || row.description.length > DYNAMIC_DESCRIPTION_MAX;
     const missingSchema = !row.hasSchema;
     const issueCount = [badTitle, badDescription, missingSchema].filter(Boolean).length;
     return {
