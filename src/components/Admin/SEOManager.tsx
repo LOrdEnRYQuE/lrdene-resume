@@ -1,10 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import styles from "./SEOManager.module.css";
 import ui from "./AdminPrimitives.module.css";
-import { Globe, Share2, Save, ExternalLink } from "lucide-react";
+import {
+  Globe,
+  Share2,
+  Save,
+  ExternalLink,
+  AlertTriangle,
+  CheckCircle2,
+  Search,
+  FileText,
+  ImageOff,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { useAdminMutation } from "@/hooks/useAdminMutation";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
@@ -19,6 +29,11 @@ const AUDIT_ROUTES = ["/", "/about", "/services", "/projects", "/blog", "/contac
 const ROUTES_WITH_INTERNAL_LINKING = new Set(["/blog", "/projects", "/services"]);
 const ROUTES_WITH_SCHEMA = new Set(["/", "/blog", "/projects", "/services"]);
 const ROUTES_WITH_CANONICAL_IN_CODE = new Set(["/", "/about", "/services", "/projects", "/blog", "/contact"]);
+
+function pct(part: number, total: number) {
+  if (!total) return 0;
+  return Math.round((part / total) * 100);
+}
 
 export const SEOManager = () => {
   const metadataList = (useAdminQuery(api.siteMetadata.list) as any[]) || [];
@@ -39,14 +54,17 @@ export const SEOManager = () => {
     description: "",
     ogImage: "",
     keywords: "",
-    route: "/"
   });
   const [topicClustersJson, setTopicClustersJson] = useState("");
   const [topicClustersDirty, setTopicClustersDirty] = useState(false);
   const [topicClustersError, setTopicClustersError] = useState("");
   const [topicClustersNotice, setTopicClustersNotice] = useState("");
+  const [staticFilter, setStaticFilter] = useState<"all" | "needsWork">("all");
+  const [dynamicFilter, setDynamicFilter] = useState<"all" | "issuesOnly">("issuesOnly");
+  const [dynamicSearch, setDynamicSearch] = useState("");
 
   const metadataByRoute = new Map(metadataList.map((entry) => [entry.route, entry]));
+
   const checklist = AUDIT_ROUTES.map((route) => {
     const record = metadataByRoute.get(route);
     const title = record?.title || "";
@@ -59,30 +77,28 @@ export const SEOManager = () => {
     const hasInternalLinks = ROUTES_WITH_INTERNAL_LINKING.has(route);
     const hasSchema = ROUTES_WITH_SCHEMA.has(route);
 
+    const checks = [
+      { label: "Title present", ok: hasTitle },
+      { label: "Title length healthy", ok: strongTitle },
+      { label: "Description present", ok: hasDescription },
+      { label: "Description length healthy", ok: strongDescription },
+      { label: "Canonical configured", ok: hasCanonical },
+      { label: "Internal links available", ok: hasInternalLinks },
+      { label: "Structured data enabled", ok: hasSchema },
+    ];
+
+    const issueCount = checks.filter((check) => !check.ok).length;
+
     return {
       route,
-      hasTitle,
-      strongTitle,
-      hasDescription,
-      strongDescription,
-      hasCanonical,
-      hasInternalLinks,
-      hasSchema,
+      checks,
+      issueCount,
     };
   });
 
-  const openItems = checklist.reduce((count, item) => {
-    const failures = [
-      !item.hasTitle,
-      !item.strongTitle,
-      !item.hasDescription,
-      !item.strongDescription,
-      !item.hasCanonical,
-      !item.hasInternalLinks,
-      !item.hasSchema,
-    ].filter(Boolean).length;
-    return count + failures;
-  }, 0);
+  const openItems = checklist.reduce((count, item) => count + item.issueCount, 0);
+  const passedStaticChecks = checklist.reduce((count, item) => count + item.checks.filter((check) => check.ok).length, 0);
+  const totalStaticChecks = checklist.reduce((count, item) => count + item.checks.length, 0);
 
   const dynamicSeoRows = [
     ...posts.map((post) => ({
@@ -106,16 +122,36 @@ export const SEOManager = () => {
       hasSchema: true,
       type: "Service",
     })),
-  ];
-
-  const dynamicOpenItems = dynamicSeoRows.reduce((count, row) => {
+  ].map((row) => {
     const badTitle = row.title.length < 35 || row.title.length > 65;
     const badDescription = row.description.length < 110 || row.description.length > 165;
     const missingSchema = !row.hasSchema;
-    return count + [badTitle, badDescription, missingSchema].filter(Boolean).length;
-  }, 0);
+    const issueCount = [badTitle, badDescription, missingSchema].filter(Boolean).length;
+    return {
+      ...row,
+      badTitle,
+      badDescription,
+      missingSchema,
+      issueCount,
+    };
+  });
 
+  const dynamicOpenItems = dynamicSeoRows.reduce((count, row) => count + row.issueCount, 0);
   const missingAltCount = media.filter((item) => !item.alt || String(item.alt).trim().length < 5).length;
+
+  const filteredStaticRows = checklist.filter((item) =>
+    staticFilter === "needsWork" ? item.issueCount > 0 : true,
+  );
+
+  const filteredDynamicRows = dynamicSeoRows
+    .filter((row) => (dynamicFilter === "issuesOnly" ? row.issueCount > 0 : true))
+    .filter((row) => {
+      const query = dynamicSearch.trim().toLowerCase();
+      if (!query) return true;
+      return row.route.toLowerCase().includes(query) || row.type.toLowerCase().includes(query);
+    })
+    .sort((a, b) => b.issueCount - a.issueCount)
+    .slice(0, 30);
 
   useEffect(() => {
     if (metadata) {
@@ -123,7 +159,7 @@ export const SEOManager = () => {
         title: metadata.title || "",
         description: metadata.description || "",
         ogImage: metadata.ogImage || "",
-        keywords: metadata.keywords || ""
+        keywords: metadata.keywords || "",
       });
     }
   }, [metadata]);
@@ -138,18 +174,18 @@ export const SEOManager = () => {
     e.preventDefault();
     try {
       if (metadata) {
-        await updateMetadata({ 
-          id: metadata._id, 
-          title: formData.title, 
+        await updateMetadata({
+          id: metadata._id,
+          title: formData.title,
           description: formData.description,
           keywords: formData.keywords,
-          ogImage: formData.ogImage
+          ogImage: formData.ogImage,
         });
       } else {
-        // Fallback to update logic or show error if no initial record exists
         alert("No metadata record found to update.");
+        return;
       }
-      alert("SEO Metadata updated successfully!");
+      alert("SEO metadata updated successfully.");
     } catch (err) {
       console.error(err);
       alert("Failed to update SEO metadata.");
@@ -180,54 +216,108 @@ export const SEOManager = () => {
     }
   };
 
+  const titleLen = formData.title.length;
+  const descriptionLen = formData.description.length;
+  const titleHealthy = titleLen >= 35 && titleLen <= 65;
+  const descriptionHealthy = descriptionLen >= 110 && descriptionLen <= 165;
+
   return (
     <div className={ui.shell}>
       <section className={ui.section}>
         <div className={ui.titleWrap}>
           <h2 className={ui.title}>SEO <span className="gold-text">Manager</span></h2>
-          <p className={ui.subtitle}>Control how your site appears in search engines and social media.</p>
+          <p className={ui.subtitle}>Optimize discoverability, metadata quality, and programmatic SEO structure.</p>
         </div>
       </section>
+
+      <div className={styles.kpiGrid}>
+        <div className={styles.kpiCard}>
+          <FileText size={16} className="gold-text" />
+          <span className={styles.kpiLabel}>Static Audit Score</span>
+          <strong className={styles.kpiValue}>{pct(passedStaticChecks, totalStaticChecks)}%</strong>
+          <small>{passedStaticChecks}/{totalStaticChecks} checks passing</small>
+        </div>
+        <div className={styles.kpiCard}>
+          <AlertTriangle size={16} className="gold-text" />
+          <span className={styles.kpiLabel}>Open SEO Issues</span>
+          <strong className={styles.kpiValue}>{openItems + dynamicOpenItems}</strong>
+          <small>{openItems} static · {dynamicOpenItems} dynamic</small>
+        </div>
+        <div className={styles.kpiCard}>
+          <ImageOff size={16} className="gold-text" />
+          <span className={styles.kpiLabel}>Missing Media Alt</span>
+          <strong className={styles.kpiValue}>{missingAltCount}</strong>
+          <small>Media assets needing accessibility text</small>
+        </div>
+      </div>
 
       <div className={styles.seoGrid}>
         <motion.div className={ui.card} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className={ui.sectionHeader}>
-            <Globe size={24} className="gold-text" />
-            <h3 className={ui.title}>Global Metadata</h3>
+            <div className={styles.sectionTitle}>
+              <Globe size={20} className="gold-text" />
+              <h3 className={ui.title}>Global Metadata</h3>
+            </div>
+            <span className={styles.microPill}>Homepage snippet editor</span>
           </div>
 
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formGroup}>
               <label>Site Title</label>
-              <input value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} placeholder="e.g. LOrdEnRYQuE | AI Agent Architect" />
+              <input
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                placeholder="e.g. LOrdEnRYQuE | AI Agent Architect"
+              />
+              <p className={`${styles.ruleHint} ${titleHealthy ? styles.ok : styles.warn}`}>
+                {titleHealthy ? <CheckCircle2 size={14} /> : <AlertTriangle size={14} />} Length: {titleLen} (target 35-65)
+              </p>
             </div>
 
             <div className={styles.formGroup}>
               <label>Meta Description</label>
-              <textarea rows={3} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} placeholder="Showcase of high-performance AI agents and digital strategies." />
+              <textarea
+                rows={3}
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="Showcase of high-performance AI agents and digital strategies."
+              />
+              <p className={`${styles.ruleHint} ${descriptionHealthy ? styles.ok : styles.warn}`}>
+                {descriptionHealthy ? <CheckCircle2 size={14} /> : <AlertTriangle size={14} />} Length: {descriptionLen} (target 110-165)
+              </p>
             </div>
 
             <div className={styles.formGroup}>
               <label>Keywords (comma separated)</label>
-              <input value={formData.keywords} onChange={e => setFormData({ ...formData, keywords: e.target.value })} placeholder="AI Agents, Next.js, Portfolio, Digital Strategy" />
+              <input
+                value={formData.keywords}
+                onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
+                placeholder="AI Agents, Next.js, Portfolio, Digital Strategy"
+              />
             </div>
 
-            <div className={ui.sectionHeader} style={{ marginTop: "1rem" }}>
-              <Share2 size={24} className="gold-text" />
+            <div className={styles.sectionTitle}>
+              <Share2 size={20} className="gold-text" />
               <h3 className={ui.title}>Social Sharing (OpenGraph)</h3>
             </div>
 
             <div className={styles.formGroup}>
               <label>OG Image URL</label>
-              <input value={formData.ogImage} onChange={e => setFormData({ ...formData, ogImage: e.target.value })} placeholder="URL to a 1200x630 sharing image" />
+              <input
+                value={formData.ogImage}
+                onChange={(e) => setFormData({ ...formData, ogImage: e.target.value })}
+                placeholder="URL to a 1200x630 sharing image"
+              />
             </div>
 
             <div className={styles.formGroup}>
               <label>Appearance Preview</label>
               <div className={styles.preview}>
-                <div 
-                  className={styles.previewImage} 
-                  style={{ backgroundImage: `url(${formData.ogImage || 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2426'})` }} 
+                <div
+                  className={styles.previewImage}
+                  style={{
+                    backgroundImage: `url(${formData.ogImage || "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2426"})`,
+                  }}
                 />
                 <div className={styles.previewContent}>
                   <div className={styles.previewTitle}>{formData.title || "LOrdEnRYQuE"}</div>
@@ -237,31 +327,50 @@ export const SEOManager = () => {
             </div>
 
             <button type="submit" className={styles.saveBtn}>
-              <Save size={18} style={{ marginRight: "0.5rem" }} /> Update Metadata
+              <Save size={18} /> Update Metadata
             </button>
           </form>
         </motion.div>
 
         <motion.div className={ui.card} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className={ui.sectionHeader}>
-            <ExternalLink size={24} className="gold-text" />
-            <h3 className={ui.title}>SEO Checklist</h3>
+            <div className={styles.sectionTitle}>
+              <ExternalLink size={20} className="gold-text" />
+              <h3 className={ui.title}>Static Route Checklist</h3>
+            </div>
+            <div className={styles.filterRow}>
+              <button
+                type="button"
+                className={`${styles.filterBtn} ${staticFilter === "all" ? styles.filterBtnActive : ""}`}
+                onClick={() => setStaticFilter("all")}
+              >
+                All
+              </button>
+              <button
+                type="button"
+                className={`${styles.filterBtn} ${staticFilter === "needsWork" ? styles.filterBtnActive : ""}`}
+                onClick={() => setStaticFilter("needsWork")}
+              >
+                Needs work
+              </button>
+            </div>
           </div>
           <p className={styles.checklistSub}>Open issues: {openItems}</p>
           <div className={styles.checklistGrid}>
-            {checklist.map((item) => (
+            {filteredStaticRows.map((item) => (
               <div key={item.route} className={styles.checklistCard}>
                 <div className={styles.routeHeader}>
                   <span>{item.route}</span>
+                  <span className={item.issueCount === 0 ? styles.okPill : styles.warnPill}>
+                    {item.issueCount === 0 ? "Healthy" : `${item.issueCount} issue${item.issueCount > 1 ? "s" : ""}`}
+                  </span>
                 </div>
                 <ul className={styles.checkRows}>
-                  <li className={item.hasTitle ? styles.ok : styles.warn}>Title present</li>
-                  <li className={item.strongTitle ? styles.ok : styles.warn}>Title length healthy</li>
-                  <li className={item.hasDescription ? styles.ok : styles.warn}>Description present</li>
-                  <li className={item.strongDescription ? styles.ok : styles.warn}>Description length healthy</li>
-                  <li className={item.hasCanonical ? styles.ok : styles.warn}>Canonical configured</li>
-                  <li className={item.hasInternalLinks ? styles.ok : styles.warn}>Internal links available</li>
-                  <li className={item.hasSchema ? styles.ok : styles.warn}>Structured data enabled</li>
+                  {item.checks.map((check) => (
+                    <li key={check.label} className={check.ok ? styles.ok : styles.warn}>
+                      {check.ok ? <CheckCircle2 size={13} /> : <AlertTriangle size={13} />} {check.label}
+                    </li>
+                  ))}
                 </ul>
               </div>
             ))}
@@ -270,36 +379,66 @@ export const SEOManager = () => {
 
         <motion.div className={ui.card} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className={ui.sectionHeader}>
-            <ExternalLink size={24} className="gold-text" />
-            <h3 className={ui.title}>Dynamic SEO Health</h3>
+            <div className={styles.sectionTitle}>
+              <Search size={20} className="gold-text" />
+              <h3 className={ui.title}>Dynamic SEO Health</h3>
+            </div>
+            <div className={styles.filterRow}>
+              <button
+                type="button"
+                className={`${styles.filterBtn} ${dynamicFilter === "issuesOnly" ? styles.filterBtnActive : ""}`}
+                onClick={() => setDynamicFilter("issuesOnly")}
+              >
+                Issues only
+              </button>
+              <button
+                type="button"
+                className={`${styles.filterBtn} ${dynamicFilter === "all" ? styles.filterBtnActive : ""}`}
+                onClick={() => setDynamicFilter("all")}
+              >
+                All
+              </button>
+            </div>
           </div>
-          <p className={styles.checklistSub}>
-            Dynamic issues: {dynamicOpenItems} | Media missing alt text: {missingAltCount}
-          </p>
+          <p className={styles.checklistSub}>Dynamic issues: {dynamicOpenItems} | Media missing alt text: {missingAltCount}</p>
+          <input
+            className={styles.searchInput}
+            value={dynamicSearch}
+            onChange={(event) => setDynamicSearch(event.target.value)}
+            placeholder="Filter dynamic routes (e.g. /blog or service slug)"
+          />
           <div className={styles.checklistGrid}>
-            {dynamicSeoRows.slice(0, 24).map((row) => {
-              const badTitle = row.title.length < 35 || row.title.length > 65;
-              const badDescription = row.description.length < 110 || row.description.length > 165;
-              return (
-                <div key={row.route} className={styles.checklistCard}>
-                  <div className={styles.routeHeader}>
-                    <span>{row.type}: {row.route}</span>
-                  </div>
-                  <ul className={styles.checkRows}>
-                    <li className={!badTitle ? styles.ok : styles.warn}>Title length healthy ({row.title.length})</li>
-                    <li className={!badDescription ? styles.ok : styles.warn}>Description length healthy ({row.description.length})</li>
-                    <li className={row.hasSchema ? styles.ok : styles.warn}>Structured data enabled</li>
-                  </ul>
+            {filteredDynamicRows.map((row) => (
+              <div key={row.route} className={styles.checklistCard}>
+                <div className={styles.routeHeader}>
+                  <span>{row.type}: {row.route}</span>
+                  <span className={row.issueCount === 0 ? styles.okPill : styles.warnPill}>
+                    {row.issueCount === 0 ? "Healthy" : `${row.issueCount} issue${row.issueCount > 1 ? "s" : ""}`}
+                  </span>
                 </div>
-              );
-            })}
+                <ul className={styles.checkRows}>
+                  <li className={!row.badTitle ? styles.ok : styles.warn}>
+                    {!row.badTitle ? <CheckCircle2 size={13} /> : <AlertTriangle size={13} />} Title length ({row.title.length})
+                  </li>
+                  <li className={!row.badDescription ? styles.ok : styles.warn}>
+                    {!row.badDescription ? <CheckCircle2 size={13} /> : <AlertTriangle size={13} />} Description length ({row.description.length})
+                  </li>
+                  <li className={row.hasSchema ? styles.ok : styles.warn}>
+                    {row.hasSchema ? <CheckCircle2 size={13} /> : <AlertTriangle size={13} />} Structured data enabled
+                  </li>
+                </ul>
+              </div>
+            ))}
           </div>
         </motion.div>
 
         <motion.div className={ui.card} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className={ui.sectionHeader}>
-            <Globe size={24} className="gold-text" />
-            <h3 className={ui.title}>Programmatic SEO Topic Clusters</h3>
+            <div className={styles.sectionTitle}>
+              <Globe size={20} className="gold-text" />
+              <h3 className={ui.title}>Programmatic SEO Topic Clusters</h3>
+            </div>
+            <span className={styles.microPill}>Drives /insights + sitemap</span>
           </div>
           <p className={styles.checklistSub}>
             Manage cluster and topic-template data used by <code>/insights</code> and sitemap generation.
@@ -325,7 +464,7 @@ export const SEOManager = () => {
           {topicClustersNotice ? <p className={styles.ok}>{topicClustersNotice}</p> : null}
 
           <button type="button" className={styles.saveBtn} onClick={handleSaveTopicClusters}>
-            <Save size={18} style={{ marginRight: "0.5rem" }} /> Save Topic Clusters
+            <Save size={18} /> Save Topic Clusters
           </button>
         </motion.div>
       </div>
