@@ -23,6 +23,7 @@ import {
   Image as ImageIcon,
   FolderLock,
   X,
+  PanelLeftClose,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import LocaleLink from "@/components/I18n/LocaleLink";
@@ -52,10 +53,14 @@ const NAV_ITEMS = [
 
 export default function AdminSidebar({
   mobileOpen = false,
+  collapsed = false,
+  onToggleCollapsed,
   onNavigate,
   onClose,
 }: {
   mobileOpen?: boolean;
+  collapsed?: boolean;
+  onToggleCollapsed?: () => void;
   onNavigate?: () => void;
   onClose?: () => void;
 }) {
@@ -137,7 +142,7 @@ export default function AdminSidebar({
   }, {});
 
   return (
-    <aside className={`${styles.sidebar} ${mobileOpen ? styles.mobileOpen : ""}`}>
+    <aside className={`${styles.sidebar} ${mobileOpen ? styles.mobileOpen : ""} ${collapsed ? styles.collapsed : ""}`}>
       <div className={styles.logo}>
         <div className={styles.logoIcon}>
           <ShieldCheck size={24} />
@@ -154,6 +159,14 @@ export default function AdminSidebar({
         >
           <X size={16} />
         </button>
+        <button
+          type="button"
+          className={styles.desktopCollapse}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          onClick={onToggleCollapsed}
+        >
+          <PanelLeftClose size={14} />
+        </button>
       </div>
 
       <nav className={styles.nav}>
@@ -168,6 +181,7 @@ export default function AdminSidebar({
                   href={item.href}
                   className={`${styles.navItem} ${isActive ? styles.active : ""}`}
                   onClick={onNavigate}
+                  title={labels[item.label as keyof typeof labels] || item.label}
                 >
                   <item.icon size={20} />
                   <span>{labels[item.label as keyof typeof labels] || item.label}</span>

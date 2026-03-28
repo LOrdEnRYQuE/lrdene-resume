@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { stripLocalePrefix } from "@/lib/i18n/path";
 import AdminSidebar from "./AdminSidebar";
 import styles from "@/app/admin/layout.module.css";
-import { Menu, ShieldCheck } from "lucide-react";
+import { Menu, PanelLeft, PanelLeftClose, ShieldCheck } from "lucide-react";
 
 const PAGE_LABELS: Record<string, { title: string; subtitle: string }> = {
   "/admin": { title: "Overview", subtitle: "Performance, pipeline, and execution health in one place." },
@@ -32,6 +32,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const normalizedPathname = stripLocalePrefix(pathname || "/");
   const isLoginPage = normalizedPathname === "/admin/login";
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const pageMeta = PAGE_LABELS[normalizedPathname] ?? {
     title: "Admin",
     subtitle: "Control panel",
@@ -40,6 +41,22 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     setMobileOpen(false);
   }, [normalizedPathname]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const stored = window.localStorage.getItem("admin_sidebar_collapsed");
+    setSidebarCollapsed(stored === "true");
+  }, []);
+
+  const toggleSidebarCollapsed = () => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem("admin_sidebar_collapsed", String(next));
+      }
+      return next;
+    });
+  };
 
   if (isLoginPage) {
     return <main className={`${styles.main} admin-main`}>{children}</main>;
@@ -57,6 +74,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       </button>
       <AdminSidebar
         mobileOpen={mobileOpen}
+        collapsed={sidebarCollapsed}
+        onToggleCollapsed={toggleSidebarCollapsed}
         onNavigate={() => setMobileOpen(false)}
         onClose={() => setMobileOpen(false)}
       />
@@ -69,7 +88,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       />
       <main className={`${styles.main} admin-main`}>
         <header className={styles.topbar}>
-          <div>
+          <div className={styles.topbarMain}>
             <p className={styles.topbarEyebrow}>
               <ShieldCheck size={14} />
               Portfolio OS
@@ -77,6 +96,16 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             <h1 className={styles.topbarTitle}>{pageMeta.title}</h1>
             <p className={styles.topbarSubtitle}>{pageMeta.subtitle}</p>
           </div>
+          <button
+            type="button"
+            className={styles.sidebarToggle}
+            onClick={toggleSidebarCollapsed}
+            aria-label={sidebarCollapsed ? "Expand admin navigation" : "Collapse admin navigation"}
+            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {sidebarCollapsed ? <PanelLeft size={16} /> : <PanelLeftClose size={16} />}
+            <span>{sidebarCollapsed ? "Expand Menu" : "Collapse Menu"}</span>
+          </button>
         </header>
         <section className={styles.content}>{children}</section>
       </main>

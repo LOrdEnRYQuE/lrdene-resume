@@ -28,6 +28,30 @@
   border-radius: 14px;
   padding: 1rem 1.05rem;
   background: linear-gradient(165deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.9rem;
+}
+
+.topbarMain {
+  min-width: 0;
+}
+
+.sidebarToggle {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  padding: 0.48rem 0.64rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
 .topbarEyebrow {
@@ -109,6 +133,10 @@
   .topbar {
     padding: 0.75rem 0.78rem;
     padding-left: 3.15rem;
+  }
+
+  .sidebarToggle {
+    display: none;
   }
 
   .topbarSubtitle {
