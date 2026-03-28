@@ -75,7 +75,6 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       <AdminSidebar
         mobileOpen={mobileOpen}
         collapsed={sidebarCollapsed}
-        onToggleCollapsed={toggleSidebarCollapsed}
         onNavigate={() => setMobileOpen(false)}
         onClose={() => setMobileOpen(false)}
       />

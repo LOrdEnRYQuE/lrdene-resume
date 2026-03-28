@@ -40,20 +40,6 @@
   cursor: pointer;
 }
 
-.desktopCollapse {
-  margin-left: auto;
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
 .logoIcon {
   width: 40px;
   height: 40px;
@@ -178,8 +164,7 @@
 .collapsed .navSectionTitle,
 .collapsed .navItem span,
 .collapsed .footerLink span,
-.collapsed .logoutBtn span,
-.collapsed .desktopCollapse {
+.collapsed .logoutBtn span {
   display: none;
 }
 
@@ -254,10 +239,6 @@
 
   .mobileClose {
     display: inline-flex;
-  }
-
-  .desktopCollapse {
-    display: none;
   }
 
   .logoText,

@@ -24,7 +24,6 @@ import {
   Image as ImageIcon,
   FolderLock,
   X,
-  PanelLeftClose,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import LocaleLink from "@/components/I18n/LocaleLink";
@@ -55,13 +54,11 @@ const NAV_ITEMS = [
 export default function AdminSidebar({
   mobileOpen = false,
   collapsed = false,
-  onToggleCollapsed,
   onNavigate,
   onClose,
 }: {
   mobileOpen?: boolean;
   collapsed?: boolean;
-  onToggleCollapsed?: () => void;
   onNavigate?: () => void;
   onClose?: () => void;
 }) {
@@ -165,14 +162,6 @@ export default function AdminSidebar({
           onClick={onClose}
         >
           <X size={16} />
-        </button>
-        <button
-          type="button"
-          className={styles.desktopCollapse}
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          onClick={onToggleCollapsed}
-        >
-          <PanelLeftClose size={14} />
         </button>
       </div>
 
