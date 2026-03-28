@@ -1337,7 +1337,7 @@ export function InboxDesk() {
     <div className={styles.container}>
       <div className={styles.workspace}>
         <aside className={styles.navRail}>
-          <h1 className={styles.railTitle}>Inbox OS</h1>
+          <h1 className={styles.railTitle}>Mail Operations</h1>
           <p className={styles.meta}>UX Build: v2</p>
           <p className={styles.meta}>Follow-up due: {dueFollowUps}</p>
           <button
@@ -1345,7 +1345,7 @@ export function InboxDesk() {
             className={`${styles.railBtn} ${activePane === "incoming" ? styles.railBtnActive : ""}`}
             onClick={() => setActivePane("incoming")}
           >
-            <Inbox size={14} /> Incoming
+            <Inbox size={14} /> Mailbox
           </button>
           <button
             type="button"
@@ -1383,8 +1383,8 @@ export function InboxDesk() {
             <>
               <div className={styles.mailTopbar}>
                 <div className={styles.mailTopbarTitle}>
-                  <strong>Inbox</strong>
-                  <span className={styles.sub}>Triaged conversations and replies</span>
+                  <strong>Mailbox</strong>
+                  <span className={styles.sub}>UA + server workflow for triage and replies</span>
                 </div>
                 <div className={styles.incomingMetrics}>
                   <article className={styles.metricCard}>
@@ -1469,7 +1469,7 @@ export function InboxDesk() {
               <div className={styles.incomingLayout}>
                 <aside className={`${styles.listPane} ${!mobileShowThreads ? styles.mobileCollapsed : ""}`}>
                   <div className={styles.paneHeader}>
-                    <strong>Threads</strong>
+                    <strong>Mailbox Threads</strong>
                     <span className={styles.meta}>{queueThreads.length} threads</span>
                   </div>
                   {queueThreads.length === 0 ? (
@@ -1497,7 +1497,7 @@ export function InboxDesk() {
                 </aside>
                 <article className={`${styles.detailPane} ${!mobileShowConversation ? styles.mobileCollapsed : ""}`}>
                   <div className={styles.paneHeader}>
-                    <strong>Conversation</strong>
+                    <strong>Message Timeline</strong>
                     <span className={styles.meta}>{filteredSelectedMessages.length} messages</span>
                   </div>
                   {!selectedThread ? (
@@ -1542,6 +1542,25 @@ export function InboxDesk() {
                         <span className={styles.meta}>
                           last message {formatRelativeTime(latestSelectedMessage?.createdAt)}
                         </span>
+                      </div>
+                      <div className={styles.architectureCard}>
+                        <div className={styles.architectureHeader}>
+                          <strong>Email System Architecture</strong>
+                          <span className={styles.meta}>SMTP relay + mailbox access</span>
+                        </div>
+                        <div className={styles.protocolChips}>
+                          <span className={styles.queueChip}>UA: Admin Inbox</span>
+                          <span className={styles.queueChip}>MTA: SMTP Transport</span>
+                          <span className={styles.queueChip}>MDA: Mailbox Delivery</span>
+                          <span className={styles.queueChip}>MAA: IMAP/POP Access</span>
+                        </div>
+                        <div className={styles.workflowLine}>
+                          <span>1. Compose (UA)</span>
+                          <span>2. Relay (SMTP + DNS/MX)</span>
+                          <span>3. Deliver (MDA)</span>
+                          <span>4. Access (IMAP/POP3)</span>
+                        </div>
+                        <p className={styles.sub}>Security layer: SPF, DKIM, DMARC validation should stay enabled.</p>
                       </div>
                       <div className={styles.timeline}>
                         {filteredSelectedMessages.length === 0 ? (

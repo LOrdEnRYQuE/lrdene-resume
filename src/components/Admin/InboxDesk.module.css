@@ -398,6 +398,44 @@
   flex-wrap: wrap;
 }
 
+.architectureCard {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+  padding: 0.62rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.architectureHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.protocolChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.workflowLine {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.workflowLine span {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.35rem 0.45rem;
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.82);
+}
+
 .templateGrid {
   display: grid;
   gap: 0.58rem;
@@ -722,6 +760,10 @@
   .templateItem {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .workflowLine {
+    grid-template-columns: 1fr;
   }
 
   .inlineActions {
