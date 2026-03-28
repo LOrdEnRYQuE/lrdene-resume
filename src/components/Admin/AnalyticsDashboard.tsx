@@ -2,6 +2,7 @@
 
 import React from "react";
 import ui from "./AdminPrimitives.module.css";
+import styles from "./AnalyticsDashboard.module.css";
 import { api } from "../../../convex/_generated/api";
 import { motion } from "framer-motion";
 import { 
@@ -9,12 +10,29 @@ import {
   Users, 
   MousePointer2, 
   Clock,
-  Eye
+  Eye,
+  TrendingUp,
+  Gauge,
+  CheckCircle2,
+  AlertTriangle,
 } from "lucide-react";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
 
 function sortCounter(counter: Record<string, number>) {
   return Object.entries(counter).sort(([, a], [, b]) => b - a);
+}
+
+function safeRatio(value: number, total: number) {
+  if (!total) return 0;
+  return value / total;
+}
+
+function formatPct(value: number) {
+  return `${(value * 100).toFixed(1)}%`;
+}
+
+function formatNumber(value: number) {
+  return Intl.NumberFormat("en-US").format(value);
 }
 
 export const AnalyticsDashboard = () => {
@@ -52,6 +70,7 @@ export const AnalyticsDashboard = () => {
 
   if (!stats) return <div className="loading">Initializing Neural Insights...</div>;
   const viewsByRoute = stats.viewsByRoute ?? {};
+  const routeRanking = sortCounter(viewsByRoute);
   const recentEvents = stats.recentEvents ?? [];
   const acquisition = stats.acquisition ?? {
     bySource: {},
@@ -98,13 +117,41 @@ export const AnalyticsDashboard = () => {
   };
   const consentRangeLabel =
     consentRangeDays === null ? "All time" : `Last ${consentRangeDays} days`;
+  const topRouteViews = routeRanking[0]?.[1] ?? 0;
+  const avgViewsPerVisitor = safeRatio(stats.totalViews, stats.uniqueVisitors || 1);
+  const topRouteShare = safeRatio(topRouteViews, stats.totalViews);
+  const contactCompletion = safeRatio(funnel.formSubmissions, funnel.formStarts);
+  const ctaToFormStart = safeRatio(funnel.formStarts, funnel.ctaClicks);
+  const sourceRanking = sortCounter(acquisition.bySource);
+  const landingRanking = sortCounter(acquisition.byLandingPage);
+
+  const diagnostics = [
+    {
+      label: "Contact Form Completion",
+      value: formatPct(contactCompletion),
+      tone: contactCompletion >= 0.35 ? "good" : contactCompletion >= 0.2 ? "warn" : "bad",
+      hint: `${formatNumber(funnel.formSubmissions)} submissions from ${formatNumber(funnel.formStarts)} starts`,
+    },
+    {
+      label: "CTA -> Form Start",
+      value: formatPct(ctaToFormStart),
+      tone: ctaToFormStart >= 0.3 ? "good" : ctaToFormStart >= 0.15 ? "warn" : "bad",
+      hint: `${formatNumber(funnel.formStarts)} starts from ${formatNumber(funnel.ctaClicks)} CTA clicks`,
+    },
+    {
+      label: "Route Concentration Risk",
+      value: formatPct(topRouteShare),
+      tone: topRouteShare <= 0.35 ? "good" : topRouteShare <= 0.55 ? "warn" : "bad",
+      hint: `Top route contributes ${formatNumber(topRouteViews)} views`,
+    },
+  ] as const;
 
   return (
     <div className={ui.shell}>
       <section className={ui.section}>
         <div className={ui.titleWrap}>
           <h2 className={ui.title}>Neural <span className="gold-text">Insights</span></h2>
-          <p className={ui.subtitle}>Real-time user engagement and traffic flow.</p>
+          <p className={ui.subtitle}>Traffic quality, conversion pressure points, and intent signals.</p>
         </div>
       </section>
 
@@ -116,7 +163,7 @@ export const AnalyticsDashboard = () => {
         >
           <Eye className="gold-text" />
           <span className={ui.kpiLabel}>Total Impressions</span>
-          <div className={ui.kpiValue}>{stats.totalViews}</div>
+          <div className={ui.kpiValue}>{formatNumber(stats.totalViews)}</div>
         </motion.div>
 
         <motion.div 
@@ -126,8 +173,8 @@ export const AnalyticsDashboard = () => {
           transition={{ delay: 0.1 }}
         >
           <Users className="gold-text" />
-          <span className={ui.kpiLabel}>Unique Sessions</span>
-          <div className={ui.kpiValue}>{stats.uniqueVisitors}</div>
+          <span className={ui.kpiLabel}>Unique Visitors</span>
+          <div className={ui.kpiValue}>{formatNumber(stats.uniqueVisitors)}</div>
         </motion.div>
 
         <motion.div 
@@ -137,31 +184,93 @@ export const AnalyticsDashboard = () => {
           transition={{ delay: 0.2 }}
         >
           <MousePointer2 className="gold-text" />
-          <span className={ui.kpiLabel}>Active Routes</span>
-          <div className={ui.kpiValue}>{Object.keys(viewsByRoute).length}</div>
+          <span className={ui.kpiLabel}>Views / Visitor</span>
+          <div className={ui.kpiValue}>{avgViewsPerVisitor.toFixed(2)}</div>
         </motion.div>
       </div>
 
       <div className={ui.grid2}>
         <div className={ui.card}>
           <div className={ui.sectionHeader}>
-            <h3 className={ui.title}><BarChart3 size={18} className="gold-text" /> Popular Content</h3>
+            <h3 className={ui.title}><Gauge size={18} className="gold-text" /> Signal Health</h3>
+            <span className={styles.microPill}>{Object.keys(viewsByRoute).length} active routes</span>
           </div>
-          <div className={ui.list}>
-            {Object.entries(viewsByRoute)
-              .sort(([, a], [, b]) => (b as number) - (a as number))
-              .map(([route, count]) => (
-                <div key={route} className={ui.listRow}>
-                  <span className={ui.listRowLabel}>{route}</span>
-                  <span className={ui.pill}>{count as number} views</span>
+          <div className={styles.healthList}>
+            {diagnostics.map((item) => (
+              <div key={item.label} className={styles.healthRow}>
+                <div>
+                  <p className={styles.healthLabel}>{item.label}</p>
+                  <p className={styles.healthHint}>{item.hint}</p>
                 </div>
-              ))}
+                <div className={styles.healthValueWrap}>
+                  <span className={styles.healthValue}>{item.value}</span>
+                  <span className={`${styles.healthState} ${item.tone === "good" ? styles.good : item.tone === "warn" ? styles.warn : styles.bad}`}>
+                    {item.tone === "good" ? <CheckCircle2 size={13} /> : <AlertTriangle size={13} />}
+                    {item.tone === "good" ? "Healthy" : item.tone === "warn" ? "Watch" : "Action"}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className={ui.card}>
+          <div className={ui.sectionHeader}>
+            <h3 className={ui.title}><TrendingUp size={18} className="gold-text" /> Conversion Funnel</h3>
+          </div>
+          <div className={styles.funnelList}>
+            {[
+              { label: "CTA Clicks", value: funnel.ctaClicks, base: Math.max(funnel.ctaClicks, 1) },
+              { label: "Form Starts", value: funnel.formStarts, base: Math.max(funnel.ctaClicks, 1) },
+              { label: "Step Views", value: funnel.formStepViews, base: Math.max(funnel.ctaClicks, 1) },
+              { label: "Submissions", value: funnel.formSubmissions, base: Math.max(funnel.ctaClicks, 1) },
+            ].map((step) => (
+              <div key={step.label} className={styles.funnelRow}>
+                <div className={styles.funnelMeta}>
+                  <span>{step.label}</span>
+                  <span>{formatNumber(step.value)} ({formatPct(safeRatio(step.value, step.base))})</span>
+                </div>
+                <div className={styles.funnelTrack}>
+                  <div className={styles.funnelFill} style={{ width: `${Math.max(5, safeRatio(step.value, step.base) * 100)}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className={ui.grid2}>
+        <div className={ui.card}>
+          <div className={ui.sectionHeader}>
+            <h3 className={ui.title}><BarChart3 size={18} className="gold-text" /> Top Routes</h3>
+          </div>
+          <div className={ui.tableWrap}>
+            <table className={ui.table}>
+              <thead>
+                <tr>
+                  <th>Route</th>
+                  <th>Views</th>
+                  <th>Share</th>
+                </tr>
+              </thead>
+              <tbody>
+                {routeRanking.slice(0, 10).map(([route, count]) => (
+                  <tr key={route}>
+                    <td>{route}</td>
+                    <td>{formatNumber(count)}</td>
+                    <td>{formatPct(safeRatio(count, stats.totalViews))}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {routeRanking.length === 0 ? <p className={ui.subtitle}>No route impressions yet.</p> : null}
           </div>
         </div>
 
         <div className={ui.card}>
           <div className={ui.sectionHeader}>
             <h3 className={ui.title}><Clock size={18} className="gold-text" /> Live Feed</h3>
+            <span className={styles.microPill}>{recentEvents.length} recent events</span>
           </div>
           <div className={ui.list}>
             {recentEvents.map((event: any) => (
@@ -187,10 +296,10 @@ export const AnalyticsDashboard = () => {
         <div className={ui.card}>
           <h3 className={ui.title}><BarChart3 size={18} className="gold-text" /> Acquisition</h3>
           <p className={ui.subtitle}>
-            Session conversion rate: {acquisition.conversionRate}%
+            Session conversion rate: {acquisition.conversionRate.toFixed(1)}%
           </p>
           <div className={ui.list}>
-            {sortCounter(acquisition.bySource).slice(0, 6).map(([source, count]) => (
+            {sourceRanking.slice(0, 6).map(([source, count]) => (
               <div key={source} className={ui.listRow}>
                 <span className={ui.listRowLabel}>Source: {source}</span>
                 <span className={ui.pill}>{count} sessions</span>
@@ -202,11 +311,12 @@ export const AnalyticsDashboard = () => {
                 <span className={ui.pill}>{count} sessions</span>
               </div>
             ))}
+            {sourceRanking.length === 0 && <p className={ui.subtitle}>No acquisition source data yet.</p>}
           </div>
         </div>
 
         <div className={ui.card}>
-          <h3 className={ui.title}><MousePointer2 size={18} className="gold-text" /> Sales Intent</h3>
+          <h3 className={ui.title}><MousePointer2 size={18} className="gold-text" /> High-Intent Segments</h3>
           <div className={ui.list}>
             {sortCounter(salesIntent.byProjectType).slice(0, 6).map(([projectType, count]) => (
               <div key={projectType} className={ui.listRow}>
@@ -226,6 +336,12 @@ export const AnalyticsDashboard = () => {
                 <span className={ui.pill}>{count}</span>
               </div>
             ))}
+            {landingRanking.slice(0, 3).map(([landing, count]) => (
+              <div key={landing} className={ui.listRow}>
+                <span className={ui.listRowLabel}>Landing: {landing}</span>
+                <span className={ui.pill}>{count} sessions</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -234,15 +350,15 @@ export const AnalyticsDashboard = () => {
         <h3 className={ui.title}><Clock size={18} className="gold-text" /> Funnel</h3>
         <div className={ui.grid2}>
           <div className={ui.list}>
-            <div className={ui.listRow}><span className={ui.listRowLabel}>CTA Clicks</span><span className={ui.pill}>{funnel.ctaClicks}</span></div>
-            <div className={ui.listRow}><span className={ui.listRowLabel}>Service Views</span><span className={ui.pill}>{funnel.serviceViews}</span></div>
-            <div className={ui.listRow}><span className={ui.listRowLabel}>Project Views</span><span className={ui.pill}>{funnel.projectViews}</span></div>
-            <div className={ui.listRow}><span className={ui.listRowLabel}>Demo Opens</span><span className={ui.pill}>{funnel.demoOpens}</span></div>
+            <div className={ui.listRow}><span className={ui.listRowLabel}>CTA Clicks</span><span className={ui.pill}>{formatNumber(funnel.ctaClicks)}</span></div>
+            <div className={ui.listRow}><span className={ui.listRowLabel}>Service Views</span><span className={ui.pill}>{formatNumber(funnel.serviceViews)}</span></div>
+            <div className={ui.listRow}><span className={ui.listRowLabel}>Project Views</span><span className={ui.pill}>{formatNumber(funnel.projectViews)}</span></div>
+            <div className={ui.listRow}><span className={ui.listRowLabel}>Demo Opens</span><span className={ui.pill}>{formatNumber(funnel.demoOpens)}</span></div>
           </div>
           <div className={ui.list}>
-            <div className={ui.listRow}><span className={ui.listRowLabel}>Contact Form Starts</span><span className={ui.pill}>{funnel.formStarts}</span></div>
-            <div className={ui.listRow}><span className={ui.listRowLabel}>Contact Step Views</span><span className={ui.pill}>{funnel.formStepViews}</span></div>
-            <div className={ui.listRow}><span className={ui.listRowLabel}>Contact Submissions</span><span className={ui.pill}>{funnel.formSubmissions}</span></div>
+            <div className={ui.listRow}><span className={ui.listRowLabel}>Contact Form Starts</span><span className={ui.pill}>{formatNumber(funnel.formStarts)}</span></div>
+            <div className={ui.listRow}><span className={ui.listRowLabel}>Contact Step Views</span><span className={ui.pill}>{formatNumber(funnel.formStepViews)}</span></div>
+            <div className={ui.listRow}><span className={ui.listRowLabel}>Contact Submissions</span><span className={ui.pill}>{formatNumber(funnel.formSubmissions)}</span></div>
           </div>
         </div>
       </div>
