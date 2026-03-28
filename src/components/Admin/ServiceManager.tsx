@@ -283,16 +283,18 @@ export const ServiceManager = () => {
     setSelectedMatrixKeys([]);
   };
 
-  const runBulkAutofill = async (mode: "faq" | "testimonial" | "all") => {
-    if (selectedMatrixKeys.length === 0) {
+  const runBulkAutofill = async (mode: "faq" | "testimonial" | "all", keysOverride?: string[]) => {
+    const targetKeys = keysOverride ?? selectedMatrixKeys;
+    if (targetKeys.length === 0) {
       alert("Select at least one row in the matrix.");
       return;
     }
+    const selectedKeySet = new Set(targetKeys);
 
     setIsBulkUpdating(true);
     try {
       for (const row of locationRows) {
-        if (!selectedMatrixKeys.includes(row.key)) continue;
+        if (!selectedKeySet.has(row.key)) continue;
         const existingSection = sections.find((entry) => entry.sectionKey === row.key);
         const existingData = (existingSection?.data ?? {}) as Partial<LocationContentForm>;
 
@@ -339,6 +341,16 @@ export const ServiceManager = () => {
     } finally {
       setIsBulkUpdating(false);
     }
+  };
+
+  const autofillMissingFaq = async () => {
+    const missingFaqKeys = locationRows.filter((row) => !row.hasFaq).map((row) => row.key);
+    if (missingFaqKeys.length === 0) {
+      alert("No rows with missing FAQ.");
+      return;
+    }
+    setMatrixFilter("missingFaq");
+    await runBulkAutofill("faq", missingFaqKeys);
   };
 
   return (
@@ -551,6 +563,14 @@ export const ServiceManager = () => {
             disabled={isBulkUpdating}
           >
             Autofill FAQ
+          </button>
+          <button
+            type="button"
+            className={styles.syncBtn}
+            onClick={autofillMissingFaq}
+            disabled={isBulkUpdating}
+          >
+            Fix Missing FAQ
           </button>
           <button
             type="button"
