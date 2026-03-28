@@ -19,6 +19,53 @@
   font-size: 0.85rem;
 }
 
+.tutorialCard {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.25rem 1.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.tutorialCard h2 {
+  margin: 0 0 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 1rem;
+}
+
+.tutorialGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.tutorialGrid article {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.7rem 0.8rem;
+}
+
+.tutorialGrid h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.85rem;
+}
+
+.tutorialGrid p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.tutorialNote {
+  margin: 0.8rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
 .grid {
   display: grid;
   grid-template-columns: minmax(280px, 400px) minmax(0, 1fr);
@@ -282,6 +329,10 @@
   .grid {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .tutorialGrid {
+    grid-template-columns: 1fr;
   }
 
   .card {

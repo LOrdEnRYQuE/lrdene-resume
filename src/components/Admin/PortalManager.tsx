@@ -17,6 +17,7 @@ import {
   PauseCircle,
   CheckCircle2,
   Ban,
+  BookOpen,
 } from "lucide-react";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
 import { useAdminMutation } from "@/hooks/useAdminMutation";
@@ -162,6 +163,35 @@ export const PortalManager = () => {
           {inlineMessage ? <p className={styles.inlineMessage}>{inlineMessage}</p> : null}
         </div>
       </header>
+
+      <section className={styles.tutorialCard}>
+        <h2><BookOpen size={18} className="gold-text" /> How To Use Portal Architect</h2>
+        <div className={styles.tutorialGrid}>
+          <article>
+            <h3>1. Create Portal</h3>
+            <p>Select a lead, optionally link a project, then click <strong>Initialize Portal</strong>.</p>
+          </article>
+          <article>
+            <h3>2. Share Secure Access</h3>
+            <p>Use <strong>Copy URL</strong> to send the private portal link to your client.</p>
+          </article>
+          <article>
+            <h3>3. Upload Delivery Assets</h3>
+            <p>Use the upload action to attach files. Assets appear in the portal workspace.</p>
+          </article>
+          <article>
+            <h3>4. Control Lifecycle</h3>
+            <p>Set status to <strong>On-Hold</strong>, <strong>Completed</strong>, or <strong>Revoked</strong> as the project evolves.</p>
+          </article>
+          <article>
+            <h3>5. Rotate Access Code</h3>
+            <p>Use <strong>Rotate Code</strong> immediately if a link is exposed or staff changes.</p>
+          </article>
+        </div>
+        <p className={styles.tutorialNote}>
+          Security tip: keep portals on <strong>Active</strong> only while collaboration is ongoing; use <strong>Revoked</strong> to disable access instantly.
+        </p>
+      </section>
 
       <div className={styles.grid}>
         <section className={styles.creator}>
