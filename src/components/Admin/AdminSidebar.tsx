@@ -2,6 +2,7 @@
 
 import React from "react";
 import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 import styles from "./AdminSidebar.module.css";
 import {
   BarChart3,
@@ -115,7 +116,7 @@ export default function AdminSidebar({
           "Digital Store": "Digital Store",
           "Site Control": "Site Control",
           Settings: "Settings",
-          adminControl: "Admin Control",
+          adminControl: "Control Center",
           sectionCore: "Core",
           sectionCRM: "CRM",
           sectionContent: "Content",
@@ -145,10 +146,16 @@ export default function AdminSidebar({
     <aside className={`${styles.sidebar} ${mobileOpen ? styles.mobileOpen : ""} ${collapsed ? styles.collapsed : ""}`}>
       <div className={styles.logo}>
         <div className={styles.logoIcon}>
-          <ShieldCheck size={24} />
+          <Image
+            src="/assets/LOGO.png"
+            alt="L.E.A.D.S logo"
+            width={28}
+            height={28}
+            className={styles.logoImage}
+          />
         </div>
         <div className={styles.logoText}>
-          <h2>Portfolio<span>OS</span></h2>
+          <h2>L.E.A.D.S</h2>
           <span>{labels.adminControl}</span>
         </div>
         <button
