@@ -643,11 +643,25 @@ export default function QRSolutionsPage() {
                 className={`${styles.showcaseCard} ${index === 0 ? styles.showcaseFeatured : ""}`}
               >
                 <div className={styles.showcaseImageWrap}>
-                  <Image src="/assets/uTraLink-icon.png" alt={item.title} fill className={styles.showcaseImage} sizes="(max-width: 960px) 100vw, 33vw" />
+                  <Image
+                    src="/assets/uTraLink-icon.png"
+                    alt={item.title}
+                    fill
+                    className={styles.showcaseImage}
+                    sizes="(max-width: 960px) 100vw, 33vw"
+                    loading="lazy"
+                  />
                   <div className={styles.showcaseOverlay} />
                   <div className={styles.showcaseLogo}>
                     <span className={styles.showcaseLogoRing} />
-                    <Image src="/assets/LOGO.png" alt="LOrdEnRYQuE" width={30} height={30} className={styles.showcaseNavLogo} />
+                    <Image
+                      src="/assets/LOGO.png"
+                      alt="LOrdEnRYQuE"
+                      width={30}
+                      height={30}
+                      className={styles.showcaseNavLogo}
+                      loading="lazy"
+                    />
                   </div>
                   <span className={styles.showcaseTag}>{index === 0 ? "Featured" : "Campaign"}</span>
                 </div>
@@ -686,7 +700,7 @@ export default function QRSolutionsPage() {
                 <div className={styles.phoneNotch} />
                 <div className={styles.phoneScreen}>
                   <div className={styles.phoneHeader}>
-                    <Image src="/assets/uTraLink-icon.png" alt="uTraLink Logo" width={30} height={30} />
+                    <Image src="/assets/uTraLink-icon.png" alt="uTraLink Logo" width={30} height={30} loading="lazy" />
                     <span className={styles.phoneHeaderLabel}>uTraLink Preview</span>
                   </div>
                   <div className={styles.phoneBody}>
