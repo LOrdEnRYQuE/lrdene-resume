@@ -13,6 +13,12 @@
   margin-bottom: 0.5rem;
 }
 
+.inlineMessage {
+  margin-top: 0.65rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
 .grid {
   display: grid;
   grid-template-columns: minmax(280px, 400px) minmax(0, 1fr);
@@ -95,6 +101,13 @@
   margin-bottom: 0.25rem;
 }
 
+.portalEmail {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin-bottom: 0.3rem;
+}
+
 .portalInfo code {
   font-family: 'JetBrains Mono', monospace;
   color: var(--accent-gold);
@@ -139,6 +152,36 @@
   color: var(--text-secondary);
   padding-top: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.statusActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.8rem;
+}
+
+.statusBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+  font-size: 0.74rem;
+  padding: 0.35rem 0.55rem;
+  cursor: pointer;
+}
+
+.statusBtn:hover:not(:disabled) {
+  border-color: rgba(212, 175, 55, 0.6);
+  color: var(--accent-gold);
+}
+
+.statusBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .empty {

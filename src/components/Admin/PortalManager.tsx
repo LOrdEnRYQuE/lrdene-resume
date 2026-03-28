@@ -6,13 +6,17 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
 import {
-  ShieldCheck, 
-  Plus, 
-  Copy, 
+  ShieldCheck,
+  Plus,
+  Copy,
   ExternalLink,
   AlertCircle,
   Upload,
-  File
+  File,
+  RefreshCw,
+  PauseCircle,
+  CheckCircle2,
+  Ban,
 } from "lucide-react";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
 import { useAdminMutation } from "@/hooks/useAdminMutation";
@@ -49,12 +53,17 @@ export const PortalManager = () => {
   const projects = useQuery(api.projects.list, {}) || [];
   const portals = (useAdminQuery(api.portals.listPortals) as any[]) || [];
   const createPortal = useAdminMutation(api.portals.createPortal);
+  const updatePortalStatus = useAdminMutation(api.portals.updatePortalStatus);
+  const rotatePortalCode = useAdminMutation(api.portals.rotatePortalCode);
   const generateUploadUrl = useAdminMutation(api.portals.generateUploadUrl);
   const addPortalAsset = useAdminMutation(api.portals.addPortalAsset);
   
   const [selectedLeadId, setSelectedLeadId] = useState<Id<"leads"> | "">("");
   const [selectedProjectId, setSelectedProjectId] = useState<Id<"projects"> | "">("");
   const [isCreating, setIsCreating] = useState(false);
+  const [statusUpdatingId, setStatusUpdatingId] = useState<string | null>(null);
+  const [rotatingId, setRotatingId] = useState<string | null>(null);
+  const [inlineMessage, setInlineMessage] = useState<string>("");
 
   const handleCreatePortal = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,14 +71,18 @@ export const PortalManager = () => {
 
     setIsCreating(true);
     try {
-      await createPortal({
+      const created = (await createPortal({
         leadId: selectedLeadId,
         projectId: selectedProjectId || undefined,
-      });
+      })) as { secretCode?: string } | null;
       setSelectedLeadId("");
       setSelectedProjectId("");
+      if (created?.secretCode) {
+        setInlineMessage(`Portal initialized: ${created.secretCode}`);
+      }
     } catch (err) {
       console.error(err);
+      setInlineMessage("Failed to initialize portal.");
     } finally {
       setIsCreating(false);
     }
@@ -94,17 +107,50 @@ export const PortalManager = () => {
         name: file.name,
         format: file.type.startsWith("image") ? "image" : "file",
       });
-      alert(`Asset "${file.name}" uploaded successfully.`);
+      setInlineMessage(`Asset uploaded: ${file.name}`);
     } catch (err) {
       console.error("Upload failed", err);
-      alert("Upload failed.");
+      setInlineMessage("Upload failed.");
     }
   };
 
-  const copyToClipboard = (code: string) => {
+  const copyToClipboard = async (code: string) => {
     const url = `${window.location.origin}/portal/${code}`;
-    navigator.clipboard.writeText(url);
-    alert("Portal URL copied to clipboard!");
+    await navigator.clipboard.writeText(url);
+    setInlineMessage("Portal URL copied.");
+  };
+
+  const handleStatusChange = async (
+    portalId: Id<"clientPortals">,
+    status: "active" | "on-hold" | "completed" | "revoked",
+  ) => {
+    setStatusUpdatingId(portalId);
+    try {
+      await updatePortalStatus({ portalId, status });
+      setInlineMessage(`Portal status updated: ${status}`);
+    } catch (error) {
+      console.error("Failed to update status", error);
+      setInlineMessage("Failed to update portal status.");
+    } finally {
+      setStatusUpdatingId(null);
+    }
+  };
+
+  const handleRotateCode = async (portalId: Id<"clientPortals">) => {
+    setRotatingId(portalId);
+    try {
+      const result = (await rotatePortalCode({ portalId })) as { secretCode?: string } | null;
+      if (result?.secretCode) {
+        setInlineMessage(`Portal code rotated: ${result.secretCode}`);
+      } else {
+        setInlineMessage("Portal code rotated.");
+      }
+    } catch (error) {
+      console.error("Failed to rotate portal code", error);
+      setInlineMessage("Failed to rotate portal code.");
+    } finally {
+      setRotatingId(null);
+    }
   };
 
   return (
@@ -113,6 +159,7 @@ export const PortalManager = () => {
         <div className={styles.titleArea}>
           <h1>Portal <span className="gold-text">Architect</span></h1>
           <p>Provision secure project environments for your clients.</p>
+          {inlineMessage ? <p className={styles.inlineMessage}>{inlineMessage}</p> : null}
         </div>
       </header>
 
@@ -168,6 +215,7 @@ export const PortalManager = () => {
                   <div className={styles.portalMain}>
                     <div className={styles.portalInfo}>
                       <strong>{portal.clientName}</strong>
+                      {portal.clientEmail ? <span className={styles.portalEmail}>{portal.clientEmail}</span> : null}
                       <code>{portal.secretCode}</code>
                     </div>
                     <div className={styles.portalActions}>
@@ -182,6 +230,13 @@ export const PortalManager = () => {
                       <button onClick={() => copyToClipboard(portal.secretCode)} title="Copy URL">
                         <Copy size={16} />
                       </button>
+                      <button
+                        onClick={() => handleRotateCode(portal._id)}
+                        title="Rotate Code"
+                        disabled={rotatingId === portal._id}
+                      >
+                        <RefreshCw size={16} />
+                      </button>
                       <a href={`/portal/${portal.secretCode}`} target="_blank" rel="noopener noreferrer" title="View Portal">
                         <ExternalLink size={16} />
                       </a>
@@ -189,9 +244,44 @@ export const PortalManager = () => {
                   </div>
                   <div className={styles.portalMeta}>
                     <span>Status: <strong style={{ color: "var(--accent-gold)" }}>{portal.status}</strong></span>
+                    {portal.projectTitle ? <span>Project: {portal.projectTitle}</span> : null}
                     {portal.lastAccessed && (
                       <span>Last Seen: {new Date(portal.lastAccessed).toLocaleDateString()}</span>
                     )}
+                  </div>
+                  <div className={styles.statusActions}>
+                    <button
+                      type="button"
+                      className={styles.statusBtn}
+                      disabled={statusUpdatingId === portal._id}
+                      onClick={() => handleStatusChange(portal._id, "active")}
+                    >
+                      <CheckCircle2 size={14} /> Activate
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.statusBtn}
+                      disabled={statusUpdatingId === portal._id}
+                      onClick={() => handleStatusChange(portal._id, "on-hold")}
+                    >
+                      <PauseCircle size={14} /> On-Hold
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.statusBtn}
+                      disabled={statusUpdatingId === portal._id}
+                      onClick={() => handleStatusChange(portal._id, "completed")}
+                    >
+                      <CheckCircle2 size={14} /> Complete
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.statusBtn}
+                      disabled={statusUpdatingId === portal._id}
+                      onClick={() => handleStatusChange(portal._id, "revoked")}
+                    >
+                      <Ban size={14} /> Revoke
+                    </button>
                   </div>
                   <AssetList portalId={portal._id} />
                 </div>

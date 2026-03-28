@@ -10,12 +10,32 @@ const RATE_LIMIT_BLOCK_MS = 30 * 60 * 1000;
 const MAX_PORTALS = 500;
 const MAX_PORTAL_ASSETS = 300;
 const MAX_PORTAL_MESSAGES = 100;
+const PORTAL_STATUS = v.union(
+  v.literal("active"),
+  v.literal("on-hold"),
+  v.literal("completed"),
+  v.literal("revoked"),
+);
 
 const generateSegment = () => {
   const bytes = new Uint8Array(4);
   crypto.getRandomValues(bytes);
   return Array.from(bytes, (b) => PORTAL_CODE_CHARSET[b % PORTAL_CODE_CHARSET.length]).join("");
 };
+
+async function allocatePortalCode(ctx: QueryCtx | MutationCtx) {
+  for (let i = 0; i < 8; i++) {
+    const candidate = `CP-${generateSegment()}-${generateSegment()}`;
+    const existing = await ctx.db
+      .query("clientPortals")
+      .withIndex("by_secretCode", (q) => q.eq("secretCode", candidate))
+      .unique();
+    if (!existing) {
+      return candidate;
+    }
+  }
+  throw new Error("Failed to allocate unique portal code");
+}
 
 async function requirePortalCodeAccess(
   ctx: QueryCtx | MutationCtx,
@@ -28,6 +48,9 @@ async function requirePortalCodeAccess(
   const portal = await ctx.db.get(portalId);
   if (!portal || portal.secretCode !== code) {
     throw new Error("Invalid portal access.");
+  }
+  if (portal.status !== "active") {
+    throw new Error("Portal is currently unavailable.");
   }
 }
 
@@ -42,22 +65,7 @@ export const createPortal = mutation({
   },
   handler: async (ctx, args) => {
     await requireAdminToken(args.adminToken);
-    // Generate a collision-resistant code and retry on rare collisions.
-    let secretCode = "";
-    for (let i = 0; i < 8; i++) {
-      const candidate = `CP-${generateSegment()}-${generateSegment()}`;
-      const existing = await ctx.db
-        .query("clientPortals")
-        .withIndex("by_secretCode", (q) => q.eq("secretCode", candidate))
-        .unique();
-      if (!existing) {
-        secretCode = candidate;
-        break;
-      }
-    }
-    if (!secretCode) {
-      throw new Error("Failed to allocate unique portal code");
-    }
+    const secretCode = await allocatePortalCode(ctx);
 
     const portalId = await ctx.db.insert("clientPortals", {
       leadId: args.leadId,
@@ -128,6 +136,9 @@ export const validatePortalAccess = mutation({
 
       return { ok: false as const, error: "Invalid or expired portal code." };
     }
+    if (portal.status !== "active") {
+      return { ok: false as const, error: "Portal is currently unavailable." };
+    }
 
     if (attempt) {
       await ctx.db.patch(attempt._id, {
@@ -173,6 +184,7 @@ export const validateCode = query({
       .unique();
 
     if (!portal) return null;
+    if (portal.status !== "active") return null;
 
     const lead = await ctx.db.get(portal.leadId);
     const project = portal.projectId ? await ctx.db.get(portal.projectId) : null;
@@ -232,9 +244,42 @@ export const listPortals = query({
     return Promise.all(
       portals.map(async (p) => {
         const lead = await ctx.db.get(p.leadId);
-        return { ...p, clientName: lead?.name };
+        const project = p.projectId ? await ctx.db.get(p.projectId) : null;
+        return { ...p, clientName: lead?.name, clientEmail: lead?.email, projectTitle: project?.title };
       })
     );
+  },
+});
+
+export const updatePortalStatus = mutation({
+  args: {
+    adminToken: ADMIN_TOKEN,
+    portalId: v.id("clientPortals"),
+    status: PORTAL_STATUS,
+  },
+  handler: async (ctx, args) => {
+    await requireAdminToken(args.adminToken);
+    await ctx.db.patch(args.portalId, { status: args.status });
+  },
+});
+
+export const rotatePortalCode = mutation({
+  args: {
+    adminToken: ADMIN_TOKEN,
+    portalId: v.id("clientPortals"),
+  },
+  handler: async (ctx, args) => {
+    await requireAdminToken(args.adminToken);
+    const portal = await ctx.db.get(args.portalId);
+    if (!portal) {
+      throw new Error("Portal not found.");
+    }
+    const nextCode = await allocatePortalCode(ctx);
+    await ctx.db.patch(args.portalId, {
+      secretCode: nextCode,
+      status: portal.status === "revoked" ? "active" : portal.status,
+    });
+    return { secretCode: nextCode };
   },
 });
 
