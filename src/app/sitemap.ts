@@ -33,27 +33,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let posts: Awaited<ReturnType<typeof fetchQuery<typeof api.posts.list>>> = [];
   let projects: Awaited<ReturnType<typeof fetchQuery<typeof api.projects.list>>> = [];
   let services: Awaited<ReturnType<typeof fetchQuery<typeof api.services.list>>> = [];
-  let demos: Awaited<ReturnType<typeof fetchQuery<typeof api.demos.list>>> = [];
   let topicClusters: ReturnType<typeof resolveTopicClusters> = [];
 
   try {
-    const [postsResult, projectsResult, servicesResult, demosResult, topicClusterContent] = await Promise.all([
+    const [postsResult, projectsResult, servicesResult, topicClusterContent] = await Promise.all([
       fetchQuery(api.posts.list, { onlyPublished: true }),
       fetchQuery(api.projects.list, { category: undefined }),
       fetchQuery(api.services.list, {}),
-      fetchQuery(api.demos.list, {}),
       fetchQuery(api.pages.getPageContent, { key: TOPIC_CLUSTER_CONTENT_KEY, fallbackToEnglish: true }),
     ]);
     posts = postsResult;
     projects = projectsResult;
     services = servicesResult;
-    demos = demosResult;
     topicClusters = resolveTopicClusters(topicClusterContent?.data);
   } catch {
     posts = [];
     projects = [];
     services = [];
-    demos = [];
     topicClusters = [];
   }
 
@@ -76,13 +72,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(service._creationTime),
     changeFrequency: "monthly" as const,
     priority: 0.85,
-  }));
-
-  const demoEntries = demos.map((demo) => ({
-    path: `/demos/${demo.slug}`,
-    lastModified: new Date(demo._creationTime),
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
   }));
 
   const insightClusterEntries = topicClusters.map((cluster) => {
@@ -130,7 +119,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return toLocalizedEntries(baseUrl, [
     ...staticRoutes,
     ...serviceEntries,
-    ...demoEntries,
     ...insightClusterEntries,
     ...insightTopicEntries,
     ...postEntries,
