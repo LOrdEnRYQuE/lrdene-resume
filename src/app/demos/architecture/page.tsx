@@ -2,9 +2,9 @@
 
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import styles from './architecture.module.css';
+import LocaleLink from "@/components/I18n/LocaleLink";
 
 const SERVICES = [
   {
@@ -40,11 +40,11 @@ export default function ArchitecturePage() {
       <nav className={styles.nav}>
         <div className={styles.navContainer}>
           <div className={styles.navHeader}>
-            <Link href="/demos" className={styles.logo}>
+            <LocaleLink href="/demos" className={styles.logo}>
               ARCH <span>NEURAL</span>
-            </Link>
+            </LocaleLink>
             <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-              <Link href="/" style={{ fontSize: '0.75rem', fontWeight: '700', letterSpacing: '0.2em', textDecoration: 'none', color: 'var(--arch-text)' }}>PORTFOLIO</Link>
+              <LocaleLink href="/" style={{ fontSize: '0.75rem', fontWeight: '700', letterSpacing: '0.2em', textDecoration: 'none', color: 'var(--arch-text)' }}>PORTFOLIO</LocaleLink>
               <button className={styles.mainCta} style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', margin: 0 }}>START PROJECT</button>
             </div>
           </div>

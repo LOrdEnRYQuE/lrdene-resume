@@ -3,7 +3,6 @@ import { MetadataRoute } from "next";
 export const runtime = "edge";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
-import { SERVICE_LOCATIONS } from "@/utils/serviceLocations";
 import { SUPPORTED_LOCALES } from "@/lib/i18n/config";
 import {
   TOPIC_CLUSTER_CONTENT_KEY,
@@ -79,15 +78,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }));
 
-  const serviceLocationEntries = services.flatMap((service) =>
-    SERVICE_LOCATIONS.map((location) => ({
-      path: `/services/${service.slug}-${location.slug}`,
-      lastModified: new Date(service._creationTime),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    })),
-  );
-
   const demoEntries = demos.map((demo) => ({
     path: `/demos/${demo.slug}`,
     lastModified: new Date(demo._creationTime),
@@ -140,7 +130,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return toLocalizedEntries(baseUrl, [
     ...staticRoutes,
     ...serviceEntries,
-    ...serviceLocationEntries,
     ...demoEntries,
     ...insightClusterEntries,
     ...insightTopicEntries,

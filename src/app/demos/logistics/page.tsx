@@ -3,7 +3,7 @@
 import React from "react";
 import styles from "./logistics.module.css";
 import { motion } from "framer-motion";
-import { 
+import {
   Truck, 
   Package, 
   BarChart2, 
@@ -15,7 +15,7 @@ import {
   Navigation,
   Box
 } from "lucide-react";
-import Link from "next/link";
+import LocaleLink from "@/components/I18n/LocaleLink";
 
 export default function LogisticsDemo() {
   const shipments = [
@@ -40,9 +40,9 @@ export default function LogisticsDemo() {
         <div className={styles.navItem}><Box size={18} /> Inventory</div>
         <div style={{ marginTop: 'auto' }}>
           <div className={styles.navItem}><Settings size={18} /> Settings</div>
-          <Link href="/demos" className={styles.navItem}>
+          <LocaleLink href="/demos" className={styles.navItem}>
              Exit Demo
-          </Link>
+          </LocaleLink>
         </div>
       </aside>
 

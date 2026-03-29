@@ -1,7 +1,7 @@
-import Link from "next/link";
 import Image from "next/image";
 import { fetchQuery } from "convex/nextjs";
 import { ExternalLink, ArrowRight, Code2 } from "lucide-react";
+import LocaleLink from "@/components/I18n/LocaleLink";
 
 import { api } from "../../../convex/_generated/api";
 import styles from "./Demos.module.css";
@@ -320,9 +320,9 @@ export default async function DemosPage() {
                   </div>
                 )}
                 <div className={styles.imageOverlay}>
-                  <Link href={`/demos/${demo.slug}`} className={styles.viewBtn}>
+                  <LocaleLink href={`/demos/${demo.slug}`} className={styles.viewBtn}>
                     View Case Study <ArrowRight size={16} />
-                  </Link>
+                  </LocaleLink>
                 </div>
               </div>
               <div className={styles.cardContent}>
@@ -339,12 +339,17 @@ export default async function DemosPage() {
                 </div>
 
                 <div className={styles.footer}>
-                  <Link href={demo.url || "#"} target="_blank" rel="noopener noreferrer" className={styles.liveLink}>
+                  <LocaleLink
+                    href={demo.url || `/demos/${demo.slug}`}
+                    target={demo.url?.startsWith("http") ? "_blank" : undefined}
+                    rel={demo.url?.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className={styles.liveLink}
+                  >
                     Live Demo <ExternalLink size={14} />
-                  </Link>
-                  <Link href={`/demos/${demo.slug}`} className={styles.detailsLink}>
+                  </LocaleLink>
+                  <LocaleLink href={`/demos/${demo.slug}`} className={styles.detailsLink}>
                     Details
-                  </Link>
+                  </LocaleLink>
                 </div>
               </div>
             </article>

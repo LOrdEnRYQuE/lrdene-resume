@@ -27,6 +27,10 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical,
       languages: getLanguageAlternates("/store"),
     },
+    robots: {
+      index: false,
+      follow: false,
+    },
     openGraph: {
       title: "Digital Store | LOrdEnRYQuE",
       description:

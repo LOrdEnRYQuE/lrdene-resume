@@ -20,6 +20,7 @@ Set these in your hosting provider (not in git):
 
 Optional integration keys:
 
+- `NEXT_PUBLIC_GA_ID` (GA4 Measurement ID, format `G-XXXXXXXXXX`)
 - `OPENAI_API_KEY`
 - `RESEND_API_KEY`
 - `EMAIL_FROM`
@@ -69,9 +70,13 @@ npm run pages:deploy
 - Check admin login flow (`/admin/login`)
 - Submit a contact lead and verify Convex write
 - Verify `robots.txt` and `sitemap.xml` return 200
+- Verify GA4:
+  - Ensure `NEXT_PUBLIC_GA_ID` is set in hosting env, or configure GA ID in `/admin/settings`.
+  - Accept analytics consent in the cookie banner on the live site.
+  - Open GA4 DebugView and confirm `page_view` and custom events appear.
+  - Confirm no analytics events fire before consent is granted.
 
 ## 7) Rollback Strategy
 
 - Frontend: rollback to previous deployment in host dashboard
 - Convex: redeploy previous backend revision if needed
-

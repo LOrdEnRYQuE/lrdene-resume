@@ -59,6 +59,16 @@ for key in "${optional_env[@]}"; do
   fi
 done
 
+if [[ -n "${NEXT_PUBLIC_GA_ID:-}" ]]; then
+  if [[ "${NEXT_PUBLIC_GA_ID}" =~ ^G-[A-Z0-9]{6,}$ ]]; then
+    echo "  - NEXT_PUBLIC_GA_ID format: OK (${NEXT_PUBLIC_GA_ID})"
+  else
+    echo "  - NEXT_PUBLIC_GA_ID format: INVALID (${NEXT_PUBLIC_GA_ID})"
+    echo "    Expected GA4 Measurement ID format like: G-XXXXXXXXXX"
+    exit 1
+  fi
+fi
+
 echo
 echo "Running quality gate (lint + typecheck)..."
 npm run check

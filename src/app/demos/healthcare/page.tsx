@@ -3,7 +3,7 @@
 import React from "react";
 import styles from "./healthcare.module.css";
 import { motion } from "framer-motion";
-import { 
+import {
   Heart, 
   PlusCircle, 
   MessageSquare, 
@@ -16,7 +16,7 @@ import {
   ShieldCheck,
   FileText
 } from "lucide-react";
-import Link from "next/link";
+import LocaleLink from "@/components/I18n/LocaleLink";
 
 export default function HealthcareDemo() {
   return (
@@ -31,7 +31,7 @@ export default function HealthcareDemo() {
           <a href="#" className={styles.navLink}>Dashboard</a>
           <a href="#" className={styles.navLink}>Medical Records</a>
           <a href="#" className={styles.navLink}>Billing</a>
-          <Link href="/demos" className={styles.navLink}>Exit Demo</Link>
+          <LocaleLink href="/demos" className={styles.navLink}>Exit Demo</LocaleLink>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           <div style={{ textAlign: 'right', display: 'none' }}>

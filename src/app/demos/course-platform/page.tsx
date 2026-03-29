@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import styles from "./course-platform.module.css";
 import { motion } from "framer-motion";
-import { 
+import {
   Play, 
   CheckCircle2, 
   BookOpen, 
@@ -12,7 +12,7 @@ import {
   Bell,
   Search,
 } from "lucide-react";
-import Link from "next/link";
+import LocaleLink from "@/components/I18n/LocaleLink";
 
 export default function CoursePlatformDemo() {
   const [currentLesson, setCurrentLesson] = useState(0);
@@ -37,7 +37,7 @@ export default function CoursePlatformDemo() {
           </div>
         </div>
         <div className={styles.userNav}>
-          <Link href="/demos" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.9rem' }}>Showcase</Link>
+          <LocaleLink href="/demos" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.9rem' }}>Showcase</LocaleLink>
           <Bell size={20} color="#64748b" />
           <div className={styles.avatar}></div>
         </div>

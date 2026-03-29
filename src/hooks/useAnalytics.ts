@@ -396,8 +396,16 @@ function generateSessionId() {
 }
 
 function getGaId() {
-  if (typeof window === "undefined") return GA_ID_ENV || "";
-  return window.__LRDENE_GA_ID?.trim() || GA_ID_ENV;
+  const normalize = (value?: string) => value?.trim().toUpperCase() || "";
+  const isValid = (value: string) => /^G-[A-Z0-9]{6,}$/.test(value);
+
+  const envGaId = normalize(GA_ID_ENV);
+  if (typeof window === "undefined") return isValid(envGaId) ? envGaId : "";
+
+  const runtimeGaId = normalize(window.__LRDENE_GA_ID);
+  if (isValid(runtimeGaId)) return runtimeGaId;
+  if (isValid(envGaId)) return envGaId;
+  return "";
 }
 
 function initGa4() {

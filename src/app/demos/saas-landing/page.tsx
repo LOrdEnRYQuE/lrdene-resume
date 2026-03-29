@@ -3,14 +3,14 @@
 import React from "react";
 import styles from "./saas-landing.module.css";
 import { motion } from "framer-motion";
-import { 
+import {
   Check, 
   Zap, 
   Layers, 
   Shield, 
   Star
 } from "lucide-react";
-import Link from "next/link";
+import LocaleLink from "@/components/I18n/LocaleLink";
 
 export default function SaasLandingDemo() {
   return (
@@ -22,7 +22,7 @@ export default function SaasLandingDemo() {
           <a href="#" className={styles.navLink}>Features</a>
           <a href="#" className={styles.navLink}>Pricing</a>
           <a href="#" className={styles.navLink}>Contact</a>
-          <Link href="/demos" className={styles.navLink}>Exit Demo</Link>
+          <LocaleLink href="/demos" className={styles.navLink}>Exit Demo</LocaleLink>
         </div>
         <button style={{ 
           background: '#0f172a', 

@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
+import { localizeHref } from "@/lib/i18n/path";
 
 export const runtime = "edge";
 
@@ -51,6 +52,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const locale = await getRequestLocale();
   const project = await fetchQuery(api.projects.getBySlug, { slug });
   if (!project) notFound();
 
@@ -86,7 +88,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     "@type": "CreativeWork",
     name: project.title,
     description: project.summary,
-    url: `https://lordenryque.com/projects/${project.slug}`,
+    url: `https://lordenryque.com${localizeHref(`/projects/${project.slug}`, locale)}`,
     creator: {
       "@type": "Person",
       name: "Attila Lazar",
@@ -112,9 +114,14 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://lordenryque.com" },
-      { "@type": "ListItem", position: 2, name: "Projects", item: "https://lordenryque.com/projects" },
-      { "@type": "ListItem", position: 3, name: project.title, item: `https://lordenryque.com/projects/${project.slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: `https://lordenryque.com${localizeHref("/", locale)}` },
+      { "@type": "ListItem", position: 2, name: "Projects", item: `https://lordenryque.com${localizeHref("/projects", locale)}` },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: project.title,
+        item: `https://lordenryque.com${localizeHref(`/projects/${project.slug}`, locale)}`,
+      },
     ],
   };
 
@@ -158,7 +165,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {relatedPosts.map((post) => (
             <Link
               key={post._id}
-              href={`/blog/${post.slug}`}
+              href={localizeHref(`/blog/${post.slug}`, locale)}
               data-track-event="internal_link_click"
               data-track-label={`Project->Blog: ${post.title}`}
             >
@@ -168,7 +175,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {relatedServices.map((service) => (
             <Link
               key={service._id}
-              href={`/services/${service.slug}`}
+              href={localizeHref(`/services/${service.slug}`, locale)}
               data-track-event="internal_link_click"
               data-track-label={`Project->Service: ${service.title}`}
             >
@@ -176,7 +183,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             </Link>
           ))}
           {relatedPosts.length === 0 && relatedServices.length === 0 ? (
-            <Link href="/services">Explore service delivery models</Link>
+            <Link href={localizeHref("/services", locale)}>Explore service delivery models</Link>
           ) : null}
         </div>
       </section>

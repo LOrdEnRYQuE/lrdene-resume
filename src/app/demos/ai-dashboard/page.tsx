@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import styles from "./ai-dashboard.module.css";
 import { motion } from "framer-motion";
-import { 
+import {
   BarChart3, 
   Cpu, 
   Database, 
@@ -13,7 +13,7 @@ import {
   AlertCircle,
   ExternalLink
 } from "lucide-react";
-import Link from "next/link";
+import LocaleLink from "@/components/I18n/LocaleLink";
 
 export default function AIDashboardDemo() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -26,7 +26,7 @@ export default function AIDashboardDemo() {
         <div className={styles.navLinks}>
           <a href="#" className={styles.navLink}>Docs</a>
           <a href="#" className={styles.navLink}>API</a>
-          <Link href="/demos" className={styles.navLink}>Exit Demo</Link>
+          <LocaleLink href="/demos" className={styles.navLink}>Exit Demo</LocaleLink>
         </div>
         <button style={{ 
           background: "#00f2fe", 

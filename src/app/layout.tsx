@@ -18,6 +18,11 @@ const ICON_VERSION = "20260327";
 const GOOGLE_SITE_VERIFICATION =
   process.env.GOOGLE_SITE_VERIFICATION || process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined;
 
+function isValidGaId(value?: string | null) {
+  if (!value) return false;
+  return /^G-[A-Z0-9]{6,}$/.test(value.trim().toUpperCase());
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://lordenryque.com"),
   applicationName: "LOrdEnRYQuE",
@@ -113,7 +118,13 @@ export default async function RootLayout({
         };
       }
     | null;
-  const gaId = settings?.gaId?.trim() || process.env.NEXT_PUBLIC_GA_ID || DEFAULT_GA_ID;
+  const settingsGaId = settings?.gaId?.trim();
+  const envGaId = process.env.NEXT_PUBLIC_GA_ID?.trim();
+  const gaId = isValidGaId(settingsGaId)
+    ? settingsGaId!.toUpperCase()
+    : isValidGaId(envGaId)
+      ? envGaId!.toUpperCase()
+      : DEFAULT_GA_ID;
   const sameAsLinks = Array.from(
     new Set(
       [

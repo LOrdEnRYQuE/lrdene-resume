@@ -9,6 +9,7 @@ import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
 import { TOPIC_CLUSTERS } from "@/lib/seo/topicClusters";
 import { findFallbackServiceBySlug } from "@/lib/servicesFallback";
+import { localizeHref } from "@/lib/i18n/path";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -116,6 +117,7 @@ export default async function ServicePage({ params }: PageProps) {
   if (!service) {
     notFound();
   }
+  const locale = await getRequestLocale();
 
   const [posts, projects, serviceSections] = await Promise.all([
     fetchQuery(api.posts.list, { onlyPublished: true }),
@@ -307,7 +309,7 @@ export default async function ServicePage({ params }: PageProps) {
             ) : null}
             <div style={{ marginTop: "0.9rem" }}>
               <Link
-                href="/contact"
+                href={localizeHref("/contact", locale)}
                 data-track-event="click_cta"
                 data-track-label={`Service location CTA: ${service.title} ${locationResolution.location.city}`}
               >
@@ -321,7 +323,7 @@ export default async function ServicePage({ params }: PageProps) {
           {relatedPosts.map((post) => (
             <Link
               key={post._id}
-              href={`/blog/${post.slug}`}
+              href={localizeHref(`/blog/${post.slug}`, locale)}
               data-track-event="internal_link_click"
               data-track-label={`Service->Blog: ${post.title}`}
             >
@@ -331,7 +333,7 @@ export default async function ServicePage({ params }: PageProps) {
           {relatedProjects.map((project) => (
             <Link
               key={project._id}
-              href={`/projects/${project.slug}`}
+              href={localizeHref(`/projects/${project.slug}`, locale)}
               data-track-event="internal_link_click"
               data-track-label={`Service->Project: ${project.title}`}
             >
@@ -339,12 +341,12 @@ export default async function ServicePage({ params }: PageProps) {
             </Link>
           ))}
           {relatedPosts.length === 0 && relatedProjects.length === 0 ? (
-            <Link href="/blog">Read the latest implementation insights</Link>
+            <Link href={localizeHref("/blog", locale)}>Read the latest implementation insights</Link>
           ) : null}
           {relatedTopicLinks.map((topic) => (
             <Link
               key={topic.href}
-              href={topic.href}
+              href={localizeHref(topic.href, locale)}
               data-track-event="internal_link_click"
               data-track-label={`Service->Insights: ${service.title} ${topic.label}`}
             >

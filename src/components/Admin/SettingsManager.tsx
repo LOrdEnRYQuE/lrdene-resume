@@ -53,6 +53,12 @@ export const SettingsManager = () => {
     setIsSaving(true);
     try {
       const updateData = { ...formData };
+      const normalizedGaId = String(updateData.gaId || "").trim().toUpperCase();
+      if (normalizedGaId && !/^G-[A-Z0-9]{6,}$/.test(normalizedGaId)) {
+        alert("Invalid GA4 Measurement ID. Use format: G-XXXXXXXXXX");
+        return;
+      }
+      updateData.gaId = normalizedGaId;
       delete updateData._id;
       delete updateData._creationTime;
       await updateSettings(updateData);

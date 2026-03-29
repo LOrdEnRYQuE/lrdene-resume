@@ -14,8 +14,8 @@ import {
   Search,
   Code2
 } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import LocaleLink from "@/components/I18n/LocaleLink";
 
 const MOCK_PRODUCTS = [
   {
@@ -27,7 +27,7 @@ const MOCK_PRODUCTS = [
     price: 49,
     imageUrl: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=2070",
     techStack: ["Figma", "React", "Storybook"],
-    downloadUrl: "#"
+    downloadUrl: ""
   },
   {
     _id: "p2",
@@ -38,13 +38,15 @@ const MOCK_PRODUCTS = [
     price: 99,
     imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2026",
     techStack: ["Next.js", "Stripe", "Clerk"],
-    downloadUrl: "#"
+    downloadUrl: ""
   }
 ];
 
 export default function StorePage() {
   const productsFromDb = useQuery(api.products.listActive);
   const products = (productsFromDb && productsFromDb.length > 0) ? productsFromDb : MOCK_PRODUCTS;
+  const isValidDownloadUrl = (value?: string) =>
+    Boolean(value && value.trim() && value !== "#");
 
   return (
     <main className={styles.container}>
@@ -112,12 +114,18 @@ export default function StorePage() {
               </div>
 
               <div className={styles.actions}>
-                <Link href={product.downloadUrl || "#"} className={styles.buyBtn}>
-                  Purchase Asset <Download size={18} />
-                </Link>
-                <Link href={`/store/${product.slug}`} className={styles.detailsBtn}>
+                {isValidDownloadUrl(product.downloadUrl) ? (
+                  <LocaleLink href={product.downloadUrl as string} className={styles.buyBtn}>
+                    Purchase Asset <Download size={18} />
+                  </LocaleLink>
+                ) : (
+                  <LocaleLink href="/contact" className={styles.buyBtn}>
+                    Request Access <Download size={18} />
+                  </LocaleLink>
+                )}
+                <LocaleLink href="/contact" className={styles.detailsBtn} aria-label={`Ask about ${product.name}`}>
                   <ExternalLink size={18} />
-                </Link>
+                </LocaleLink>
               </div>
             </div>
           </motion.div>

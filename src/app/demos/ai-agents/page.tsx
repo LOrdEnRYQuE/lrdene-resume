@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { 
   Bot, 
@@ -14,6 +13,7 @@ import {
   Terminal
 } from 'lucide-react';
 import styles from './ai-agents.module.css';
+import LocaleLink from "@/components/I18n/LocaleLink";
 
 const AGENTS = [
   {
@@ -61,12 +61,12 @@ export default function AIAgentsPage() {
       <nav className={styles.nav}>
         <div className={styles.container}>
           <div className={styles.navInner}>
-            <Link href="/demos" className={styles.logo}>
+            <LocaleLink href="/demos" className={styles.logo}>
               <Bot size={28} />
               <span>NEURAL AGENCIES</span>
-            </Link>
+            </LocaleLink>
             <div className={styles.navLinks}>
-              <Link href="/" className={styles.navLink}>Portfolio</Link>
+              <LocaleLink href="/" className={styles.navLink}>Portfolio</LocaleLink>
             </div>
           </div>
         </div>
