@@ -9,10 +9,16 @@ export const runtime = "edge";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const canonical = toLocaleCanonical("/projects", locale);
+  const isDe = locale === "de";
+  const title = isDe ? "KI- & Web-Fallstudien" : "AI & Web Case Studies";
+  const description = isDe
+    ? "Reale Projektergebnisse in KI-Produkten, performanten Web-Plattformen und conversion-orientierter Umsetzung."
+    : "Real project outcomes across AI products, high-performance web platforms, and conversion-focused digital delivery.";
+  const socialTitle = `${title} | LOrdEnRYQuE`;
 
   return {
-    title: "AI & Web Case Studies",
-    description: "Real project outcomes across AI products, high-performance web platforms, and conversion-focused digital delivery.",
+    title,
+    description,
     keywords: [
       "software case studies",
       "AI project portfolio",
@@ -25,18 +31,18 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/projects"),
     },
     openGraph: {
-      title: "AI & Web Case Studies | LOrdEnRYQuE",
-      description: "Real project outcomes across AI products, high-performance web platforms, and conversion-focused digital delivery.",
+      title: socialTitle,
+      description,
       url: `https://lordenryque.com${canonical}`,
       type: "website",
       siteName: "LOrdEnRYQuE",
-      images: ["/assets/LOGO.png"],
+      images: ["/assets/realestate-hero.jpg"],
     },
     twitter: {
       card: "summary_large_image",
-      title: "AI & Web Case Studies | LOrdEnRYQuE",
-      description: "Real project outcomes across AI products, high-performance web platforms, and conversion-focused digital delivery.",
-      images: ["/assets/LOGO.png"],
+      title: socialTitle,
+      description,
+      images: ["/assets/realestate-hero.jpg"],
     },
   };
 }

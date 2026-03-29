@@ -12,10 +12,16 @@ export const runtime = "edge";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const canonical = toLocaleCanonical("/contact", locale);
+  const isDe = locale === "de";
+  const title = isDe ? "Projekt starten" : "Start Your Project";
+  const description = isDe
+    ? `Sprich mit ${BUSINESS_PROFILE.name} über KI-Systeme, Web-Architektur und wachstumsorientierte digitale Lösungen.`
+    : `Talk with ${BUSINESS_PROFILE.name} about AI systems, web architecture, and growth-focused digital solutions. Remote-first from Germany (${BUSINESS_PROFILE.timezone}).`;
+  const socialTitle = `${title} | LOrdEnRYQuE`;
 
   return {
-    title: "Start Your Project",
-    description: `Talk with ${BUSINESS_PROFILE.name} about AI systems, web architecture, and growth-focused digital solutions. Remote-first from Germany (${BUSINESS_PROFILE.timezone}).`,
+    title,
+    description,
     keywords: [
       "contact AI engineer",
       "hire Next.js developer",
@@ -28,8 +34,8 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/contact"),
     },
     openGraph: {
-      title: "Start Your Project | LOrdEnRYQuE",
-      description: `Talk with ${BUSINESS_PROFILE.name} about AI systems, web architecture, and growth-focused digital solutions. Remote-first from Germany (${BUSINESS_PROFILE.timezone}).`,
+      title: socialTitle,
+      description,
       url: `https://lordenryque.com${canonical}`,
       type: "website",
       siteName: "LOrdEnRYQuE",
@@ -37,8 +43,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: "Start Your Project | LOrdEnRYQuE",
-      description: `Talk with ${BUSINESS_PROFILE.name} about AI systems, web architecture, and growth-focused digital solutions. Remote-first from Germany (${BUSINESS_PROFILE.timezone}).`,
+      title: socialTitle,
+      description,
       images: ["/assets/LOGO.png"],
     },
   };

@@ -13,11 +13,16 @@ export const runtime = "edge";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const canonical = toLocaleCanonical("/insights", locale);
+  const isDe = locale === "de";
+  const title = isDe ? "SEO-, KI- & Web-Growth-Playbooks" : "SEO, AI & Web Growth Playbooks";
+  const description = isDe
+    ? "Topic-Cluster-Playbooks für SEO, KI-Automation, Webentwicklung und messbare Wachstumsprozesse."
+    : "Topic-cluster playbooks for SEO, AI automation, web development, and measurable growth operations.";
+  const socialTitle = `${title} | LOrdEnRYQuE`;
 
   return {
-    title: "SEO, AI & Web Growth Playbooks",
-    description:
-      "Topic-cluster playbooks for SEO, AI automation, web development, and measurable growth operations.",
+    title,
+    description,
     keywords: [
       "topic clusters",
       "programmatic SEO content",
@@ -30,20 +35,18 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/insights"),
     },
     openGraph: {
-      title: "SEO, AI & Web Growth Playbooks | LOrdEnRYQuE",
-      description:
-        "Topic-cluster playbooks for SEO, AI automation, web development, and measurable growth operations.",
+      title: socialTitle,
+      description,
       url: `https://lordenryque.com${canonical}`,
       type: "website",
       siteName: "LOrdEnRYQuE",
-      images: ["/assets/LOGO.png"],
+      images: ["/assets/ai-dashboard-hero.png"],
     },
     twitter: {
       card: "summary_large_image",
-      title: "SEO, AI & Web Growth Playbooks | LOrdEnRYQuE",
-      description:
-        "Topic-cluster playbooks for SEO, AI automation, web development, and measurable growth operations.",
-      images: ["/assets/LOGO.png"],
+      title: socialTitle,
+      description,
+      images: ["/assets/ai-dashboard-hero.png"],
     },
   };
 }

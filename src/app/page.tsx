@@ -42,11 +42,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
   const localeHeader = requestHeaders.get(LOCALE_HEADER_NAME);
   const locale: Locale = isLocale(localeHeader) ? localeHeader : "en";
+  const isDe = locale === "de";
+  const title = isDe
+    ? "KI-Engineer & Next.js-Architekt in Deutschland"
+    : "AI Engineer & Next.js Architect in Germany";
+  const description = isDe
+    ? "Baue performante Websites, KI-Workflows und skalierbare digitale Produkte mit messbaren Business-Ergebnissen."
+    : "Build high-performance websites, AI workflows, and scalable digital products with measurable business outcomes.";
+  const socialTitle = `${title} | LOrdEnRYQuE`;
 
   return {
-    title: "AI Engineer & Next.js Architect in Germany",
-    description:
-      "Build high-performance websites, AI workflows, and scalable digital products with measurable business outcomes.",
+    title,
+    description,
     keywords: [
       "AI engineer Germany",
       "Next.js developer Germany",
@@ -60,20 +67,18 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/"),
     },
     openGraph: {
-      title: "AI Engineer & Next.js Architect in Germany | LOrdEnRYQuE",
-      description:
-        "Build high-performance websites, AI workflows, and scalable digital products with measurable business outcomes.",
+      title: socialTitle,
+      description,
       url: `https://lordenryque.com/${locale}`,
       type: "website",
       siteName: "LOrdEnRYQuE",
-      images: ["/assets/LOGO.png"],
+      images: ["/assets/Profile.webp"],
     },
     twitter: {
       card: "summary_large_image",
-      title: "AI Engineer & Next.js Architect in Germany | LOrdEnRYQuE",
-      description:
-        "Build high-performance websites, AI workflows, and scalable digital products with measurable business outcomes.",
-      images: ["/assets/LOGO.png"],
+      title: socialTitle,
+      description,
+      images: ["/assets/Profile.webp"],
     },
   };
 }

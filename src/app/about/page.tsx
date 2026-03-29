@@ -11,10 +11,16 @@ export const runtime = "edge";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const canonical = toLocaleCanonical("/about", locale);
+  const isDe = locale === "de";
+  const title = isDe ? "Über Attila Lazar" : "About Attila Lazar";
+  const description = isDe
+    ? "Lerne den Engineer hinter LOrdEnRYQuE kennen: KI-Systeme, Full-Stack-Architektur und hochwertige Produktumsetzung."
+    : "Meet the engineer behind LOrdEnRYQuE: AI systems, full-stack architecture, and premium digital product delivery.";
+  const socialTitle = `${title} | LOrdEnRYQuE`;
 
   return {
-    title: "About Attila Lazar",
-    description: "Meet the engineer behind LOrdEnRYQuE: AI systems, full-stack architecture, and premium digital product delivery.",
+    title,
+    description,
     keywords: [
       "Attila Lazar",
       "AI engineer profile",
@@ -27,18 +33,18 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/about"),
     },
     openGraph: {
-      title: "About Attila Lazar | LOrdEnRYQuE",
-      description: "Meet the engineer behind LOrdEnRYQuE: AI systems, full-stack architecture, and premium digital product delivery.",
+      title: socialTitle,
+      description,
       url: `https://lordenryque.com${canonical}`,
       type: "profile",
       siteName: "LOrdEnRYQuE",
-      images: ["/assets/LOGO.png"],
+      images: ["/assets/Profile.webp"],
     },
     twitter: {
       card: "summary_large_image",
-      title: "About Attila Lazar | LOrdEnRYQuE",
-      description: "Meet the engineer behind LOrdEnRYQuE: AI systems, full-stack architecture, and premium digital product delivery.",
-      images: ["/assets/LOGO.png"],
+      title: socialTitle,
+      description,
+      images: ["/assets/Profile.webp"],
     },
   };
 }

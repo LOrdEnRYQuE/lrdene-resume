@@ -27,6 +27,10 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical,
       languages: getLanguageAlternates(basePath),
     },
+    robots: {
+      index: false,
+      follow: true,
+    },
     openGraph: {
       title: `${title} | LOrdEnRYQuE`,
       description,

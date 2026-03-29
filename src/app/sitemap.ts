@@ -110,10 +110,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/qr-solutions", lastModified: staticLastModified, changeFrequency: "weekly" as const, priority: 0.85 },
     { path: "/demos", lastModified: staticLastModified, changeFrequency: "weekly" as const, priority: 0.8 },
     { path: "/contact", lastModified: staticLastModified, changeFrequency: "yearly" as const, priority: 0.8 },
-    { path: "/privacy", lastModified: staticLastModified, changeFrequency: "yearly" as const, priority: 0.4 },
-    { path: "/terms", lastModified: staticLastModified, changeFrequency: "yearly" as const, priority: 0.4 },
-    { path: "/imprint", lastModified: staticLastModified, changeFrequency: "yearly" as const, priority: 0.4 },
-    { path: "/cookies", lastModified: staticLastModified, changeFrequency: "yearly" as const, priority: 0.4 },
   ];
 
   return toLocalizedEntries(baseUrl, [

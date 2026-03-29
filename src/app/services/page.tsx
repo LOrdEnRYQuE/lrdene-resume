@@ -15,11 +15,16 @@ export const runtime = "edge";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const canonical = toLocaleCanonical("/services", locale);
+  const isDe = locale === "de";
+  const title = isDe ? "KI- & Next.js-Entwicklungsservices" : "AI & Next.js Development Services";
+  const description = isDe
+    ? "KI-Engineering, Web-Architektur und Produktumsetzung für mehr Conversion, Geschwindigkeit und Wachstum."
+    : "AI engineering, web architecture, and product delivery services designed to increase conversion, speed, and growth.";
+  const socialTitle = `${title} | LOrdEnRYQuE`;
 
   return {
-    title: "AI & Next.js Development Services",
-    description:
-      "AI engineering, web architecture, and product delivery services designed to increase conversion, speed, and growth.",
+    title,
+    description,
     keywords: [
       "AI development services",
       "Next.js development service",
@@ -32,20 +37,18 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/services"),
     },
     openGraph: {
-      title: "AI & Next.js Development Services | LOrdEnRYQuE",
-      description:
-        "AI engineering, web architecture, and product delivery services designed to increase conversion, speed, and growth.",
+      title: socialTitle,
+      description,
       url: `https://lordenryque.com${canonical}`,
       type: "website",
       siteName: "LOrdEnRYQuE",
-      images: ["/assets/LOGO.png"],
+      images: ["/assets/homeservices-hero.jpg"],
     },
     twitter: {
       card: "summary_large_image",
-      title: "AI & Next.js Development Services | LOrdEnRYQuE",
-      description:
-        "AI engineering, web architecture, and product delivery services designed to increase conversion, speed, and growth.",
-      images: ["/assets/LOGO.png"],
+      title: socialTitle,
+      description,
+      images: ["/assets/homeservices-hero.jpg"],
     },
   };
 }

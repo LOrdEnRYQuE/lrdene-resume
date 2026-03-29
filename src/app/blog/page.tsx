@@ -11,10 +11,16 @@ export const runtime = "edge";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const canonical = toLocaleCanonical("/blog", locale);
+  const isDe = locale === "de";
+  const title = isDe ? "KI-, Web- & Growth-Insights Blog" : "AI, Web & Growth Insights Blog";
+  const description = isDe
+    ? "Praxisnahe Insights zu KI-Systemen, Next.js-Architektur, SEO/GEO-Strategie und Produktwachstum."
+    : "Actionable insights on AI systems, Next.js architecture, SEO/GEO strategy, and product growth execution.";
+  const socialTitle = `${title} | LOrdEnRYQuE`;
 
   return {
-    title: "AI, Web & Growth Insights Blog",
-    description: "Actionable insights on AI systems, Next.js architecture, SEO/GEO strategy, and product growth execution.",
+    title,
+    description,
     keywords: [
       "AI insights blog",
       "Next.js architecture articles",
@@ -27,18 +33,18 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: getLanguageAlternates("/blog"),
     },
     openGraph: {
-      title: "AI, Web & Growth Insights Blog | LOrdEnRYQuE",
-      description: "Actionable insights on AI systems, Next.js architecture, SEO/GEO strategy, and product growth execution.",
+      title: socialTitle,
+      description,
       url: `https://lordenryque.com${canonical}`,
       type: "website",
       siteName: "LOrdEnRYQuE",
-      images: ["/assets/LOGO.png"],
+      images: ["/assets/ai-seo-hero.png"],
     },
     twitter: {
       card: "summary_large_image",
-      title: "AI, Web & Growth Insights Blog | LOrdEnRYQuE",
-      description: "Actionable insights on AI systems, Next.js architecture, SEO/GEO strategy, and product growth execution.",
-      images: ["/assets/LOGO.png"],
+      title: socialTitle,
+      description,
+      images: ["/assets/ai-seo-hero.png"],
     },
   };
 }
