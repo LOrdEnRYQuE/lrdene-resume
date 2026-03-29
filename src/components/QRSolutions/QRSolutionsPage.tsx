@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import dynamic from "next/dynamic";
 import LocaleLink from "@/components/I18n/LocaleLink";
 import { useLocale } from "@/lib/i18n/useLocale";
 import styles from "./QRSolutionsPage.module.css";
 import Image from "next/image";
-const QRSolutionsLeadForm = dynamic(() => import("./QRSolutionsLeadForm"), { ssr: false });
+import QRSolutionsLeadForm from "./QRSolutionsLeadForm";
 
 export default function QRSolutionsPage() {
   const locale = useLocale();
