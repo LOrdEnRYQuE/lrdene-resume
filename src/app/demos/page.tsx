@@ -305,7 +305,7 @@ export default async function DemosPage() {
                   fill
                   style={{ objectFit: "cover" }}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  priority={idx < 2}
+                  priority={idx === 0}
                 />
                 {demo.featured && (
                   <div className={styles.featuredLogoBadge} aria-label="Featured demo">

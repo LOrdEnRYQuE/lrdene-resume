@@ -14,13 +14,33 @@ export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
   const localeHeader = requestHeaders.get(LOCALE_HEADER_NAME);
   const locale: Locale = isLocale(localeHeader) ? localeHeader : "en";
+  const isDe = locale === "de";
   const basePath = "/imprint";
+  const title = isDe ? "Impressum" : "Imprint";
+  const description = isDe
+    ? "Impressum für LOrdEnRYQuE."
+    : "Legal notice (Impressum) for LOrdEnRYQuE.";
+  const canonical = toLocaleCanonical(basePath, locale);
   return {
-    title: "Imprint",
-    description: "Legal notice (Impressum) for LOrdEnRYQuE.",
+    title,
+    description,
     alternates: {
-      canonical: toLocaleCanonical(basePath, locale),
+      canonical,
       languages: getLanguageAlternates(basePath),
+    },
+    openGraph: {
+      title: `${title} | LOrdEnRYQuE`,
+      description,
+      url: `https://lordenryque.com${canonical}`,
+      type: "website",
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | LOrdEnRYQuE`,
+      description,
+      images: ["/assets/LOGO.png"],
     },
   };
 }

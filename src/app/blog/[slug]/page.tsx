@@ -36,6 +36,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: post.excerpt,
       type: "article",
       url: `https://lordenryque.com${canonical}`,
+      siteName: "LOrdEnRYQuE",
       images: [post.coverImage],
       publishedTime: new Date(post.date).toISOString(),
       authors: [post.author],

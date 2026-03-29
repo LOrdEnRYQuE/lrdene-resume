@@ -94,12 +94,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: `https://lordenryque.com${localeCanonical}`,
       type: "article",
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
       tags: [service.category, service.title],
     },
     twitter: {
       card: "summary_large_image",
       title: `${service.title} | LOrdEnRYQuE`,
       description,
+      images: ["/assets/LOGO.png"],
     },
   };
 }

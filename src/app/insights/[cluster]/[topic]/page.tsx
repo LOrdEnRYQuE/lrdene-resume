@@ -59,12 +59,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: data.topic.summary,
       type: "article",
       url: `https://lordenryque.com${canonical}`,
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
       tags: data.topic.intentKeywords,
     },
     twitter: {
       card: "summary_large_image",
       title: `${data.topic.title} Guide | ${data.cluster.title}`,
       description: data.topic.summary,
+      images: ["/assets/LOGO.png"],
     },
   };
 }

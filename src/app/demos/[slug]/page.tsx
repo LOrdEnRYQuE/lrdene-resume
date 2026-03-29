@@ -41,6 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: demo.description,
       url: `https://lordenryque.com${canonical}`,
       type: "website",
+      siteName: "LOrdEnRYQuE",
       images: [shareImage],
     },
     twitter: {

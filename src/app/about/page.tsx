@@ -31,11 +31,14 @@ export async function generateMetadata(): Promise<Metadata> {
       description: "Meet the engineer behind LOrdEnRYQuE: AI systems, full-stack architecture, and premium digital product delivery.",
       url: `https://lordenryque.com${canonical}`,
       type: "profile",
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
     },
     twitter: {
       card: "summary_large_image",
       title: "About Attila Lazar | LOrdEnRYQuE",
       description: "Meet the engineer behind LOrdEnRYQuE: AI systems, full-stack architecture, and premium digital product delivery.",
+      images: ["/assets/LOGO.png"],
     },
   };
 }

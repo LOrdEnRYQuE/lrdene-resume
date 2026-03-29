@@ -35,12 +35,15 @@ export async function generateMetadata(): Promise<Metadata> {
         "Topic-cluster playbooks for SEO, AI automation, web development, and measurable growth operations.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
     },
     twitter: {
       card: "summary_large_image",
       title: "SEO, AI & Web Growth Playbooks | LOrdEnRYQuE",
       description:
         "Topic-cluster playbooks for SEO, AI automation, web development, and measurable growth operations.",
+      images: ["/assets/LOGO.png"],
     },
   };
 }

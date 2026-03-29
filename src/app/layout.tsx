@@ -12,11 +12,14 @@ import CookieConsent from "@/components/Cookies/CookieConsent";
 import { getPageContentCached, getSiteSettingsCached } from "@/lib/server/cachedQueries";
 import { BUSINESS_PROFILE } from "@/lib/businessProfile";
 import { SERVICE_LOCATIONS } from "@/utils/serviceLocations";
+import { getRequestLocale } from "@/lib/seo/localeCanonical";
 
 const DEFAULT_GA_ID = "G-R3P3P44GWT";
 const ICON_VERSION = "20260327";
 const GOOGLE_SITE_VERIFICATION =
   process.env.GOOGLE_SITE_VERIFICATION || process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined;
+
+export const runtime = "edge";
 
 function isValidGaId(value?: string | null) {
   if (!value) return false;
@@ -90,6 +93,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getRequestLocale();
   const [navbarEn, navbarDe, footerEn, footerDe, siteSettings] = await Promise.all([
     getPageContentCached("navbar", "en", true),
     getPageContentCached("navbar", "de", true),
@@ -230,7 +234,7 @@ export default async function RootLayout({
   };
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body>
         <ConvexClientProvider>
           <LocaleDocumentSync />

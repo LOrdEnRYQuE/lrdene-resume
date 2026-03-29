@@ -31,11 +31,14 @@ export async function generateMetadata(): Promise<Metadata> {
       description: "Actionable insights on AI systems, Next.js architecture, SEO/GEO strategy, and product growth execution.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
     },
     twitter: {
       card: "summary_large_image",
       title: "AI, Web & Growth Insights Blog | LOrdEnRYQuE",
       description: "Actionable insights on AI systems, Next.js architecture, SEO/GEO strategy, and product growth execution.",
+      images: ["/assets/LOGO.png"],
     },
   };
 }

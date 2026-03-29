@@ -156,8 +156,7 @@ export const Navbar = ({ cmsContent }: NavbarProps) => {
             alt="LOrdEnRYQuE Logo" 
             width={120} 
             height={52} 
-            className={styles.logoImage} 
-            priority
+            className={styles.logoImage}
           />
         </LocaleLink>
         <button

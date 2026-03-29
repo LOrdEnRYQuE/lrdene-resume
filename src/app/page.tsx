@@ -65,12 +65,15 @@ export async function generateMetadata(): Promise<Metadata> {
         "Build high-performance websites, AI workflows, and scalable digital products with measurable business outcomes.",
       url: `https://lordenryque.com/${locale}`,
       type: "website",
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
     },
     twitter: {
       card: "summary_large_image",
       title: "AI Engineer & Next.js Architect in Germany | LOrdEnRYQuE",
       description:
         "Build high-performance websites, AI workflows, and scalable digital products with measurable business outcomes.",
+      images: ["/assets/LOGO.png"],
     },
   };
 }
@@ -125,11 +128,21 @@ export default async function Home() {
       <DemoBranches locale={locale} />
       <ServicesGrid locale={locale} />
       <FeaturedProjects locale={locale} featuredProjects={featuredProjects ?? []} />
-      <About />
-      <ProcessSection locale={locale} />
-      <BlogPreview locale={locale} posts={posts ?? []} />
-      <Contact />
-      <FinalCTA locale={locale} />
+      <section style={{ contentVisibility: "auto", containIntrinsicSize: "1400px" }}>
+        <About />
+      </section>
+      <section style={{ contentVisibility: "auto", containIntrinsicSize: "900px" }}>
+        <ProcessSection locale={locale} />
+      </section>
+      <section style={{ contentVisibility: "auto", containIntrinsicSize: "1200px" }}>
+        <BlogPreview locale={locale} posts={posts ?? []} />
+      </section>
+      <section style={{ contentVisibility: "auto", containIntrinsicSize: "1600px" }}>
+        <Contact />
+      </section>
+      <section style={{ contentVisibility: "auto", containIntrinsicSize: "420px" }}>
+        <FinalCTA locale={locale} />
+      </section>
     </main>
   );
 }

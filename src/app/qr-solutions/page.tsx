@@ -30,12 +30,15 @@ export async function generateMetadata(): Promise<Metadata> {
         "Deploy dynamic QR and NFC systems for lead capture, digital business cards, campaign tracking, and measurable conversions.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
     },
     twitter: {
       card: "summary_large_image",
       title: "QR & NFC Solutions for Business Growth | LOrdEnRYQuE",
       description:
         "Deploy dynamic QR and NFC systems for lead capture, digital business cards, campaign tracking, and measurable conversions.",
+      images: ["/assets/LOGO.png"],
     },
   };
 }

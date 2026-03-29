@@ -28,13 +28,20 @@ function withSecurityHeaders(response: NextResponse) {
   return response;
 }
 
+function withRouteHeaders(response: NextResponse, normalizedPathname?: string) {
+  if (normalizedPathname?.startsWith("/demos/")) {
+    response.headers.set("X-Robots-Tag", "noindex, follow");
+  }
+  return withSecurityHeaders(response);
+}
+
 function continueWithOptionalLocaleRewrite(
   request: NextRequest,
   localeInPath: string | null,
   normalizedPathname: string,
 ) {
   if (!localeInPath) {
-    return withSecurityHeaders(NextResponse.next());
+    return withRouteHeaders(NextResponse.next(), normalizedPathname);
   }
 
   const rewriteUrl = request.nextUrl.clone();
@@ -49,7 +56,7 @@ function continueWithOptionalLocaleRewrite(
     maxAge: 60 * 60 * 24 * 365,
     sameSite: "lax",
   });
-  return withSecurityHeaders(response);
+  return withRouteHeaders(response, normalizedPathname);
 }
 
 export async function middleware(request: NextRequest) {
@@ -58,14 +65,14 @@ export async function middleware(request: NextRequest) {
     const canonicalUrl = request.nextUrl.clone();
     canonicalUrl.protocol = "https:";
     canonicalUrl.host = "lordenryque.com";
-    return withSecurityHeaders(NextResponse.redirect(canonicalUrl, 301));
+    return withRouteHeaders(NextResponse.redirect(canonicalUrl, 301), request.nextUrl.pathname);
   }
 
   const pathname = request.nextUrl.pathname;
   if (pathname === "/icon" || pathname === "/apple-icon") {
     const iconUrl = request.nextUrl.clone();
     iconUrl.pathname = "/favicon.ico";
-    return withSecurityHeaders(NextResponse.redirect(iconUrl, 307));
+    return withRouteHeaders(NextResponse.redirect(iconUrl, 307), pathname);
   }
   const localeInPath = getLocalePrefixFromPathname(pathname);
   const normalizedPathname = localeInPath ? stripLocalePrefix(pathname) : pathname;
@@ -77,12 +84,15 @@ export async function middleware(request: NextRequest) {
     }
     const creds = getAdminCredentials();
     if (!creds) {
-      return withSecurityHeaders(NextResponse.json({ error: "Admin auth is not configured." }, { status: 500 }));
+      return withRouteHeaders(
+        NextResponse.json({ error: "Admin auth is not configured." }, { status: 500 }),
+        normalizedPathname,
+      );
     }
     const token = readAdminTokenFromCookieHeader(request.headers.get("cookie"));
     const valid = await verifyAdminSessionToken(token, creds.sessionSecret, creds.username);
     if (!valid) {
-      return withSecurityHeaders(NextResponse.json({ error: "Unauthorized" }, { status: 401 }));
+      return withRouteHeaders(NextResponse.json({ error: "Unauthorized" }, { status: 401 }), normalizedPathname);
     }
     return continueWithOptionalLocaleRewrite(request, localeInPath, normalizedPathname);
   }
@@ -94,17 +104,17 @@ export async function middleware(request: NextRequest) {
     const adminHomePath = `${localePrefix}/admin`;
     if (!creds) {
       if (isLoginPath) return continueWithOptionalLocaleRewrite(request, localeInPath, normalizedPathname);
-      return withSecurityHeaders(NextResponse.redirect(new URL(loginPath, request.url)));
+      return withRouteHeaders(NextResponse.redirect(new URL(loginPath, request.url)), normalizedPathname);
     }
     const token = request.cookies.get(getAdminCookieName())?.value;
     const valid = await verifyAdminSessionToken(token, creds.sessionSecret, creds.username);
     if (!valid && !isLoginPath) {
       const loginUrl = new URL(loginPath, request.url);
       loginUrl.searchParams.set("next", normalizedPathname);
-      return withSecurityHeaders(NextResponse.redirect(loginUrl));
+      return withRouteHeaders(NextResponse.redirect(loginUrl), normalizedPathname);
     }
     if (valid && isLoginPath) {
-      return withSecurityHeaders(NextResponse.redirect(new URL(adminHomePath, request.url)));
+      return withRouteHeaders(NextResponse.redirect(new URL(adminHomePath, request.url)), normalizedPathname);
     }
     return continueWithOptionalLocaleRewrite(request, localeInPath, normalizedPathname);
   }
@@ -124,7 +134,7 @@ export async function middleware(request: NextRequest) {
       maxAge: 60 * 60 * 24 * 365,
       sameSite: "lax",
     });
-    return withSecurityHeaders(response);
+    return withRouteHeaders(response, normalizedPathname);
   }
 
   const cookieLocale = request.cookies.get(LOCALE_COOKIE_NAME)?.value;
@@ -132,7 +142,7 @@ export async function middleware(request: NextRequest) {
   const redirectUrl = request.nextUrl.clone();
   redirectUrl.pathname = pathname === "/" ? `/${locale}` : `/${locale}${pathname}`;
 
-  return withSecurityHeaders(NextResponse.redirect(redirectUrl));
+  return withRouteHeaders(NextResponse.redirect(redirectUrl), pathname);
 }
 
 export const config = {

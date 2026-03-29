@@ -33,12 +33,15 @@ export async function generateMetadata(): Promise<Metadata> {
         "Live demo gallery for AI products, SaaS interfaces, e-commerce, and conversion-focused digital experiences.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
     },
     twitter: {
       card: "summary_large_image",
       title: "Interactive Demos | LOrdEnRYQuE",
       description:
         "Live demo gallery for AI products, SaaS interfaces, e-commerce, and conversion-focused digital experiences.",
+      images: ["/assets/LOGO.png"],
     },
   };
 }

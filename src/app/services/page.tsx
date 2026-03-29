@@ -37,12 +37,15 @@ export async function generateMetadata(): Promise<Metadata> {
         "AI engineering, web architecture, and product delivery services designed to increase conversion, speed, and growth.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
     },
     twitter: {
       card: "summary_large_image",
       title: "AI & Next.js Development Services | LOrdEnRYQuE",
       description:
         "AI engineering, web architecture, and product delivery services designed to increase conversion, speed, and growth.",
+      images: ["/assets/LOGO.png"],
     },
   };
 }

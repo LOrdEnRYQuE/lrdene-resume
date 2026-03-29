@@ -37,12 +37,15 @@ export async function generateMetadata(): Promise<Metadata> {
         "Premium digital assets: templates, UI kits, and engineering blueprints for modern product teams.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
     },
     twitter: {
       card: "summary_large_image",
       title: "Digital Store | LOrdEnRYQuE",
       description:
         "Premium digital assets: templates, UI kits, and engineering blueprints for modern product teams.",
+      images: ["/assets/LOGO.png"],
     },
   };
 }

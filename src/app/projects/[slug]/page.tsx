@@ -38,6 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: project.summary,
       type: "article",
       url: `https://lordenryque.com${canonical}`,
+      siteName: "LOrdEnRYQuE",
       images: [project.coverImage],
       tags: project.stack,
     },

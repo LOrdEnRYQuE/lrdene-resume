@@ -29,11 +29,14 @@ export async function generateMetadata(): Promise<Metadata> {
       description: "Real project outcomes across AI products, high-performance web platforms, and conversion-focused digital delivery.",
       url: `https://lordenryque.com${canonical}`,
       type: "website",
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
     },
     twitter: {
       card: "summary_large_image",
       title: "AI & Web Case Studies | LOrdEnRYQuE",
       description: "Real project outcomes across AI products, high-performance web platforms, and conversion-focused digital delivery.",
+      images: ["/assets/LOGO.png"],
     },
   };
 }

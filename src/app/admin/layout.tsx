@@ -2,6 +2,8 @@ import React from "react";
 import type { Metadata } from "next";
 import AdminShell from "@/components/Admin/AdminShell";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: {
     default: "Admin",

@@ -32,11 +32,14 @@ export async function generateMetadata(): Promise<Metadata> {
       description: `Talk with ${BUSINESS_PROFILE.name} about AI systems, web architecture, and growth-focused digital solutions. Remote-first from Germany (${BUSINESS_PROFILE.timezone}).`,
       url: `https://lordenryque.com${canonical}`,
       type: "website",
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
     },
     twitter: {
       card: "summary_large_image",
       title: "Start Your Project | LOrdEnRYQuE",
       description: `Talk with ${BUSINESS_PROFILE.name} about AI systems, web architecture, and growth-focused digital solutions. Remote-first from Germany (${BUSINESS_PROFILE.timezone}).`,
+      images: ["/assets/LOGO.png"],
     },
   };
 }

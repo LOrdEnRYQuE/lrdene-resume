@@ -1,5 +1,7 @@
 import { PortalAccess } from "../../components/Portal/PortalAccess";
 
+export const runtime = "edge";
+
 export const metadata = {
   title: "Secure Portal Access | Portfolio OS",
   description: "Enter your private access code to view project progress.",

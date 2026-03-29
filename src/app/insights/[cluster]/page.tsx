@@ -58,11 +58,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: data.description,
       type: "website",
       url: `https://lordenryque.com${canonical}`,
+      siteName: "LOrdEnRYQuE",
+      images: ["/assets/LOGO.png"],
     },
     twitter: {
       card: "summary_large_image",
       title: `${data.title} Playbooks | SEO & AI`,
       description: data.description,
+      images: ["/assets/LOGO.png"],
     },
   };
 }
