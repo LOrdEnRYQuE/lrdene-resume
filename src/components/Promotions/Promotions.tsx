@@ -23,7 +23,7 @@ export const Promotions = ({ locale, content }: PromotionsProps) => {
   const de = locale === "de";
   const defaults = de
     ? {
-        eyebrow: "Startup Promotions",
+        eyebrow: "Startup-Angebote",
         titleA: "Startup-Angebote von",
         titleB: "10% bis 50% OFF",
         subtitle:
@@ -50,9 +50,10 @@ export const Promotions = ({ locale, content }: PromotionsProps) => {
           { off: "10%", stage: de ? "Frühe Idee" : "Early-stage idea" },
           { off: "20%", stage: de ? "MVP Planung" : "MVP planning" },
           { off: "30%", stage: de ? "Erste Traktion" : "Initial traction" },
-          { off: "40%", stage: de ? "Product-Market Validation" : "Product-market validation" },
-          { off: "50%", stage: de ? "High-Potential Startup Fit" : "High-potential startup fit" },
+          { off: "40%", stage: de ? "Product-Market-Validierung" : "Product-market validation" },
+          { off: "50%", stage: de ? "High-Potential Startup-Fit" : "High-potential startup fit" },
         ];
+  const offLabel = de ? "Rabatt" : "OFF";
 
   return (
     <section className={styles.section} id="promotions">
@@ -71,7 +72,7 @@ export const Promotions = ({ locale, content }: PromotionsProps) => {
         <div className={styles.tierGrid}>
           {tiers.map((tier) => (
             <article key={tier.off} className={styles.tierCard}>
-              <strong>{tier.off} OFF</strong>
+              <strong>{tier.off} {offLabel}</strong>
               <span>{tier.stage}</span>
             </article>
           ))}

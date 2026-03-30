@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const canonical = toLocaleCanonical("/partners", locale);
   const isDe = locale === "de";
-  const title = isDe ? "Partner- & Referral-Programm" : "Partner & Referral Program";
+  const title = isDe ? "Partner- & Empfehlungsprogramm" : "Partner & Referral Program";
   const description = isDe
     ? "Kooperations- und Empfehlungsmodelle für Agenturen, Berater und Produktteams mit transparenter Zusammenarbeit."
     : "Collaboration and referral models for agencies, consultants, and product teams with clear delivery ownership.";
@@ -54,28 +54,28 @@ export default async function PartnersPage() {
   const copy = isDe
     ? {
         badge: "Wachstum durch Kooperation",
-        title: "Partner- und Referral-Programm",
+        title: "Partner- und Empfehlungsprogramm",
         subtitle:
-          "Für Agenturen, Berater und Teams, die zuverlässige Umsetzung in AI, Next.js und Produktentwicklung brauchen.",
+          "Für Agenturen, Berater und Teams, die zuverlässige Umsetzung in KI, Next.js und Produktentwicklung brauchen.",
         modelsTitle: "Zusammenarbeitsmodelle",
-        referralTitle: "Referral Partner",
+        referralTitle: "Empfehlungspartner",
         referralBody:
-          "Du stellst den Kontakt her, ich übernehme Discovery, Angebot und Delivery. Ideal für Berater, Freelancer und Creator mit passender Zielgruppe.",
+          "Du stellst den Kontakt her, ich übernehme Discovery, Angebot und Umsetzung. Ideal für Berater, Freelancer und Creator mit passender Zielgruppe.",
         referralPointA: "Schneller Qualifizierungs-Call mit deinem Lead",
         referralPointB: "Klare Scope-Definition und transparente Übergabe",
         referralPointC: "Faire Beteiligung pro abgeschlossenem Projekt",
-        executionTitle: "Delivery Partner",
+        executionTitle: "Umsetzungspartner",
         executionBody:
-          "Du führst die Kundenbeziehung, ich liefere als technischer Partner im Hintergrund oder Co-Branding-Setup mit klaren Zuständigkeiten.",
-        executionPointA: "White-label oder Co-Branded Delivery möglich",
+          "Du führst die Kundenbeziehung, ich liefere als technischer Partner im Hintergrund oder im Co-Branding-Setup mit klaren Zuständigkeiten.",
+        executionPointA: "White-Label oder Co-Branding-Umsetzung möglich",
         executionPointB: "Strukturierte Sprints, regelmäßige Status-Updates",
-        executionPointC: "Verlässlich bei Frontend, Backend und AI-Integrationen",
+        executionPointC: "Verlässlich bei Frontend, Backend und KI-Integrationen",
         fitTitle: "Wann es passt",
-        fitA: "Du hast wiederkehrend Requests für Web, Automationen oder AI Features.",
+        fitA: "Du hast wiederkehrende Anfragen für Web, Automatisierungen oder KI-Features.",
         fitB: "Du brauchst einen Partner, der sauber dokumentiert und termintreu liefert.",
         fitC: "Du willst deine Kapazität erweitern, ohne ein großes Inhouse-Team aufzubauen.",
         ctaTitle: "Lass uns den passenden Modus festlegen",
-        ctaBody: "15 Minuten reichen, um Referral oder Delivery-Modell sauber festzulegen.",
+        ctaBody: "15 Minuten reichen, um Empfehlungs- oder Umsetzungsmodell sauber festzulegen.",
         ctaPrimary: "Partner-Call anfragen",
         ctaSecondary: "Kontaktseite öffnen",
       }
