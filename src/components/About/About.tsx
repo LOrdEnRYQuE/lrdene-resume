@@ -1155,6 +1155,17 @@ export const About = () => {
               {copy.philosophyDesc}
             </p>
             <div className={styles.signature}>{copy.signature}</div>
+            <div className={styles.triangleFlowBlock}>
+              <h3>{copy.triangleFlowTitle}</h3>
+              <div className={styles.triangleFlowGrid}>
+                {copy.triangleFlow.map((flow) => (
+                  <article key={flow.step} className={styles.triangleFlowItem}>
+                    <span className={styles.flowStep}>{flow.step}</span>
+                    <p>{flow.desc}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className={styles.triangleBox}>
@@ -1180,17 +1191,6 @@ export const About = () => {
                   {outcome}
                 </span>
               ))}
-            </div>
-            <div className={styles.triangleFlowBlock}>
-              <h3>{copy.triangleFlowTitle}</h3>
-              <div className={styles.triangleFlowGrid}>
-                {copy.triangleFlow.map((flow) => (
-                  <article key={flow.step} className={styles.triangleFlowItem}>
-                    <span className={styles.flowStep}>{flow.step}</span>
-                    <p>{flow.desc}</p>
-                  </article>
-                ))}
-              </div>
             </div>
             <div className={styles.triangleSupportGrid}>
               <article className={styles.triangleSupportCard}>

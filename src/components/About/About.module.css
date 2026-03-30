@@ -700,6 +700,15 @@
   color: var(--accent-platinum);
   font-size: 0.95rem;
   letter-spacing: 0.02em;
+  margin-bottom: 1.2rem;
+}
+
+.philosophyBox .triangleFlowBlock {
+  margin-bottom: 0;
+}
+
+.philosophyBox .triangleFlowGrid {
+  grid-template-columns: 1fr;
 }
 
 .triangleDesc {
