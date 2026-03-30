@@ -281,6 +281,12 @@ export const About = () => {
           chapters: "Karriere Kapitel",
           journey: "Der Weg",
           philosophyTitle: "Engineering Philosophie",
+          focusTrack: [
+            "Business-First Architektur",
+            "Messbare Performance",
+            "DSGVO + Tracking Klarheit",
+            "Schnelle Delivery ohne Chaos",
+          ],
           philosophyQuote:
             "Technologie sollte einem klaren Zweck dienen: verlässliche, skalierbare Produkte für reale Probleme.",
           philosophyDesc:
@@ -415,6 +421,12 @@ export const About = () => {
           chapters: "Career Chapters",
           journey: "The Journey",
           philosophyTitle: "Engineering Philosophy",
+          focusTrack: [
+            "Business-First Architecture",
+            "Measurable Performance",
+            "GDPR + Tracking Clarity",
+            "Fast Delivery Without Chaos",
+          ],
           philosophyQuote:
             "Technology should serve a clear purpose: building reliable, scalable digital products that solve real problems.",
           philosophyDesc:
@@ -1023,6 +1035,14 @@ export const About = () => {
             <p className={styles.description}>
               {hero.description}
             </p>
+            <div className={styles.focusTrack}>
+              {copy.focusTrack.map((item) => (
+                <span key={item} className={styles.focusPill}>
+                  <Sparkles size={13} />
+                  {item}
+                </span>
+              ))}
+            </div>
 
             {/* Stat row */}
             <div className={styles.statRow}>

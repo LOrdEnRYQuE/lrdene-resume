@@ -9,6 +9,8 @@ import { ArrowLeft, ExternalLink, Github, Code2, Trophy, Target, Calendar, Brief
 import LocaleLink from "@/components/I18n/LocaleLink";
 import { notFound } from "next/navigation";
 import { useLocale } from "@/lib/i18n/useLocale";
+import Image from "next/image";
+import { resolveProjectCover } from "@/lib/projects/covers";
 
 
 export const ProjectDetail = ({ slug }: { slug: string }) => {
@@ -45,6 +47,7 @@ export const ProjectDetail = ({ slug }: { slug: string }) => {
 
   if (project === undefined) return <div className={styles.loading}>{copy.loading}</div>;
   if (project === null) notFound();
+  const coverImage = resolveProjectCover(project.slug, project.coverImage);
 
   return (
     <article className={styles.detail}>
@@ -87,6 +90,13 @@ export const ProjectDetail = ({ slug }: { slug: string }) => {
         
         <div className={styles.heroImageWrapper}>
           <div className={styles.parallaxImage}>
+            <Image
+              src={coverImage}
+              alt={project.title}
+              fill
+              className={styles.heroImage}
+              sizes="(max-width: 1100px) 100vw, 60vw"
+            />
             <div className={styles.imageOverlay} />
           </div>
         </div>

@@ -1,6 +1,9 @@
 .archive {
   padding: 8rem 0;
-  background: var(--bg-dark);
+  background:
+    radial-gradient(circle at 14% 0%, rgba(180, 200, 229, 0.14), rgba(5, 5, 5, 0) 48%),
+    radial-gradient(circle at 86% 8%, rgba(212, 175, 55, 0.14), rgba(5, 5, 5, 0) 46%),
+    var(--bg-dark);
 }
 
 .header {
@@ -17,6 +20,46 @@
 .subtitle {
   font-size: 1.1rem;
   color: var(--text-secondary);
+}
+
+.signalGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 2.2rem;
+}
+
+.signalCard {
+  border: 1px solid rgba(229, 228, 226, 0.16);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
+    rgba(6, 6, 6, 0.8);
+  border-radius: 10px;
+  padding: 0.95rem 1rem 1.1rem;
+}
+
+.signalCard span {
+  display: inline-block;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.signalCard strong {
+  display: block;
+  font-size: 1.55rem;
+  line-height: 1;
+  margin-bottom: 0.35rem;
+  font-weight: 800;
+  color: var(--accent-platinum);
+}
+
+.signalCard p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(232, 232, 232, 0.82);
 }
 
 .controls {
@@ -496,6 +539,10 @@
 }
 
 @media (max-width: 1024px) {
+  .signalGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .list .cardInner {
     flex-direction: column;
     align-items: flex-start;
@@ -511,6 +558,9 @@
 @media (max-width: 768px) {
   .archive { padding: 4.8rem 0; }
   .header { margin-bottom: 2.2rem; }
+  .signalGrid {
+    grid-template-columns: 1fr;
+  }
   .subtitle {
     font-size: 0.97rem;
     line-height: 1.6;

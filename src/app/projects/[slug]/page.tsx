@@ -8,6 +8,7 @@ import Link from "next/link";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
 import { localizeHref } from "@/lib/i18n/path";
+import { resolveProjectCover } from "@/lib/projects/covers";
 
 export const runtime = "edge";
 
@@ -24,6 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const basePath = `/projects/${project.slug}`;
   const locale = await getRequestLocale();
   const canonical = toLocaleCanonical(basePath, locale);
+  const coverImage = resolveProjectCover(project.slug, project.coverImage);
 
   return {
     title: `${project.title} Case Study | Stack & Results`,
@@ -39,14 +41,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       type: "article",
       url: `https://lordenryque.com${canonical}`,
       siteName: "LOrdEnRYQuE",
-      images: [project.coverImage],
+      images: [coverImage],
       tags: project.stack,
     },
     twitter: {
       card: "summary_large_image",
       title: `${project.title} Case Study | Stack & Results`,
       description: project.summary,
-      images: [project.coverImage],
+      images: [coverImage],
     },
   };
 }

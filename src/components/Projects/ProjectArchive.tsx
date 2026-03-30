@@ -9,6 +9,7 @@ import { Search, ArrowUpRight, Grid, List as ListIcon, X } from "lucide-react";
 import LocaleLink from "@/components/I18n/LocaleLink";
 import { useLocale } from "@/lib/i18n/useLocale";
 import Image from "next/image";
+import { getProjectCoverFallback, resolveProjectCover } from "@/lib/projects/covers";
 
 
 const categories = ["All", "Web", "AI", "Design", "Branding", "Dashboard", "Demo"];
@@ -30,6 +31,7 @@ export const ProjectArchive = ({ initialProjects = [] }: { initialProjects?: Pro
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [imageFailures, setImageFailures] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 480px)");
@@ -64,6 +66,13 @@ export const ProjectArchive = ({ initialProjects = [] }: { initialProjects?: Pro
           viewCase: "Case Study Ansehen",
           grid: "Rasteransicht",
           list: "Listenansicht",
+          signals: {
+            portfolio: "Portfolio Signale",
+            total: "Case Studies Gesamt",
+            ai: "KI Schwerpunkt",
+            web: "Web Plattformen",
+            updated: "Live & Aktualisiert",
+          },
           categoryLabels: {
             All: "Alle",
             Web: "Web",
@@ -88,6 +97,13 @@ export const ProjectArchive = ({ initialProjects = [] }: { initialProjects?: Pro
           viewCase: "View Case Study",
           grid: "Grid View",
           list: "List View",
+          signals: {
+            portfolio: "Portfolio Signals",
+            total: "Total Cases",
+            ai: "AI Focused",
+            web: "Web Platforms",
+            updated: "Live & Updated",
+          },
           categoryLabels: {
             All: "All",
             Web: "Web",
@@ -111,6 +127,8 @@ export const ProjectArchive = ({ initialProjects = [] }: { initialProjects?: Pro
     p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
     p.summary.toLowerCase().includes(searchQuery.toLowerCase())
   ).filter(p => selectedCategory === "All" || p.category === selectedCategory);
+  const aiProjects = (projects ?? []).filter((project) => project.category === "AI").length;
+  const webProjects = (projects ?? []).filter((project) => project.category === "Web").length;
 
   return (
     <section className={styles.archive}>
@@ -118,6 +136,28 @@ export const ProjectArchive = ({ initialProjects = [] }: { initialProjects?: Pro
         <div className={styles.header}>
           <h1 className={styles.title}>{copy.titlePrefix} <span className="platinum-text">{copy.titleAccent}</span></h1>
           <p className={styles.subtitle}>{copy.subtitle}</p>
+        </div>
+        <div className={styles.signalGrid}>
+          <article className={styles.signalCard}>
+            <span>{copy.signals.portfolio}</span>
+            <strong>{(projects ?? []).length}</strong>
+            <p>{copy.signals.total}</p>
+          </article>
+          <article className={styles.signalCard}>
+            <span>{copy.signals.portfolio}</span>
+            <strong>{aiProjects}</strong>
+            <p>{copy.signals.ai}</p>
+          </article>
+          <article className={styles.signalCard}>
+            <span>{copy.signals.portfolio}</span>
+            <strong>{webProjects}</strong>
+            <p>{copy.signals.web}</p>
+          </article>
+          <article className={styles.signalCard}>
+            <span>{copy.signals.portfolio}</span>
+            <strong>24/7</strong>
+            <p>{copy.signals.updated}</p>
+          </article>
         </div>
 
         <div className={styles.controls}>
@@ -195,6 +235,11 @@ export const ProjectArchive = ({ initialProjects = [] }: { initialProjects?: Pro
         >
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project) => (
+              (() => {
+                const coverSource = imageFailures[project.slug]
+                  ? getProjectCoverFallback(project.slug)
+                  : resolveProjectCover(project.slug, project.coverImage);
+                return (
               <motion.div 
                 layout
                 key={project.slug}
@@ -215,19 +260,19 @@ export const ProjectArchive = ({ initialProjects = [] }: { initialProjects?: Pro
                         className={styles.projectLogoImage}
                       />
                     </div>
-                    {project.coverImage ? (
-                      <Image
-                        src={project.coverImage}
-                        alt={project.title}
-                        fill
-                        sizes={viewMode === "grid" ? "(max-width: 900px) 100vw, 33vw" : "120px"}
-                        className={styles.projectCover}
-                      />
-                    ) : (
-                      <div className={styles.imagePlaceholder}>
-                        {project.category}
-                      </div>
-                    )}
+                    <Image
+                      src={coverSource}
+                      alt={project.title}
+                      fill
+                      sizes={viewMode === "grid" ? "(max-width: 900px) 100vw, 33vw" : "120px"}
+                      className={styles.projectCover}
+                      onError={() =>
+                        setImageFailures((prev) => ({
+                          ...prev,
+                          [project.slug]: true,
+                        }))
+                      }
+                    />
                     <div className={styles.imageTint} />
                     {viewMode === "grid" && (
                       <div className={styles.overlay}>
@@ -259,6 +304,8 @@ export const ProjectArchive = ({ initialProjects = [] }: { initialProjects?: Pro
                   </div>
                 </div>
               </motion.div>
+                );
+              })()
             ))}
           </AnimatePresence>
         </motion.div>
