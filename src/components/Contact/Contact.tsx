@@ -9,6 +9,7 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 import { useLocale } from "@/lib/i18n/useLocale";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/taxonomy";
 import LocaleLink from "@/components/I18n/LocaleLink";
+import { useSearchParams } from "next/navigation";
 
 type ContactContent = {
   title: string;
@@ -66,6 +67,7 @@ export const Contact = () => {
   const LEGACY_LINKEDINS = ["Attila Lazar", "https://linkedin.com/in/leads", "linkedin.com/in/leads", "leads"];
 
   const locale = useLocale();
+  const searchParams = useSearchParams();
   const content = useQuery(api.pages.getPageContent, { key: "contact", locale, fallbackToEnglish: false });
   const data = (content?.data ?? {}) as ContactContent;
   const promotionsContent = useQuery(api.pages.getPageContent, { key: "home_promotions", locale, fallbackToEnglish: true });
@@ -375,6 +377,7 @@ export const Contact = () => {
   const [website, setWebsite] = useState("");
   const controlsDisabled = isSubmitting;
   const startedTrackingRef = useRef(false);
+  const prefillAppliedRef = useRef(false);
 
   const createLead = useMutation(api.leads.create);
   const { trackConversion, trackEvent } = useAnalytics();
@@ -447,6 +450,53 @@ export const Contact = () => {
       };
     });
   }, [advancedScopeOptions, backendDepthOptions, budgets, engagementOptions, goalOptions, platformOptions, projectTypes, promotionOptions, scopeOptions, timelines]);
+
+  useEffect(() => {
+    if (prefillAppliedRef.current) return;
+    const topic = searchParams.get("topic")?.trim().toLowerCase() || "";
+    const service = searchParams.get("service")?.trim() || "";
+    if (!topic && !service) {
+      prefillAppliedRef.current = true;
+      return;
+    }
+
+    const isPartnerIntent = ["partners", "partner", "referral", "referrals", "partnership"].includes(topic);
+
+    setFormData((prev) => {
+      let next = { ...prev };
+
+      if (isPartnerIntent) {
+        const advisoryEngagement =
+          engagementOptions.find((entry) => /advisory|beratung/i.test(entry)) ?? engagementOptions[0] ?? prev.engagement;
+        const advisoryProjectType =
+          projectTypes.find((entry) => /advisory|consulting|beratung/i.test(entry)) ?? projectTypes[0] ?? prev.projectType;
+
+        next = {
+          ...next,
+          projectType: advisoryProjectType,
+          engagement: advisoryEngagement,
+        };
+
+        if (!prev.message.trim()) {
+          next.message =
+            locale === "de"
+              ? "Es geht um eine Partner-/Referral-Zusammenarbeit. Hier ist der Kontext:"
+              : "This request is for a partner/referral collaboration. Context:";
+        }
+      }
+
+      if (service) {
+        const serviceLine = locale === "de" ? `Gewunschter Service: ${service}` : `Requested service: ${service}`;
+        if (!next.scopeNotes.includes(serviceLine)) {
+          next.scopeNotes = next.scopeNotes.trim() ? `${next.scopeNotes}\n${serviceLine}` : serviceLine;
+        }
+      }
+
+      return next;
+    });
+
+    prefillAppliedRef.current = true;
+  }, [engagementOptions, locale, projectTypes, searchParams]);
 
   useEffect(() => {
     if (!formEnabled || submitted || startedTrackingRef.current) return;
