@@ -117,6 +117,12 @@ export const Navbar = ({ cmsContent }: NavbarProps) => {
   if (!hasQrSolutions) {
     navLinks.splice(Math.min(3, navLinks.length), 0, { name: "QR Solutions", href: "/qr-solutions" });
   }
+  const hasPartners = navLinks.some(
+    (link) => link?.href === "/partners" || /^partners?$/i.test(link?.name ?? "") || /^partner$/i.test(link?.name ?? ""),
+  );
+  if (!hasPartners) {
+    navLinks.splice(Math.min(3, navLinks.length), 0, { name: "Partners", href: "/partners" });
+  }
 
   const localizedLinks: NavLink[] = navLinks.map((link: { name: string; href: string; hasMega?: boolean }) => ({
     ...link,

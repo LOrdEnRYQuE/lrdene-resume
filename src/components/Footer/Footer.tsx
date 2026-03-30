@@ -92,6 +92,18 @@ export const Footer = ({ cmsContent, siteSettings }: FooterProps) => {
 
   if (normalizedPathname.startsWith("/admin")) return null;
 
+  const normalizedPillars = (Array.isArray(footerData.pillars) ? footerData.pillars : []).map((pillar: any) => {
+    if (pillar?.title !== "Navigation" || !Array.isArray(pillar?.links)) return pillar;
+    const hasPartners = pillar.links.some(
+      (link: any) => link?.href === "/partners" || /^partners?$/i.test(String(link?.label ?? "")),
+    );
+    if (hasPartners) return pillar;
+
+    const nextLinks = [...pillar.links];
+    nextLinks.splice(Math.min(1, nextLinks.length), 0, { label: "Partners", href: "/partners" });
+    return { ...pillar, links: nextLinks };
+  });
+
   const siteName = settings?.siteName || "LOrdEnRYQuE";
   const logoSrc = "/assets/LOGO.png";
   const brandLine = "LOrdEnRYQuE | Advanced Digital Solution";
@@ -123,7 +135,7 @@ export const Footer = ({ cmsContent, siteSettings }: FooterProps) => {
 
           
           <div className={styles.linksGrid}>
-            {footerData.pillars.map((pillar: any, idx: number) => (
+            {normalizedPillars.map((pillar: any, idx: number) => (
               <div key={idx} className={styles.column}>
                 <h3>
                   {pillar.title === "Navigation"
