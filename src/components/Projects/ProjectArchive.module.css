@@ -147,6 +147,16 @@
   flex-shrink: 0;
 }
 
+.projectCover {
+  object-fit: cover;
+  transform: scale(1.01);
+}
+
+.grid .card:hover .projectCover {
+  transform: scale(1.04);
+  transition: transform 0.45s ease;
+}
+
 .projectLogoBadge {
   position: absolute;
   top: 0.7rem;
@@ -233,6 +243,15 @@
 
 .grid .imagePlaceholder {
   border-bottom: 1px solid var(--glass-border);
+}
+
+.imageTint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.42) 100%),
+    radial-gradient(circle at 75% 15%, rgba(212, 175, 55, 0.2), rgba(0, 0, 0, 0) 52%);
 }
 
 .overlay {

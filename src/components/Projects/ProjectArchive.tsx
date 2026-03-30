@@ -21,6 +21,7 @@ type ProjectItem = {
   stack: string[];
   category: string;
   year?: string;
+  coverImage?: string;
 };
 
 export const ProjectArchive = ({ initialProjects = [] }: { initialProjects?: ProjectItem[] }) => {
@@ -214,9 +215,20 @@ export const ProjectArchive = ({ initialProjects = [] }: { initialProjects?: Pro
                         className={styles.projectLogoImage}
                       />
                     </div>
-                    <div className={styles.imagePlaceholder}>
-                      {project.category}
-                    </div>
+                    {project.coverImage ? (
+                      <Image
+                        src={project.coverImage}
+                        alt={project.title}
+                        fill
+                        sizes={viewMode === "grid" ? "(max-width: 900px) 100vw, 33vw" : "120px"}
+                        className={styles.projectCover}
+                      />
+                    ) : (
+                      <div className={styles.imagePlaceholder}>
+                        {project.category}
+                      </div>
+                    )}
+                    <div className={styles.imageTint} />
                     {viewMode === "grid" && (
                       <div className={styles.overlay}>
                         <LocaleLink href={`/projects/${project.slug}`} className={styles.viewBtn}>
