@@ -709,30 +709,49 @@
   margin-bottom: 1.75rem;
 }
 
+.triangleBox {
+  border: 1px solid rgba(229, 228, 226, 0.14);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(180, 200, 229, 0.12), rgba(8, 8, 8, 0) 46%),
+    radial-gradient(circle at 90% 8%, rgba(229, 228, 226, 0.08), rgba(8, 8, 8, 0) 44%),
+    rgba(255, 255, 255, 0.02);
+  padding: 1.55rem;
+}
+
 .trianglePillarGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.9rem;
-  margin-bottom: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.95rem;
+  margin-bottom: 1.25rem;
 }
 
 .trianglePillarCard {
-  padding: 1rem;
+  padding: 1rem 1.05rem;
   background: rgba(229, 228, 226, 0.05);
   border: 1px solid rgba(229, 228, 226, 0.14);
   border-radius: var(--radius-md);
+  min-height: 136px;
+}
+
+.trianglePillarCard:first-child {
+  grid-column: 1 / -1;
+  background:
+    linear-gradient(140deg, rgba(229, 228, 226, 0.12), rgba(180, 200, 229, 0.1)),
+    rgba(229, 228, 226, 0.05);
+  border-color: rgba(229, 228, 226, 0.28);
 }
 
 .trianglePillarCard h3 {
   font-size: 0.9rem;
   font-weight: 800;
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.5rem;
 }
 
 .trianglePillarCard p {
-  font-size: 0.82rem;
+  font-size: 0.83rem;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.52;
 }
 
 .outcomeRow {
@@ -768,8 +787,8 @@
 
 .triangleFlowGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.7rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
 }
 
 .triangleFlowItem {
@@ -828,7 +847,7 @@
 
 .proofGrid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.7rem;
 }
 
