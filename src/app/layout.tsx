@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import { Navbar } from "@/components/Navbar/Navbar";
 import { Footer } from "@/components/Footer/Footer";
@@ -15,11 +16,18 @@ import { SERVICE_LOCATIONS } from "@/utils/serviceLocations";
 import { getRequestLocale } from "@/lib/seo/localeCanonical";
 
 const DEFAULT_GA_ID = "G-R3P3P44GWT";
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID?.trim() || "";
 const ICON_VERSION = "20260327";
 const GOOGLE_SITE_VERIFICATION =
   process.env.GOOGLE_SITE_VERIFICATION || process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined;
 
 export const runtime = "edge";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 function isValidGaId(value?: string | null) {
   if (!value) return false;
@@ -129,6 +137,7 @@ export default async function RootLayout({
     : isValidGaId(envGaId)
       ? envGaId!.toUpperCase()
       : DEFAULT_GA_ID;
+  const hasGtm = /^GTM-[A-Z0-9]+$/i.test(GTM_ID);
   const sameAsLinks = Array.from(
     new Set(
       [
@@ -235,11 +244,22 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body>
+      <body className={inter.variable}>
+        {hasGtm ? (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${encodeURIComponent(GTM_ID)}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+              title="Google Tag Manager"
+            />
+          </noscript>
+        ) : null}
         <ConvexClientProvider>
           <LocaleDocumentSync />
           <AnalyticsTracker />
-          {gaId ? (
+          {gaId || hasGtm ? (
             <>
               <script
                 dangerouslySetInnerHTML={{
@@ -279,6 +299,21 @@ gtag('config', ${JSON.stringify(gaId)}, {
                 src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`}
                 strategy="afterInteractive"
               />
+              {hasGtm ? (
+                <Script
+                  id="lrdene-gtm-loader"
+                  strategy="afterInteractive"
+                  dangerouslySetInnerHTML={{
+                    __html: `
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer',${JSON.stringify(GTM_ID)});
+                    `,
+                  }}
+                />
+              ) : null}
             </>
           ) : null}
           <script

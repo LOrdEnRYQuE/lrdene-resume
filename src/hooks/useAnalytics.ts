@@ -6,7 +6,7 @@ import { useReportWebVitals } from "next/web-vitals";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/taxonomy";
-import { COOKIE_CONSENT_EVENT, hasAnalyticsConsent } from "@/lib/cookies/consent";
+import { COOKIE_CONSENT_EVENT, hasAnalyticsConsent, hasMarketingConsent } from "@/lib/cookies/consent";
 
 const SESSION_KEY = "lrdene_session_id";
 const FIRST_TOUCH_KEY = "lrdene_first_touch";
@@ -451,11 +451,12 @@ function initGa4() {
 function updateGaConsent(enabled: boolean) {
   if (typeof window === "undefined") return;
   if (!window.gtag) return;
+  const marketingEnabled = hasMarketingConsent();
   window.gtag("consent", "update", {
     analytics_storage: enabled ? "granted" : "denied",
-    ad_storage: "denied",
-    ad_user_data: "denied",
-    ad_personalization: "denied",
+    ad_storage: marketingEnabled ? "granted" : "denied",
+    ad_user_data: marketingEnabled ? "granted" : "denied",
+    ad_personalization: marketingEnabled ? "granted" : "denied",
   });
 }
 
@@ -466,6 +467,10 @@ function sendGaEvent(name: string, params: Record<string, string | number | unde
 }
 
 function resolveLocaleFromPath(path: string) {
+  if (typeof document !== "undefined") {
+    const lang = document.documentElement.lang?.trim().toLowerCase();
+    if (lang === "en" || lang === "de") return lang;
+  }
   const segments = path.split("/").filter(Boolean);
   const first = segments[0];
   if (first === "en" || first === "de") return first;

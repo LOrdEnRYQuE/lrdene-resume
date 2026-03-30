@@ -37,6 +37,11 @@ export function hasAnalyticsConsent() {
   return Boolean(consent?.analytics);
 }
 
+export function hasMarketingConsent() {
+  const consent = readCookieConsent();
+  return Boolean(consent?.marketing);
+}
+
 export function getOrCreateConsentFingerprint() {
   if (typeof window === "undefined") return "";
   const existing = window.localStorage.getItem(COOKIE_CONSENT_FINGERPRINT_KEY);

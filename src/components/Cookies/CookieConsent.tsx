@@ -119,10 +119,28 @@ export default function CookieConsent() {
             <button type="button" className={styles.btn} onClick={() => applyConsent(buildConsent(false, consent ? "settings" : "banner"))}>
               {copy.reject}
             </button>
-            <button type="button" className={styles.btn} onClick={() => applyConsent(buildConsent(true, consent ? "settings" : "banner"))}>
+            <button
+              type="button"
+              className={styles.btn}
+              onClick={() =>
+                applyConsent({
+                  ...buildConsent(true, consent ? "settings" : "banner"),
+                  marketing: false,
+                })
+              }
+            >
               {copy.acceptAnalytics}
             </button>
-            <button type="button" className={`${styles.btn} ${styles.btnPrimary}`} onClick={() => applyConsent(buildConsent(true, consent ? "settings" : "banner"))}>
+            <button
+              type="button"
+              className={`${styles.btn} ${styles.btnPrimary}`}
+              onClick={() =>
+                applyConsent({
+                  ...buildConsent(true, consent ? "settings" : "banner"),
+                  marketing: true,
+                })
+              }
+            >
               {copy.acceptAll}
             </button>
           </div>
