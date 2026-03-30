@@ -46,6 +46,7 @@ export const Footer = ({ cmsContent, siteSettings }: FooterProps) => {
           title: "Navigation",
           links: [
             { label: "Projects", href: "/projects" },
+            { label: "Partners", href: "/partners" },
             { label: "Journal", href: "/blog" },
             { label: "About", href: "/about" },
             { label: "Contact", href: "/contact" }

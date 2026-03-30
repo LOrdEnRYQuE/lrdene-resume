@@ -38,6 +38,7 @@ export const Navbar = ({ cmsContent }: NavbarProps) => {
         { name: "Services", href: "/services", hasMega: true },
         { name: "Demos", href: "/demos", hasMega: true },
         { name: "Projects", href: "/projects" },
+        { name: "Partners", href: "/partners" },
         { name: "QR Solutions", href: "/qr-solutions" },
         { name: "About", href: "/about" },
         { name: "Blog", href: "/blog" },
@@ -123,10 +124,10 @@ export const Navbar = ({ cmsContent }: NavbarProps) => {
   }));
 
   const leftLinks: NavLink[] = localizedLinks.filter(
-    (l: NavLink) => l.hasMega || ["Projects", "QR Solutions"].includes(l.name)
+    (l: NavLink) => l.hasMega || ["Projects", "Partners", "QR Solutions"].includes(l.name)
   );
   const rightLinks: NavLink[] = localizedLinks.filter(
-    (l: NavLink) => !l.hasMega && !["Projects", "QR Solutions"].includes(l.name)
+    (l: NavLink) => !l.hasMega && !["Projects", "Partners", "QR Solutions"].includes(l.name)
   );
 
   const isActiveLink = (href: string) => {
