@@ -43,13 +43,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const localeHeader = requestHeaders.get(LOCALE_HEADER_NAME);
   const locale: Locale = isLocale(localeHeader) ? localeHeader : "en";
   const isDe = locale === "de";
-  const title = isDe
-    ? "KI-Engineer & Next.js-Architekt in Deutschland"
-    : "AI Engineer & Next.js Architect in Germany";
+  const title = "LOrdEnRYQuE | Advanced Digital Solution";
   const description = isDe
     ? "Baue performante Websites, KI-Workflows und skalierbare digitale Produkte mit messbaren Business-Ergebnissen."
     : "Build high-performance websites, AI workflows, and scalable digital products with measurable business outcomes.";
-  const socialTitle = `${title} | LOrdEnRYQuE`;
+  const socialTitle = title;
 
   return {
     title,
