@@ -81,6 +81,11 @@ function localeFromPath(pathname) {
   return "x-default";
 }
 
+function hasRequiredAlternates(alternates) {
+  const langs = new Set(alternates.map((entry) => entry.hreflang));
+  return langs.has("x-default") && langs.has("en") && langs.has("de");
+}
+
 (async () => {
   const started = Date.now();
   const root = await fetch(sitemap);
@@ -113,6 +118,7 @@ function localeFromPath(pathname) {
     hreflangXDefaultMissing: 0,
     hreflangSelfMissing: 0,
     hreflangReciprocalMissing: 0,
+    hreflangPairMissing: 0,
     issues: {
       status3xx: [],
       status4xx: [],
@@ -121,6 +127,7 @@ function localeFromPath(pathname) {
       hreflangXDefaultMissing: [],
       hreflangSelfMissing: [],
       hreflangReciprocalMissing: [],
+      hreflangPairMissing: [],
     },
   };
 
@@ -168,16 +175,23 @@ function localeFromPath(pathname) {
         metrics.issues.hreflangXDefaultMissing.push(url);
       }
 
-      const locale = localeFromPath(urlPath);
-      const selfHref = alternates.find((a) => a.hreflang === locale)?.href;
-      const selfAbs = selfHref ? toAbs(selfHref, url) : null;
-      const selfPath = selfAbs ? normalizePath(new URL(selfAbs).pathname) : null;
+      if (!hasRequiredAlternates(alternates)) {
+        metrics.hreflangPairMissing += 1;
+        metrics.issues.hreflangPairMissing.push(url);
+      }
 
-      if (!selfPath || selfPath !== urlPath) {
-        metrics.hreflangSelfMissing += 1;
-        metrics.issues.hreflangSelfMissing.push(
-          `${url} (expected ${locale} -> ${urlPath}, got ${selfHref || "MISSING"})`,
-        );
+      const locale = localeFromPath(urlPath);
+      if (locale !== "x-default") {
+        const selfHref = alternates.find((a) => a.hreflang === locale)?.href;
+        const selfAbs = selfHref ? toAbs(selfHref, url) : null;
+        const selfPath = selfAbs ? normalizePath(new URL(selfAbs).pathname) : null;
+
+        if (!selfPath || selfPath !== urlPath) {
+          metrics.hreflangSelfMissing += 1;
+          metrics.issues.hreflangSelfMissing.push(
+            `${url} (expected ${locale} -> ${urlPath}, got ${selfHref || "MISSING"})`,
+          );
+        }
       }
     }
   }
@@ -192,6 +206,7 @@ function localeFromPath(pathname) {
   for (const [url, meta] of pageMeta.entries()) {
     const sourcePath = normalizePath(new URL(url).pathname);
     const sourceLocale = localeFromPath(sourcePath);
+    if (sourceLocale === "x-default") continue;
 
     for (const alt of meta.alternates) {
       if (alt.hreflang === sourceLocale || alt.hreflang === "x-default") continue;
@@ -224,6 +239,7 @@ function localeFromPath(pathname) {
   console.log(`STATUS_5XX=${metrics.status5xx}`);
   console.log(`CANONICAL_MISMATCH=${metrics.canonicalMismatch}`);
   console.log(`HREFLANG_XDEFAULT_MISSING=${metrics.hreflangXDefaultMissing}`);
+  console.log(`HREFLANG_PAIR_MISSING=${metrics.hreflangPairMissing}`);
   console.log(`HREFLANG_SELF_MISSING=${metrics.hreflangSelfMissing}`);
   console.log(`HREFLANG_RECIPROCAL_MISSING=${metrics.hreflangReciprocalMissing}`);
   console.log(`DURATION_MS=${Date.now() - started}`);
@@ -239,6 +255,7 @@ function localeFromPath(pathname) {
   printTop("STATUS_5XX", metrics.issues.status5xx);
   printTop("CANONICAL_MISMATCH", metrics.issues.canonicalMismatch);
   printTop("HREFLANG_XDEFAULT_MISSING", metrics.issues.hreflangXDefaultMissing);
+  printTop("HREFLANG_PAIR_MISSING", metrics.issues.hreflangPairMissing);
   printTop("HREFLANG_SELF_MISSING", metrics.issues.hreflangSelfMissing);
   printTop("HREFLANG_RECIPROCAL_MISSING", metrics.issues.hreflangReciprocalMissing);
 
@@ -248,6 +265,7 @@ function localeFromPath(pathname) {
     metrics.status5xx > 0 ||
     metrics.canonicalMismatch > 0 ||
     metrics.hreflangXDefaultMissing > 0 ||
+    metrics.hreflangPairMissing > 0 ||
     metrics.hreflangSelfMissing > 0 ||
     metrics.hreflangReciprocalMissing > 0;
 

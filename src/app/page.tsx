@@ -61,13 +61,13 @@ export async function generateMetadata(): Promise<Metadata> {
       "digital solutions",
     ],
     alternates: {
-      canonical: `/${locale}`,
+      canonical: "/",
       languages: getLanguageAlternates("/"),
     },
     openGraph: {
       title: socialTitle,
       description,
-      url: `https://lordenryque.com/${locale}`,
+      url: "https://lordenryque.com/",
       type: "website",
       siteName: "LOrdEnRYQuE",
       images: ["/assets/Profile.webp"],

@@ -68,14 +68,15 @@ export const useAnalytics = () => {
   });
 
   useEffect(() => {
-    initGa4();
     const onConsentChanged = () => {
       const enabled = hasAnalyticsConsent();
       setAnalyticsEnabled(enabled);
+      if (enabled) initGa4();
       updateGaConsent(enabled);
     };
     const enabled = hasAnalyticsConsent();
     setAnalyticsEnabled(enabled);
+    if (enabled) initGa4();
     updateGaConsent(enabled);
     window.addEventListener(COOKIE_CONSENT_EVENT, onConsentChanged as EventListener);
     return () => window.removeEventListener(COOKIE_CONSENT_EVENT, onConsentChanged as EventListener);

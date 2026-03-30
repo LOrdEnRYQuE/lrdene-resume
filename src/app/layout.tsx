@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import { Navbar } from "@/components/Navbar/Navbar";
@@ -9,6 +8,7 @@ import DesignTokensRuntime from "@/components/DesignTokensRuntime";
 import LocaleDocumentSync from "@/components/I18n/LocaleDocumentSync";
 import DeferredEnhancements from "@/components/Runtime/DeferredEnhancements";
 import AnalyticsTracker from "@/components/Analytics/AnalyticsTracker";
+import GtmLoader from "@/components/Analytics/GtmLoader";
 import CookieConsent from "@/components/Cookies/CookieConsent";
 import { getPageContentCached, getSiteSettingsCached } from "@/lib/server/cachedQueries";
 import { BUSINESS_PROFILE } from "@/lib/businessProfile";
@@ -226,6 +226,12 @@ export default async function RootLayout({
           addressRegion: "Bayern",
           addressCountry: "DE",
         },
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: 48.5442,
+          longitude: 12.1469,
+        },
+        hasMap: "https://maps.google.com/?q=48.5442,12.1469",
         sameAs: sameAsLinks,
       },
       {
@@ -245,25 +251,15 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={inter.variable}>
-        {hasGtm ? (
-          <noscript>
-            <iframe
-              src={`https://www.googletagmanager.com/ns.html?id=${encodeURIComponent(GTM_ID)}`}
-              height="0"
-              width="0"
-              style={{ display: "none", visibility: "hidden" }}
-              title="Google Tag Manager"
-            />
-          </noscript>
-        ) : null}
         <ConvexClientProvider>
           <LocaleDocumentSync />
           <AnalyticsTracker />
+          <GtmLoader />
           {gaId || hasGtm ? (
             <>
               <script
                 dangerouslySetInnerHTML={{
-                  __html: `window.__LRDENE_GA_ID=${JSON.stringify(gaId)};`,
+                  __html: `window.__LRDENE_GA_ID=${JSON.stringify(gaId)};window.__LRDENE_GTM_ID=${JSON.stringify(hasGtm ? GTM_ID : "")};`,
                 }}
               />
               <script
@@ -294,26 +290,6 @@ gtag('config', ${JSON.stringify(gaId)}, {
                   `,
                 }}
               />
-              <Script
-                id="lrdene-ga4-loader"
-                src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`}
-                strategy="afterInteractive"
-              />
-              {hasGtm ? (
-                <Script
-                  id="lrdene-gtm-loader"
-                  strategy="afterInteractive"
-                  dangerouslySetInnerHTML={{
-                    __html: `
-  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer',${JSON.stringify(GTM_ID)});
-                    `,
-                  }}
-                />
-              ) : null}
             </>
           ) : null}
           <script
