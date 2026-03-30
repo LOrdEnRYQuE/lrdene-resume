@@ -922,6 +922,16 @@
   line-height: 1.55;
 }
 
+.skillStackLine {
+  margin-bottom: 0.35rem;
+  color: #e6e6e6;
+  font-weight: 600;
+}
+
+.skillDescription {
+  color: var(--text-secondary);
+}
+
 .skillsFullWidth {
   margin-bottom: 7rem;
 }

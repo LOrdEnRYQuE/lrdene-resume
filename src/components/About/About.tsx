@@ -51,6 +51,42 @@ const ABOUT_DE_TEXT_MAP: Record<string, string> = {
   "Human Centric": "Menschzentriert",
 };
 
+const CORE_SKILL_DESCRIPTIONS_EN: Record<string, string> = {
+  "Web Development": "Builds robust business websites and custom web apps with clean architecture and production reliability.",
+  Frontend: "Designs responsive, high-conversion interfaces with modern component systems and smooth UX behavior.",
+  Backend: "Implements scalable APIs, secure business logic, and maintainable data structures for long-term growth.",
+  "AI Engineering": "Integrates LLM workflows, automation logic, and practical AI features into real business processes.",
+  Design: "Translates brand direction into coherent UI systems, visual language, and product-level consistency.",
+  "Cloud & DevOps": "Handles deployment pipelines, environment strategy, monitoring, and operational runtime stability.",
+  "Data & Analytics": "Sets up event tracking and KPI visibility to support measurable product and marketing decisions.",
+  "E-Commerce": "Builds product flows, checkout paths, and trust-focused storefront experiences for better conversion.",
+  "Technical SEO": "Optimizes crawlability, Core Web Vitals, and site structure for discoverability and sustainable organic reach.",
+};
+
+const CORE_SKILL_DESCRIPTIONS_DE: Record<string, string> = {
+  Webentwicklung: "Entwicklung stabiler Business-Websites und individueller Web-Apps mit sauberer Architektur und zuverlässigem Betrieb.",
+  Frontend: "Konzeption responsiver, conversion-starker Interfaces mit modernen Komponenten und klarer UX-Führung.",
+  Backend: "Umsetzung skalierbarer APIs, sicherer Business-Logik und wartbarer Datenstrukturen für nachhaltiges Wachstum.",
+  "KI Engineering": "Integration von LLM-Workflows, Automationen und praxisnahen KI-Features in reale Geschäftsprozesse.",
+  Design: "Übersetzung von Markenstrategie in konsistente UI-Systeme, visuelle Sprache und starke Produktwirkung.",
+  "Cloud & DevOps": "Steuerung von Deployment-Pipelines, Umgebungen, Monitoring und stabilen Runtime-Prozessen.",
+  "Daten & Analytics": "Aufbau von Event-Tracking und KPI-Transparenz für datenbasierte Produkt- und Marketingentscheidungen.",
+  ECommerce: "Entwicklung von Produkt- und Checkout-Flows mit Fokus auf Vertrauen, Klarheit und höhere Conversion.",
+  "Technische SEO": "Optimierung von Crawlability, Core Web Vitals und Informationsarchitektur für langfristige Sichtbarkeit.",
+};
+
+function resolveCoreSkillDescription(
+  locale: "en" | "de",
+  title: string,
+  providedDescription?: string,
+) {
+  if (providedDescription && providedDescription.trim().length > 0) {
+    return providedDescription;
+  }
+  const map = locale === "de" ? CORE_SKILL_DESCRIPTIONS_DE : CORE_SKILL_DESCRIPTIONS_EN;
+  return map[title] ?? "";
+}
+
 function localizeAboutText(value: unknown, locale: "en" | "de") {
   if (typeof value !== "string") return value;
   if (locale !== "de") return value;
@@ -1243,7 +1279,10 @@ export const About = () => {
               >
                 <div className={styles.skillIcon}>{IconMap[s.icon as string] || <Code2 size={20} />}</div>
                 <h4>{s.title}</h4>
-                <p>{s.skills}</p>
+                <p className={styles.skillStackLine}>{s.skills}</p>
+                <p className={styles.skillDescription}>
+                  {resolveCoreSkillDescription(locale, s.title, s.description)}
+                </p>
               </div>
             ))}
           </div>
