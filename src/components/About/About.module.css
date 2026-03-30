@@ -922,6 +922,10 @@
   line-height: 1.55;
 }
 
+.skillsFullWidth {
+  margin-bottom: 7rem;
+}
+
 /* ── Values ───────────────────────────────────────────────── */
 .valuesSection {
   padding-top: 2rem;

@@ -1227,20 +1227,27 @@ export const About = () => {
                 ))}
               </div>
             </div>
-            <div className={styles.skillGrid}>
-              {mergedSkills.map((s: any) => (
-                <div
-                  key={s.title}
-                  className={styles.skillCard}
-                >
-                  <div className={styles.skillIcon}>{IconMap[s.icon as string] || <Code2 size={20} />}</div>
-                  <h4>{s.title}</h4>
-                  <p>{s.skills}</p>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
+
+        <section className={styles.skillsFullWidth}>
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionEyebrow}>{copy.skillStack}</span>
+            <h2 className={styles.sectionTitle}>{copy.coreSkills}</h2>
+          </div>
+          <div className={styles.skillGrid}>
+            {mergedSkills.map((s: any) => (
+              <div
+                key={s.title}
+                className={styles.skillCard}
+              >
+                <div className={styles.skillIcon}>{IconMap[s.icon as string] || <Code2 size={20} />}</div>
+                <h4>{s.title}</h4>
+                <p>{s.skills}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* ── Values Section ────────────────────────────────────── */}
         <div className={styles.valuesSection}>
