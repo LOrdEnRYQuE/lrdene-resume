@@ -50,8 +50,33 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function AboutPage() {
+  const aboutJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Attila Lazar",
+    alternateName: "LOrdEnRYQuE",
+    url: "https://lordenryque.com/about",
+    jobTitle: "Senior Full-Stack Engineer",
+    knowsAbout: [
+      "AI Engineering",
+      "Next.js Development",
+      "Software Architecture",
+      "Conversion-Focused Web Products",
+    ],
+    worksFor: {
+      "@type": "Organization",
+      name: "LOrdEnRYQuE | Advanced Digital Solution",
+      url: "https://lordenryque.com",
+    },
+    sameAs: [
+      "https://www.linkedin.com/in/LOrdEnRQuE",
+      "https://github.com/LOrdEnRYQuE",
+    ],
+  };
+
   return (
     <main style={{ marginTop: "clamp(88px, 12vw, 140px)" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }} />
       <About />
     </main>
   );

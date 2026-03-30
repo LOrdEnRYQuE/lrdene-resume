@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./ProjectArchive.module.css";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Search, ArrowUpRight, Grid, List as ListIcon, X } from "lucide-react";
 import LocaleLink from "@/components/I18n/LocaleLink";
 import { useLocale } from "@/lib/i18n/useLocale";
@@ -13,8 +13,19 @@ import Image from "next/image";
 
 const categories = ["All", "Web", "AI", "Design", "Branding", "Dashboard", "Demo"];
 
-export const ProjectArchive = () => {
+type ProjectItem = {
+  _id?: string;
+  slug: string;
+  title: string;
+  summary: string;
+  stack: string[];
+  category: string;
+  year?: string;
+};
+
+export const ProjectArchive = ({ initialProjects = [] }: { initialProjects?: ProjectItem[] }) => {
   const locale = useLocale();
+  const reduceMotion = useReducedMotion();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -33,9 +44,8 @@ export const ProjectArchive = () => {
     return () => mq.removeListener(syncMode);
   }, []);
   
-  const projects = useQuery(api.projects.list, 
-    selectedCategory === "All" ? {} : { category: selectedCategory }
-  );
+  const projectsLive = useQuery(api.projects.list, {});
+  const projects = projectsLive ?? initialProjects;
 
   const copy =
     locale === "de"
@@ -88,7 +98,7 @@ export const ProjectArchive = () => {
           } as Record<string, string>,
         };
 
-  if (projects === undefined) {
+  if (!projects && initialProjects.length === 0) {
     return (
       <div className={styles.loading}>
         <div className="gold-text">{copy.loading}</div>
@@ -96,7 +106,7 @@ export const ProjectArchive = () => {
     );
   }
 
-  const filteredProjects = projects.filter(p => 
+  const filteredProjects = (projects ?? []).filter(p =>
     p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
     p.summary.toLowerCase().includes(searchQuery.toLowerCase())
   ).filter(p => selectedCategory === "All" || p.category === selectedCategory);
@@ -187,9 +197,9 @@ export const ProjectArchive = () => {
               <motion.div 
                 layout
                 key={project.slug}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
+                initial={reduceMotion ? false : { opacity: 0, scale: 0.9 }}
+                animate={reduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
+                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
                 className={styles.card}
               >
                 <div className={styles.cardInner}>
