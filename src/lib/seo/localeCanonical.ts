@@ -9,7 +9,7 @@ export async function getRequestLocale(): Promise<Locale> {
 }
 
 export function toLocaleCanonical(pathname: string, locale: Locale): string {
+  void locale;
   const normalized = pathname.startsWith("/") ? pathname : `/${pathname}`;
-  if (normalized === "/") return `/${locale}`;
-  return `/${locale}${normalized}`;
+  return normalized === "/" ? "/" : normalized;
 }

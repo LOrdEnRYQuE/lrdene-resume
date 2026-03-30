@@ -13,6 +13,60 @@ import {
   verifyAdminSessionToken,
 } from "@/lib/adminAuth";
 
+const LEGACY_PATH_REDIRECTS = new Map<string, string>([
+  ["/portfolio", "/projects"],
+  ["/work", "/projects"],
+  ["/case-study", "/projects"],
+  ["/case-studies", "/projects"],
+  ["/articles", "/blog"],
+  ["/posts", "/blog"],
+  ["/solution", "/services"],
+  ["/solutions", "/services"],
+  ["/demo", "/demos"],
+  ["/showcase", "/demos"],
+]);
+
+const DEMO_SLUG_ALIASES: Record<string, string> = {
+  realestate: "real-estate",
+  home_services: "home-services",
+  homeservices: "home-services",
+  aiseo: "ai-seo",
+  aiagents: "ai-agents",
+  aimarketplace: "ai-marketplace",
+  aiplayground: "ai-playground",
+  courseplatform: "course-platform",
+  cardealer: "car-dealer",
+  cardetailing: "car-detailing",
+  carselling: "car-selling",
+  saaslanding: "saas-landing",
+  mentalhealth: "mental-health",
+  greenco: "green-eco",
+  greeneco: "green-eco",
+};
+
+function normalizePathForMatching(pathname: string) {
+  const lowered = pathname.toLowerCase();
+  if (lowered.length > 1 && lowered.endsWith("/")) return lowered.slice(0, -1);
+  return lowered || "/";
+}
+
+function resolveLegacyPathRedirect(pathname: string): string | null {
+  const normalized = normalizePathForMatching(pathname);
+  const staticRedirect = LEGACY_PATH_REDIRECTS.get(normalized);
+  if (staticRedirect) return staticRedirect;
+
+  const demoAliasMatch = normalized.match(/^\/demos\/([^/]+)$/);
+  if (demoAliasMatch) {
+    const currentSlug = demoAliasMatch[1];
+    const canonicalSlug = DEMO_SLUG_ALIASES[currentSlug];
+    if (canonicalSlug && canonicalSlug !== currentSlug) {
+      return `/demos/${canonicalSlug}`;
+    }
+  }
+
+  return null;
+}
+
 function withSecurityHeaders(response: NextResponse) {
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");
@@ -59,6 +113,14 @@ function continueWithOptionalLocaleRewrite(
   return withRouteHeaders(response, normalizedPathname);
 }
 
+function resolvePreferredLocaleFromAcceptLanguage(headerValue: string | null): string {
+  if (!headerValue) return DEFAULT_LOCALE;
+  const lower = headerValue.toLowerCase();
+  if (lower.includes("de")) return "de";
+  if (lower.includes("en")) return "en";
+  return DEFAULT_LOCALE;
+}
+
 export async function middleware(request: NextRequest) {
   const hostHeader = request.headers.get("host")?.toLowerCase();
   if (hostHeader === "www.lordenryque.com") {
@@ -76,7 +138,26 @@ export async function middleware(request: NextRequest) {
   }
   const localeInPath = getLocalePrefixFromPathname(pathname);
   const normalizedPathname = localeInPath ? stripLocalePrefix(pathname) : pathname;
-  const localePrefix = localeInPath ? `/${localeInPath}` : "";
+
+  if (localeInPath) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = normalizedPathname;
+    const response = NextResponse.redirect(redirectUrl, 301);
+    response.cookies.set(LOCALE_COOKIE_NAME, localeInPath, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+    });
+    return withRouteHeaders(response, normalizedPathname);
+  }
+
+  const legacyRedirectPath = resolveLegacyPathRedirect(normalizedPathname);
+
+  if (legacyRedirectPath && !normalizedPathname.startsWith("/admin") && !normalizedPathname.startsWith("/api/admin")) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = legacyRedirectPath;
+    return withRouteHeaders(NextResponse.redirect(redirectUrl, 301), normalizedPathname);
+  }
 
   if (normalizedPathname.startsWith("/api/admin")) {
     if (normalizedPathname === "/api/admin/login" || normalizedPathname === "/api/admin/logout") {
@@ -100,8 +181,8 @@ export async function middleware(request: NextRequest) {
   if (normalizedPathname.startsWith("/admin")) {
     const isLoginPath = normalizedPathname === "/admin/login";
     const creds = getAdminCredentials();
-    const loginPath = `${localePrefix}/admin/login`;
-    const adminHomePath = `${localePrefix}/admin`;
+    const loginPath = "/admin/login";
+    const adminHomePath = "/admin";
     if (!creds) {
       if (isLoginPath) return continueWithOptionalLocaleRewrite(request, localeInPath, normalizedPathname);
       return withRouteHeaders(NextResponse.redirect(new URL(loginPath, request.url)), normalizedPathname);
@@ -118,31 +199,22 @@ export async function middleware(request: NextRequest) {
     }
     return continueWithOptionalLocaleRewrite(request, localeInPath, normalizedPathname);
   }
-
-  if (localeInPath) {
-    const rewriteUrl = request.nextUrl.clone();
-    rewriteUrl.pathname = normalizedPathname;
-
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set(LOCALE_HEADER_NAME, localeInPath);
-
-    const response = NextResponse.rewrite(rewriteUrl, {
-      request: { headers: requestHeaders },
-    });
-    response.cookies.set(LOCALE_COOKIE_NAME, localeInPath, {
+  const cookieLocale = request.cookies.get(LOCALE_COOKIE_NAME)?.value;
+  const preferredLocale = resolvePreferredLocaleFromAcceptLanguage(request.headers.get("accept-language"));
+  const locale = isLocale(cookieLocale) ? cookieLocale : preferredLocale;
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(LOCALE_HEADER_NAME, locale);
+  const response = NextResponse.next({
+    request: { headers: requestHeaders },
+  });
+  if (!isLocale(cookieLocale)) {
+    response.cookies.set(LOCALE_COOKIE_NAME, locale, {
       path: "/",
       maxAge: 60 * 60 * 24 * 365,
       sameSite: "lax",
     });
-    return withRouteHeaders(response, normalizedPathname);
   }
-
-  const cookieLocale = request.cookies.get(LOCALE_COOKIE_NAME)?.value;
-  const locale = isLocale(cookieLocale) ? cookieLocale : DEFAULT_LOCALE;
-  const redirectUrl = request.nextUrl.clone();
-  redirectUrl.pathname = pathname === "/" ? `/${locale}` : `/${locale}${pathname}`;
-
-  return withRouteHeaders(NextResponse.redirect(redirectUrl), pathname);
+  return withRouteHeaders(response, normalizedPathname);
 }
 
 export const config = {

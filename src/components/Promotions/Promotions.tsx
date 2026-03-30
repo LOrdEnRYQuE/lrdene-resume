@@ -21,7 +21,6 @@ type PromotionsProps = {
 
 export const Promotions = ({ locale, content }: PromotionsProps) => {
   const de = locale === "de";
-  const localePrefix = de ? "/de" : "/en";
   const defaults = de
     ? {
         eyebrow: "Startup Promotions",
@@ -80,7 +79,7 @@ export const Promotions = ({ locale, content }: PromotionsProps) => {
 
         <div className={styles.footer}>
           <p>{data.note || defaults.note}</p>
-          <Link href={`${localePrefix}/contact`} className={styles.ctaBtn}>
+          <Link href="/contact" className={styles.ctaBtn}>
             {data.cta || defaults.cta} <ArrowRight size={17} />
           </Link>
         </div>

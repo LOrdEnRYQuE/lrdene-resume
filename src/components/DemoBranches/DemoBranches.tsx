@@ -102,7 +102,6 @@ function getDemoIcon(slug: string, category: string) {
 }
 
 export const DemoBranches = async ({ locale }: DemoBranchesProps) => {
-  const localePrefix = locale === "de" ? "/de" : "/en";
   const dbDemos = (await fetchQuery(api.demos.list)) as DemoRecord[] | null;
   const demos = dbDemos && dbDemos.length > 0 ? dbDemos : fallbackDemos;
   const copy =
@@ -154,7 +153,7 @@ export const DemoBranches = async ({ locale }: DemoBranchesProps) => {
               
               <div className={styles.footer}>
                 <Link
-                  href={`${localePrefix}/demos/${demo.slug}`}
+                  href={`/demos/${demo.slug}`}
                   className={styles.demoBtn}
                   data-track-event="open_demo"
                   data-track-label={`Demo opened: ${demo.name}`}
@@ -166,7 +165,7 @@ export const DemoBranches = async ({ locale }: DemoBranchesProps) => {
           ))}
         </div>
         <div className={styles.moreWrap}>
-          <Link href={`${localePrefix}/demos`} className={styles.moreBtn}>
+          <Link href="/demos" className={styles.moreBtn}>
             {copy.allDemos}
           </Link>
         </div>

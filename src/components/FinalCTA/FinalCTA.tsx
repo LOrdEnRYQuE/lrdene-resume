@@ -34,8 +34,6 @@ export const FinalCTA = ({ locale }: FinalCTAProps) => {
           ctaSecondary: "View Services",
         };
 
-  const localePrefix = locale === "de" ? "/de" : "/en";
-
   return (
     <section className={styles.section}>
       <div className={styles.glow} />
@@ -57,7 +55,7 @@ export const FinalCTA = ({ locale }: FinalCTAProps) => {
 
           <div className={styles.btnRow}>
             <Link
-              href={`${localePrefix}/contact`}
+              href="/contact"
               className={styles.ctaBtn}
               data-track-event="click_cta"
               data-track-label="Final CTA: Start a Project"
@@ -65,7 +63,7 @@ export const FinalCTA = ({ locale }: FinalCTAProps) => {
               {copy.ctaPrimary} <ArrowRight size={18} />
             </Link>
             <Link
-              href={`${localePrefix}/services`}
+              href="/services"
               className={styles.ghostBtn}
               data-track-event="click_cta"
               data-track-label="Final CTA: View Services"

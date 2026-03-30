@@ -175,7 +175,7 @@ export default async function RootLayout({
         inLanguage: ["en", "de"],
         potentialAction: {
           "@type": "SearchAction",
-          target: "https://lordenryque.com/en/blog?query={search_term_string}",
+          target: "https://lordenryque.com/blog?query={search_term_string}",
           "query-input": "required name=search_term_string",
         },
       },

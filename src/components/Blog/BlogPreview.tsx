@@ -39,8 +39,6 @@ export const BlogPreview = ({ locale, posts }: BlogPreviewProps) => {
           empty: "New content arriving soon.",
           dateLocale: "en-US",
         };
-  const localePrefix = locale === "de" ? "/de" : "/en";
-
   return (
     <section className={styles.previewSection}>
       <div className="container">
@@ -53,7 +51,7 @@ export const BlogPreview = ({ locale, posts }: BlogPreviewProps) => {
               {copy.subtitle}
             </p>
           </div>
-          <Link href={`${localePrefix}/blog`} className={styles.previewAllLink}>
+          <Link href="/blog" className={styles.previewAllLink}>
             {copy.readAll} <ArrowRight size={18} />
           </Link>
         </div>
@@ -65,7 +63,7 @@ export const BlogPreview = ({ locale, posts }: BlogPreviewProps) => {
               className={styles.blogCard}
               style={{ animationDelay: `${index * 80}ms` }}
             >
-              <Link href={`${localePrefix}/blog/${post.slug}`} className={styles.cardLink}>
+              <Link href={`/blog/${post.slug}`} className={styles.cardLink}>
                 <div className={styles.cardContent}>
                   <div className={styles.cardMeta}>
                     <span className={styles.metaItem}>

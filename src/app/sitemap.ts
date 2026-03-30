@@ -3,27 +3,20 @@ import { MetadataRoute } from "next";
 export const runtime = "edge";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
-import { SUPPORTED_LOCALES } from "@/lib/i18n/config";
 import {
   TOPIC_CLUSTER_CONTENT_KEY,
   getAllTopicClusterPaths,
   resolveTopicClusters,
 } from "@/lib/seo/topicClusters";
 
-function localizePath(path: string, locale: string) {
-  return path === "/" ? `/${locale}` : `/${locale}${path}`;
-}
-
-function toLocalizedEntries(
+function toEntries(
   baseUrl: string,
   entries: Array<Omit<MetadataRoute.Sitemap[number], "url"> & { path: string }>,
 ): MetadataRoute.Sitemap {
-  return entries.flatMap((entry) =>
-    SUPPORTED_LOCALES.map((locale) => ({
-      ...entry,
-      url: `${baseUrl}${localizePath(entry.path, locale)}`,
-    })),
-  );
+  return entries.map((entry) => ({
+    ...entry,
+    url: `${baseUrl}${entry.path}`,
+  }));
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -113,7 +106,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/contact", lastModified: staticLastModified, changeFrequency: "yearly" as const, priority: 0.8 },
   ];
 
-  return toLocalizedEntries(baseUrl, [
+  return toEntries(baseUrl, [
     ...staticRoutes,
     ...serviceEntries,
     ...insightClusterEntries,

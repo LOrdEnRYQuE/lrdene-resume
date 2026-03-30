@@ -1,11 +1,45 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
-import { getLocaleFromPathname } from "@/lib/i18n/path";
+import { useEffect, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, type Locale, isLocale } from "@/lib/i18n/config";
 
 export function useLocale(): Locale {
   const pathname = usePathname();
-  if (!pathname) return DEFAULT_LOCALE;
-  return getLocaleFromPathname(pathname);
+  const searchParams = useSearchParams();
+  const [locale, setLocale] = useState<Locale>(DEFAULT_LOCALE);
+
+  useEffect(() => {
+    const resolveLocale = (): Locale => {
+      if (typeof document !== "undefined") {
+        const docLang = document.documentElement.lang?.trim().toLowerCase();
+        if (isLocale(docLang)) return docLang;
+      }
+      if (typeof document !== "undefined") {
+        const cookieEntry = document.cookie
+          .split(";")
+          .map((entry) => entry.trim())
+          .find((entry) => entry.startsWith(`${LOCALE_COOKIE_NAME}=`));
+        const cookieValue = cookieEntry?.split("=")[1];
+        if (isLocale(cookieValue)) return cookieValue;
+      }
+      return DEFAULT_LOCALE;
+    };
+
+    setLocale(resolveLocale());
+  }, [pathname, searchParams]);
+
+  useEffect(() => {
+    const handleLocaleChange = (event: Event) => {
+      const customEvent = event as CustomEvent<Locale | undefined>;
+      const nextLocale = customEvent.detail;
+      if (isLocale(nextLocale)) {
+        setLocale(nextLocale);
+      }
+    };
+    window.addEventListener("lrdene:locale-change", handleLocaleChange);
+    return () => window.removeEventListener("lrdene:locale-change", handleLocaleChange);
+  }, []);
+
+  return locale;
 }

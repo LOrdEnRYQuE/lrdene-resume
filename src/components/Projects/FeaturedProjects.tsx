@@ -45,8 +45,6 @@ export const FeaturedProjects = ({ locale, featuredProjects }: FeaturedProjectsP
           caseStudy: "Read Case Study",
           loading: "Loading featured work...",
         };
-  const localePrefix = locale === "de" ? "/de" : "/en";
-
   return (
     <section className={styles.projects} id="projects">
       <div className="container">
@@ -55,7 +53,7 @@ export const FeaturedProjects = ({ locale, featuredProjects }: FeaturedProjectsP
             <h2 className={styles.title}>{copy.titlePrefix} <span className="gold-text">{copy.titleAccent}</span></h2>
             <p className={styles.subtitle}>{copy.subtitle}</p>
           </div>
-          <Link href={`${localePrefix}/projects`} className={styles.viewAll}>
+          <Link href="/projects" className={styles.viewAll}>
             {copy.viewAll} <ArrowUpRight size={20} />
           </Link>
         </div>
@@ -82,7 +80,7 @@ export const FeaturedProjects = ({ locale, featuredProjects }: FeaturedProjectsP
                   ))}
                 </div>
                 
-                <Link href={`${localePrefix}/projects/${project.slug}`} className={styles.caseStudyLink}>
+                <Link href={`/projects/${project.slug}`} className={styles.caseStudyLink}>
                   {copy.caseStudy} <ArrowUpRight size={18} />
                 </Link>
               </div>

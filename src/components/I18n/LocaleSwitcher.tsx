@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { SUPPORTED_LOCALES } from "@/lib/i18n/config";
+import { LOCALE_COOKIE_NAME, SUPPORTED_LOCALES } from "@/lib/i18n/config";
 import { localizePath, stripLocalePrefix } from "@/lib/i18n/path";
 import { useLocale } from "@/lib/i18n/useLocale";
 import styles from "./LocaleSwitcher.module.css";
@@ -25,8 +25,14 @@ export default function LocaleSwitcher() {
             type="button"
             className={`${styles.button} ${isActive ? styles.active : ""}`}
             onClick={() => {
+              if (typeof document !== "undefined") {
+                document.cookie = `${LOCALE_COOKIE_NAME}=${nextLocale}; path=/; max-age=31536000; samesite=lax`;
+                window.dispatchEvent(new CustomEvent("lrdene:locale-change", { detail: nextLocale }));
+              }
               const path = localizePath(basePath, nextLocale);
-              router.push(query ? `${path}?${query}` : path);
+              const target = query ? `${path}?${query}` : path;
+              router.push(target);
+              router.refresh();
             }}
           >
             {nextLocale.toUpperCase()}

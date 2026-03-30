@@ -20,8 +20,9 @@ export function stripLocalePrefix(pathname: string): string {
 }
 
 export function localizePath(pathname: string, locale: Locale): string {
+  void locale;
   const normalized = stripLocalePrefix(pathname || "/");
-  return normalized === "/" ? `/${locale}` : `/${locale}${normalized}`;
+  return normalized || "/";
 }
 
 export function localizeHref(href: string, locale: Locale): string {

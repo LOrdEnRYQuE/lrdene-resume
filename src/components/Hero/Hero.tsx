@@ -70,7 +70,6 @@ export const Hero = ({ locale, content }: HeroProps) => {
     };
   }, [content, locale]);
 
-  const localePrefix = locale === "de" ? "/de" : "/en";
   const resolvedSubtitle =
     data.subtitle === LEGACY_SUBTITLE_DE
         ? UPDATED_SUBTITLE_DE
@@ -143,10 +142,10 @@ export const Hero = ({ locale, content }: HeroProps) => {
 
 
           <div className={styles.ctaRow}>
-            <Link href={`${localePrefix}/demos`} className={styles.primaryCta}>
+            <Link href="/demos" className={styles.primaryCta}>
               {data.ctaPrimary} <ArrowRight size={18} style={{ marginLeft: "8px", display: "inline" }} />
             </Link>
-            <Link href={`${localePrefix}/projects`} className={styles.heroSecondaryAction}>
+            <Link href="/projects" className={styles.heroSecondaryAction}>
               {data.ctaSecondary}
             </Link>
           </div>

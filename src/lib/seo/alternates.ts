@@ -1,8 +1,8 @@
 export function getLanguageAlternates(pathname: string) {
   const normalized = pathname === "/" ? "" : pathname;
   return {
-    "x-default": normalized || "/",
-    en: `/en${normalized}`,
-    de: `/de${normalized}`,
+    "x-default": `${normalized || "/"}`,
+    en: `${normalized || "/"}`,
+    de: `${normalized || "/"}`,
   };
 }
