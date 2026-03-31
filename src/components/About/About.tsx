@@ -52,27 +52,27 @@ const ABOUT_DE_TEXT_MAP: Record<string, string> = {
 };
 
 const CORE_SKILL_DESCRIPTIONS_EN: Record<string, string> = {
-  "Web Development": "Builds robust business websites and custom web apps with clean architecture and production reliability.",
-  Frontend: "Designs responsive, high-conversion interfaces with modern component systems and smooth UX behavior.",
-  Backend: "Implements scalable APIs, secure business logic, and maintainable data structures for long-term growth.",
-  "AI Engineering": "Integrates LLM workflows, automation logic, and practical AI features into real business processes.",
-  Design: "Translates brand direction into coherent UI systems, visual language, and product-level consistency.",
-  "Cloud & DevOps": "Handles deployment pipelines, environment strategy, monitoring, and operational runtime stability.",
-  "Data & Analytics": "Sets up event tracking and KPI visibility to support measurable product and marketing decisions.",
-  "E-Commerce": "Builds product flows, checkout paths, and trust-focused storefront experiences for better conversion.",
-  "Technical SEO": "Optimizes crawlability, Core Web Vitals, and site structure for discoverability and sustainable organic reach.",
+  "Web Development": "Delivers production-ready websites and web apps that shorten launch cycles and reduce post-launch rework.",
+  Frontend: "Builds conversion-focused UX flows that improve engagement quality, retention behavior, and lead completion rates.",
+  Backend: "Implements secure, scalable API architecture that supports growth without performance bottlenecks or fragile logic.",
+  "AI Engineering": "Adds practical AI automation that cuts manual effort, accelerates operations, and improves response quality.",
+  Design: "Creates premium visual systems that increase brand trust, perceived value, and decision confidence.",
+  "Cloud & DevOps": "Establishes stable release pipelines and monitoring to reduce downtime, regressions, and operational risk.",
+  "Data & Analytics": "Tracks funnel and behavior metrics so product decisions are based on measurable outcomes, not assumptions.",
+  "E-Commerce": "Optimizes catalog-to-checkout journeys to increase conversion rate, average order value, and purchase completion.",
+  "Technical SEO": "Improves discoverability and Core Web Vitals to grow qualified organic traffic and long-term lead flow.",
 };
 
 const CORE_SKILL_DESCRIPTIONS_DE: Record<string, string> = {
-  Webentwicklung: "Entwicklung stabiler Business-Websites und individueller Web-Apps mit sauberer Architektur und zuverlässigem Betrieb.",
-  Frontend: "Konzeption responsiver, conversion-starker Interfaces mit modernen Komponenten und klarer UX-Führung.",
-  Backend: "Umsetzung skalierbarer APIs, sicherer Business-Logik und wartbarer Datenstrukturen für nachhaltiges Wachstum.",
-  "KI Engineering": "Integration von LLM-Workflows, Automationen und praxisnahen KI-Features in reale Geschäftsprozesse.",
-  Design: "Übersetzung von Markenstrategie in konsistente UI-Systeme, visuelle Sprache und starke Produktwirkung.",
-  "Cloud & DevOps": "Steuerung von Deployment-Pipelines, Umgebungen, Monitoring und stabilen Runtime-Prozessen.",
-  "Daten & Analytics": "Aufbau von Event-Tracking und KPI-Transparenz für datenbasierte Produkt- und Marketingentscheidungen.",
-  ECommerce: "Entwicklung von Produkt- und Checkout-Flows mit Fokus auf Vertrauen, Klarheit und höhere Conversion.",
-  "Technische SEO": "Optimierung von Crawlability, Core Web Vitals und Informationsarchitektur für langfristige Sichtbarkeit.",
+  Webentwicklung: "Liefert produktionsreife Websites und Web-Apps, die Go-Live-Zeiten verkürzen und Nacharbeit nach Launch reduzieren.",
+  Frontend: "Entwickelt conversion-starke UX-Flows, die Engagement-Qualität, Nutzerbindung und Lead-Abschlüsse verbessern.",
+  Backend: "Implementiert sichere, skalierbare API-Architektur für Wachstum ohne Performance-Engpässe oder fragile Logik.",
+  "KI Engineering": "Integriert praxisnahe KI-Automationen, die manuellen Aufwand senken und operative Geschwindigkeit erhöhen.",
+  Design: "Baut Premium-Designsysteme, die Markenvertrauen, Wertwahrnehmung und Kauf-/Kontaktbereitschaft steigern.",
+  "Cloud & DevOps": "Etabliert stabile Release-Pipelines und Monitoring, um Ausfälle, Regressionen und Betriebsrisiken zu minimieren.",
+  "Daten & Analytics": "Macht Funnel- und Verhaltensdaten messbar, damit Entscheidungen auf Ergebnissen statt Vermutungen basieren.",
+  ECommerce: "Optimiert den Weg von Produktansicht bis Checkout für höhere Conversion, Warenkorbwerte und Kaufabschlüsse.",
+  "Technische SEO": "Verbessert Sichtbarkeit und Core Web Vitals, um qualifizierten organischen Traffic und Leads nachhaltig zu steigern.",
 };
 
 function resolveCoreSkillDescription(
