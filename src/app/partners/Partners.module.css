@@ -79,6 +79,151 @@
   padding-top: 3rem;
 }
 
+.wizardWrap {
+  padding-top: 3rem;
+}
+
+.wizardHeader h2 {
+  font-size: clamp(1.3rem, 3.4vw, 1.9rem);
+  letter-spacing: -0.02em;
+}
+
+.wizardHeader p {
+  margin-top: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.wizardProgress {
+  margin-top: 1rem;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.wizardProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-gold), #f7d87f);
+  transition: width 0.3s ease;
+}
+
+.wizardSteps {
+  margin-top: 0.65rem;
+  display: flex;
+  gap: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.activeStep {
+  color: var(--accent-gold);
+}
+
+.wizardCard {
+  margin-top: 1rem;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  border-radius: 20px;
+  padding: 1.2rem;
+}
+
+.wizardGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.wizardGrid label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.wizardGrid input,
+.wizardGrid select,
+.wizardGrid textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  border-radius: 10px;
+  min-height: 42px;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+}
+
+.wizardGrid textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.consentRow {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.consentRow input {
+  width: 18px;
+  height: 18px;
+  min-height: 18px;
+  margin-top: 0.1rem;
+}
+
+.wizardActions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.7rem;
+}
+
+.wizardPrimary,
+.wizardSecondary {
+  border: none;
+  min-height: 42px;
+  border-radius: 999px;
+  padding: 0.6rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.wizardPrimary {
+  background: var(--accent-gold);
+  color: #111;
+}
+
+.wizardSecondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.wizardPrimary:disabled,
+.wizardSecondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.wizardError,
+.wizardSuccess {
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+}
+
+.wizardError {
+  color: #ff9c9c;
+}
+
+.wizardSuccess {
+  color: #7fe7a8;
+}
+
 .cta {
   margin-top: 3rem;
   padding: 2rem;
@@ -131,5 +276,13 @@
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .wizardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .wizardActions {
+    flex-direction: column;
   }
 }

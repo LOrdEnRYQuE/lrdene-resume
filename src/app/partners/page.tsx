@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
 import styles from "./Partners.module.css";
+import PartnersLeadWizard from "./PartnersLeadWizard";
 
 export const runtime = "edge";
 
@@ -147,6 +148,8 @@ export default async function PartnersPage() {
           <li>{copy.fitC}</li>
         </ul>
       </section>
+
+      <PartnersLeadWizard locale={locale} />
 
       <section className={`container ${styles.cta}`}>
         <h2>{copy.ctaTitle}</h2>
