@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { headers } from "next/headers";
 
 import { Hero, type HeroData } from "@/components/Hero/Hero";
+import StartupOfferPopup from "@/components/Home/StartupOfferPopup";
 import { TrustStrip } from "@/components/TrustStrip/TrustStrip";
 import { Promotions } from "@/components/Promotions/Promotions";
 import { DemoBranches } from "@/components/DemoBranches/DemoBranches";
@@ -124,6 +125,7 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}
       />
+      <StartupOfferPopup locale={locale} />
       <Hero locale={locale} content={heroData} />
       <Promotions locale={locale} content={promotionsData} />
       <TrustStrip locale={locale} />
