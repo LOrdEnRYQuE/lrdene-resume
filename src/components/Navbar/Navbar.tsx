@@ -38,6 +38,7 @@ export const Navbar = ({ cmsContent }: NavbarProps) => {
         { name: "Services", href: "/services", hasMega: true },
         { name: "Demos", href: "/demos", hasMega: true },
         { name: "Projects", href: "/projects" },
+        { name: "Offers", href: "/offers" },
         { name: "Partners", href: "/partners" },
         { name: "QR Solutions", href: "/qr-solutions" },
         { name: "About", href: "/about" },
@@ -123,6 +124,10 @@ export const Navbar = ({ cmsContent }: NavbarProps) => {
   if (!hasPartners) {
     navLinks.splice(Math.min(3, navLinks.length), 0, { name: "Partners", href: "/partners" });
   }
+  const hasOffers = navLinks.some((link) => link?.href === "/offers" || /^offers?$/i.test(link?.name ?? ""));
+  if (!hasOffers) {
+    navLinks.splice(Math.min(3, navLinks.length), 0, { name: "Offers", href: "/offers" });
+  }
 
   const localizedLinks: NavLink[] = navLinks.map((link: { name: string; href: string; hasMega?: boolean }) => ({
     ...link,
@@ -130,10 +135,10 @@ export const Navbar = ({ cmsContent }: NavbarProps) => {
   }));
 
   const leftLinks: NavLink[] = localizedLinks.filter(
-    (l: NavLink) => l.hasMega || ["Projects", "Partners", "QR Solutions"].includes(l.name)
+    (l: NavLink) => l.hasMega || ["Projects", "Offers", "Partners", "QR Solutions"].includes(l.name)
   );
   const rightLinks: NavLink[] = localizedLinks.filter(
-    (l: NavLink) => !l.hasMega && !["Projects", "Partners", "QR Solutions"].includes(l.name)
+    (l: NavLink) => !l.hasMega && !["Projects", "Offers", "Partners", "QR Solutions"].includes(l.name)
   );
 
   const isActiveLink = (href: string) => {

@@ -46,6 +46,7 @@ export const Footer = ({ cmsContent, siteSettings }: FooterProps) => {
           title: "Navigation",
           links: [
             { label: "Projects", href: "/projects" },
+            { label: "Offers", href: "/offers" },
             { label: "Partners", href: "/partners" },
             { label: "Journal", href: "/blog" },
             { label: "About", href: "/about" },
@@ -97,10 +98,18 @@ export const Footer = ({ cmsContent, siteSettings }: FooterProps) => {
     const hasPartners = pillar.links.some(
       (link: any) => link?.href === "/partners" || /^partners?$/i.test(String(link?.label ?? "")),
     );
-    if (hasPartners) return pillar;
+    const hasOffers = pillar.links.some(
+      (link: any) => link?.href === "/offers" || /^offers?$/i.test(String(link?.label ?? "")),
+    );
+    if (hasPartners && hasOffers) return pillar;
 
     const nextLinks = [...pillar.links];
-    nextLinks.splice(Math.min(1, nextLinks.length), 0, { label: "Partners", href: "/partners" });
+    if (!hasOffers) {
+      nextLinks.splice(Math.min(1, nextLinks.length), 0, { label: "Offers", href: "/offers" });
+    }
+    if (!hasPartners) {
+      nextLinks.splice(Math.min(2, nextLinks.length), 0, { label: "Partners", href: "/partners" });
+    }
     return { ...pillar, links: nextLinks };
   });
 

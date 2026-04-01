@@ -28,6 +28,7 @@ export const messages: Record<Locale, LocaleMessages> = {
         Services: "Services",
         Demos: "Demos",
         Projects: "Projects",
+        Offers: "Offers",
         Partners: "Partners",
         "QR Solutions": "QR Solutions",
         About: "About",
@@ -47,6 +48,7 @@ export const messages: Record<Locale, LocaleMessages> = {
       cookiePolicy: "Cookie Policy",
       labels: {
         Projects: "Projects",
+        Offers: "Offers",
         Partners: "Partners",
         Journal: "Journal",
         About: "About",
@@ -65,6 +67,7 @@ export const messages: Record<Locale, LocaleMessages> = {
         Services: "Leistungen",
         Demos: "Demos",
         Projects: "Projekte",
+        Offers: "Angebote",
         Partners: "Partner",
         "QR Solutions": "QR Lösungen",
         About: "Über Mich",
@@ -84,6 +87,7 @@ export const messages: Record<Locale, LocaleMessages> = {
       cookiePolicy: "Cookie-Richtlinie",
       labels: {
         Projects: "Projekte",
+        Offers: "Angebote",
         Partners: "Partner",
         Journal: "Journal",
         About: "Über Mich",
