@@ -10,6 +10,7 @@ import DeferredEnhancements from "@/components/Runtime/DeferredEnhancements";
 import AnalyticsTracker from "@/components/Analytics/AnalyticsTracker";
 import GtmLoader from "@/components/Analytics/GtmLoader";
 import CookieConsent from "@/components/Cookies/CookieConsent";
+import WhatsAppBubble from "@/components/WhatsApp/WhatsAppBubble";
 import { getPageContentCached, getSiteSettingsCached } from "@/lib/server/cachedQueries";
 import { BUSINESS_PROFILE } from "@/lib/businessProfile";
 import { SERVICE_LOCATIONS } from "@/utils/serviceLocations";
@@ -291,6 +292,7 @@ gtag('config', ${JSON.stringify(gaId)}, {
           <Navbar cmsContent={navbarCms} />
           {children}
           <Footer cmsContent={footerCms} siteSettings={siteSettings as unknown} />
+          <WhatsAppBubble />
         </ConvexClientProvider>
       </body>
     </html>
