@@ -6,7 +6,6 @@ import { Hero, type HeroData } from "@/components/Hero/Hero";
 import { TrustStrip } from "@/components/TrustStrip/TrustStrip";
 import { Promotions } from "@/components/Promotions/Promotions";
 import { DemoBranches } from "@/components/DemoBranches/DemoBranches";
-import HomeDeferredSections from "@/components/Home/HomeDeferredSections";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { LOCALE_HEADER_NAME, type Locale, isLocale } from "@/lib/i18n/config";
 import {
@@ -20,6 +19,21 @@ const ServicesGrid = dynamic(
 );
 const FeaturedProjects = dynamic(
   () => import("@/components/Projects/FeaturedProjects").then((m) => m.FeaturedProjects),
+);
+const About = dynamic(
+  () => import("@/components/About/About").then((m) => m.About),
+);
+const ProcessSection = dynamic(
+  () => import("@/components/ProcessSection/ProcessSection").then((m) => m.ProcessSection),
+);
+const BlogPreview = dynamic(
+  () => import("@/components/Blog/BlogPreview").then((m) => m.BlogPreview),
+);
+const Contact = dynamic(
+  () => import("@/components/Contact/Contact").then((m) => m.Contact),
+);
+const FinalCTA = dynamic(
+  () => import("@/components/FinalCTA/FinalCTA").then((m) => m.FinalCTA),
 );
 export const runtime = "edge";
 
@@ -116,7 +130,21 @@ export default async function Home() {
       <DemoBranches locale={locale} />
       <ServicesGrid locale={locale} />
       <FeaturedProjects locale={locale} featuredProjects={featuredProjects ?? []} />
-      <HomeDeferredSections locale={locale} posts={posts ?? []} />
+      <section style={{ contentVisibility: "auto", containIntrinsicSize: "1400px" }}>
+        <About />
+      </section>
+      <section style={{ contentVisibility: "auto", containIntrinsicSize: "900px" }}>
+        <ProcessSection locale={locale} />
+      </section>
+      <section style={{ contentVisibility: "auto", containIntrinsicSize: "1200px" }}>
+        <BlogPreview locale={locale} posts={posts ?? []} />
+      </section>
+      <section style={{ contentVisibility: "auto", containIntrinsicSize: "1600px" }}>
+        <Contact />
+      </section>
+      <section style={{ contentVisibility: "auto", containIntrinsicSize: "420px" }}>
+        <FinalCTA locale={locale} />
+      </section>
     </main>
   );
 }
