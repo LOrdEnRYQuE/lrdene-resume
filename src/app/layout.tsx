@@ -234,17 +234,6 @@ export default async function RootLayout({
         hasMap: "https://maps.google.com/?q=48.5442,12.1469",
         sameAs: sameAsLinks,
       },
-      {
-        "@type": "FAQPage",
-        mainEntity: BUSINESS_PROFILE.faq.map((entry) => ({
-          "@type": "Question",
-          name: entry.q,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: entry.a,
-          },
-        })),
-      },
     ],
   };
 
