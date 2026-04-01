@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { X, BadgePercent, ArrowRight } from "lucide-react";
+import { X, BadgePercent, ArrowRight, Copy, Check } from "lucide-react";
 import LocaleLink from "@/components/I18n/LocaleLink";
 import type { Locale } from "@/lib/i18n/config";
 import styles from "./StartupOfferPopup.module.css";
@@ -10,6 +10,7 @@ import styles from "./StartupOfferPopup.module.css";
 const DISMISS_KEY = "lrdene_startup_offer_popup_dismissed_until";
 const DISMISS_MS = 24 * 60 * 60 * 1000;
 const SHOW_DELAY_MS = 1800;
+const STARTUP_COUPON = "START50LRD";
 
 type StartupOfferPopupProps = {
   locale: Locale;
@@ -18,6 +19,7 @@ type StartupOfferPopupProps = {
 export default function StartupOfferPopup({ locale }: StartupOfferPopupProps) {
   const isDe = locale === "de";
   const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const dismiss = useCallback(() => {
     if (typeof window !== "undefined") {
@@ -48,26 +50,31 @@ export default function StartupOfferPopup({ locale }: StartupOfferPopupProps) {
       }
     };
 
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
-
     return () => {
-      document.body.style.overflow = "";
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [dismiss, open]);
 
+  const copyCoupon = async () => {
+    try {
+      await navigator.clipboard.writeText(STARTUP_COUPON);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      setCopied(false);
+    }
+  };
+
   if (!open) return null;
 
   return (
-    <div className={styles.overlay} onClick={dismiss} role="presentation">
-      <div
-        className={styles.modal}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="startup-offer-popup-title"
-        onClick={(event) => event.stopPropagation()}
-      >
+    <aside
+      className={styles.card}
+      role="dialog"
+      aria-modal="false"
+      aria-labelledby="startup-offer-popup-title"
+    >
         <button
           type="button"
           className={styles.closeButton}
@@ -84,7 +91,7 @@ export default function StartupOfferPopup({ locale }: StartupOfferPopupProps) {
             src="/assets/startup-promo-popup.png"
             alt={isDe ? "Startup Webdesign Angebot" : "Startup web design offer"}
             fill
-            sizes="(max-width: 900px) 100vw, 540px"
+            sizes="(max-width: 760px) 92vw, 420px"
             priority={false}
             className={styles.image}
           />
@@ -106,14 +113,30 @@ export default function StartupOfferPopup({ locale }: StartupOfferPopupProps) {
               : "Limited slots available for a premium launch offer with mobile-first delivery, SEO foundations, and a fast start."}
           </p>
 
+          <div className={styles.couponRow}>
+            <div className={styles.couponCard}>
+              <span className={styles.couponLabel}>{isDe ? "Coupon" : "Coupon"}</span>
+              <strong className={styles.couponValue}>{STARTUP_COUPON}</strong>
+            </div>
+            <button
+              type="button"
+              className={styles.copyButton}
+              onClick={copyCoupon}
+              data-track-event="click_cta"
+              data-track-label="Startup popup copy coupon"
+            >
+              {copied ? <Check size={16} /> : <Copy size={16} />}
+              {copied ? (isDe ? "Kopiert" : "Copied") : (isDe ? "Code kopieren" : "Copy code")}
+            </button>
+          </div>
+
           <div className={styles.highlights}>
-            <span>{isDe ? "Coupon" : "Coupon"}: <strong>START50LRD</strong></span>
             <span>{isDe ? "Ideal für" : "Best for"}: <strong>{isDe ? "Launch, Relaunch, erste Conversion-Seite" : "launch, relaunch, first conversion page"}</strong></span>
           </div>
 
           <div className={styles.actions}>
             <LocaleLink
-              href="/offers"
+              href="/offers?offer=startup-launch"
               className={styles.primaryCta}
               data-track-event="click_cta"
               data-track-label="Startup popup claim offer"
@@ -137,7 +160,6 @@ export default function StartupOfferPopup({ locale }: StartupOfferPopupProps) {
               : "New clients only. Final price still depends on actual scope."}
           </p>
         </div>
-      </div>
-    </div>
+    </aside>
   );
 }

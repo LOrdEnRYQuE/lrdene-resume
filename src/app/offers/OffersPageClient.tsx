@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "convex/react";
+import { useSearchParams } from "next/navigation";
 import { ArrowRight, BadgePercent, Clock3, Sparkles } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import { useAnalytics } from "@/hooks/useAnalytics";
@@ -33,6 +34,7 @@ export default function OffersPageClient({ locale }: OffersPageClientProps) {
   const createLead = useMutation(api.leads.create);
   const { trackConversion, trackEvent } = useAnalytics();
   const formRef = useRef<HTMLDivElement | null>(null);
+  const searchParams = useSearchParams();
 
   const copy = isDe
     ? {
@@ -199,8 +201,10 @@ export default function OffersPageClient({ locale }: OffersPageClientProps) {
         },
       };
 
-  const offers: OfferItem[] = isDe
-    ? [
+  const offers: OfferItem[] = useMemo(
+    () =>
+      isDe
+        ? [
         {
           key: "startup-launch",
           label: "Startup Launch",
@@ -208,7 +212,7 @@ export default function OffersPageClient({ locale }: OffersPageClientProps) {
           price: "Bis zu 50% OFF",
           description: "Premium Landing Page für Startups mit hoher Geschwindigkeit, sauberer Struktur und Conversion-Fokus.",
           points: ["Premium Landing Page", "Mobile-first", "SEO-ready", "Schnelle Lieferung", "Ideal für Startups"],
-          coupon: "START50",
+          coupon: "START50LRD",
           expiry: "30. Juni 2026",
           cta: "Angebot sichern",
         },
@@ -246,7 +250,7 @@ export default function OffersPageClient({ locale }: OffersPageClientProps) {
           cta: "Beratung buchen",
         },
       ]
-    : [
+        : [
         {
           key: "startup-launch",
           label: "Startup Launch",
@@ -254,7 +258,7 @@ export default function OffersPageClient({ locale }: OffersPageClientProps) {
           price: "Up to 50% OFF",
           description: "A premium landing page offer for startups that need speed, clarity, and conversion intent from day one.",
           points: ["Premium landing page", "Mobile-first", "SEO-ready", "Fast delivery", "Ideal for startups"],
-          coupon: "START50",
+          coupon: "START50LRD",
           expiry: "June 30, 2026",
           cta: "Claim Offer",
         },
@@ -291,7 +295,9 @@ export default function OffersPageClient({ locale }: OffersPageClientProps) {
           expiry: "June 30, 2026",
           cta: "Book Consultation",
         },
-      ];
+      ],
+    [isDe],
+  );
 
   const [selectedKey, setSelectedKey] = useState(offers[0]?.key ?? "");
   const [name, setName] = useState("");
@@ -306,6 +312,14 @@ export default function OffersPageClient({ locale }: OffersPageClientProps) {
   const [submittedOffer, setSubmittedOffer] = useState<OfferItem | null>(null);
 
   const selectedOffer = offers.find((offer) => offer.key === selectedKey) ?? offers[0];
+
+  useEffect(() => {
+    const offerParam = searchParams.get("offer")?.trim().toLowerCase();
+    if (!offerParam) return;
+    const matchedOffer = offers.find((offer) => offer.key.toLowerCase() === offerParam);
+    if (!matchedOffer) return;
+    setSelectedKey(matchedOffer.key);
+  }, [offers, searchParams]);
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });

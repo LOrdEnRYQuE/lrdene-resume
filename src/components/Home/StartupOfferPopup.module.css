@@ -1,60 +1,70 @@
-.overlay {
+.card {
   position: fixed;
-  inset: 0;
-  z-index: 1100;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 95;
+  width: min(440px, calc(100vw - 2rem));
   display: grid;
-  place-items: center;
-  padding: 1.25rem;
-  background:
-    radial-gradient(circle at top, rgba(36, 117, 255, 0.18), transparent 42%),
-    rgba(2, 7, 16, 0.76);
-  backdrop-filter: blur(10px);
-}
-
-.modal {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-  width: min(1040px, 100%);
   overflow: hidden;
   border-radius: 28px;
   border: 1px solid rgba(134, 181, 255, 0.18);
   background:
     linear-gradient(180deg, rgba(7, 13, 24, 0.98), rgba(6, 11, 20, 0.98));
   box-shadow:
-    0 32px 100px rgba(0, 0, 0, 0.42),
+    0 24px 72px rgba(0, 0, 0, 0.42),
     0 0 0 1px rgba(91, 170, 255, 0.08) inset;
+  animation: popup-slide-in 0.36s ease;
 }
 
 .closeButton {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 2;
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  top: 0.8rem;
+  right: 0.8rem;
+  z-index: 4;
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 999px;
-  background: rgba(6, 11, 20, 0.72);
+  background: rgba(3, 10, 21, 0.92);
   color: #f5f8ff;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.closeButton:hover {
+  background: rgba(12, 23, 42, 0.98);
+}
+
+.closeButton:focus-visible,
+.copyButton:focus-visible,
+.primaryCta:focus-visible,
+.secondaryCta:focus-visible {
+  outline: 2px solid rgba(142, 192, 255, 0.95);
+  outline-offset: 3px;
 }
 
 .media {
   position: relative;
-  min-height: 540px;
-  background: #020712;
+  min-height: 220px;
+  background:
+    radial-gradient(circle at center, rgba(36, 117, 255, 0.18), transparent 55%),
+    #020712;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .image {
-  object-fit: cover;
-  object-position: center;
+  object-fit: contain;
+  object-position: center center;
+  padding: 1rem 2.6rem 0.4rem 1rem;
 }
 
 .content {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 3rem 2.3rem 2.3rem;
+  padding: 1.25rem 1.15rem 1.05rem;
 }
 
 .eyebrow {
@@ -76,34 +86,79 @@
 
 .title {
   margin: 0;
-  font-size: clamp(2rem, 4vw, 3.2rem);
-  line-height: 0.98;
+  font-size: clamp(1.45rem, 4vw, 2rem);
+  line-height: 1;
   letter-spacing: -0.04em;
   color: #f6fbff;
+  max-width: 14ch;
 }
 
 .copy {
-  margin: 1rem 0 0;
-  max-width: 34ch;
+  margin: 0.75rem 0 0;
+  max-width: none;
   color: rgba(234, 242, 255, 0.78);
-  font-size: 1rem;
-  line-height: 1.65;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.couponRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.couponCard,
+.highlights span {
+  padding: 0.85rem 0.95rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #dbe8ff;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.couponCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.couponLabel {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: rgba(219, 232, 255, 0.64);
+}
+
+.couponValue {
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  color: #8ec0ff;
+}
+
+.copyButton {
+  min-height: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  justify-content: center;
+  padding: 0.85rem 0.95rem;
+  border-radius: 16px;
+  border: 1px solid rgba(91, 170, 255, 0.22);
+  background: rgba(31, 91, 175, 0.12);
+  color: #f6fbff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
 }
 
 .highlights {
   display: grid;
   gap: 0.75rem;
-  margin-top: 1.4rem;
-}
-
-.highlights span {
-  padding: 0.9rem 1rem;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #dbe8ff;
-  font-size: 0.92rem;
-  line-height: 1.45;
+  margin-top: 0.75rem;
 }
 
 .highlights strong {
@@ -114,7 +169,7 @@
   display: flex;
   gap: 0.85rem;
   align-items: center;
-  margin-top: 1.6rem;
+  margin-top: 1rem;
 }
 
 .primaryCta,
@@ -146,39 +201,33 @@
 }
 
 .note {
-  margin: 1rem 0 0;
+  margin: 0.8rem 0 0;
   color: rgba(219, 232, 255, 0.56);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   line-height: 1.5;
 }
 
-@media (max-width: 920px) {
-  .modal {
-    grid-template-columns: 1fr;
-    max-width: 640px;
+@keyframes popup-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
   }
-
-  .media {
-    min-height: 300px;
-  }
-
-  .content {
-    padding-top: 1.6rem;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 @media (max-width: 640px) {
-  .overlay {
-    align-items: end;
-    padding: 0.85rem;
-  }
-
-  .modal {
+  .card {
+    right: 0.8rem;
+    bottom: 5.9rem;
+    width: calc(100vw - 1.6rem);
     border-radius: 24px;
   }
 
   .media {
-    min-height: 220px;
+    min-height: 180px;
   }
 
   .content {
@@ -186,12 +235,11 @@
   }
 
   .title {
-    font-size: clamp(1.55rem, 9vw, 2.2rem);
+    font-size: clamp(1.35rem, 7.5vw, 1.9rem);
   }
 
-  .copy {
-    max-width: none;
-    font-size: 0.94rem;
+  .couponRow {
+    grid-template-columns: 1fr;
   }
 
   .actions {
@@ -202,5 +250,9 @@
   .primaryCta,
   .secondaryCta {
     width: 100%;
+  }
+
+  .image {
+    padding-right: 2.8rem;
   }
 }
