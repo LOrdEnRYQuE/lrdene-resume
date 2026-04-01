@@ -8,7 +8,7 @@ import type { Locale } from "@/lib/i18n/config";
 import styles from "./StartupOfferPopup.module.css";
 
 const DISMISS_KEY = "lrdene_startup_offer_popup_dismissed_until";
-const DISMISS_MS = 24 * 60 * 60 * 1000;
+const DISMISS_MS = 7 * 24 * 60 * 60 * 1000;
 const SHOW_DELAY_MS = 1800;
 const STARTUP_COUPON = "START50LRD";
 

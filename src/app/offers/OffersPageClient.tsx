@@ -321,6 +321,17 @@ export default function OffersPageClient({ locale }: OffersPageClientProps) {
     setSelectedKey(matchedOffer.key);
   }, [offers, searchParams]);
 
+  useEffect(() => {
+    const offerParam = searchParams.get("offer")?.trim().toLowerCase();
+    if (!offerParam) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [searchParams]);
+
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
