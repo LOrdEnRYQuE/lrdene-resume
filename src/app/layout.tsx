@@ -6,10 +6,7 @@ import { Footer } from "@/components/Footer/Footer";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
 import DesignTokensRuntime from "@/components/DesignTokensRuntime";
 import LocaleDocumentSync from "@/components/I18n/LocaleDocumentSync";
-import DeferredEnhancements from "@/components/Runtime/DeferredEnhancements";
-import AnalyticsTracker from "@/components/Analytics/AnalyticsTracker";
-import GtmLoader from "@/components/Analytics/GtmLoader";
-import CookieConsent from "@/components/Cookies/CookieConsent";
+import ClientRuntimeMount from "@/components/Runtime/ClientRuntimeMount";
 import { getPageContentCached, getSiteSettingsCached } from "@/lib/server/cachedQueries";
 import { BUSINESS_PROFILE } from "@/lib/businessProfile";
 import { SERVICE_LOCATIONS } from "@/utils/serviceLocations";
@@ -242,8 +239,7 @@ export default async function RootLayout({
       <body className={inter.variable}>
         <ConvexClientProvider>
           <LocaleDocumentSync />
-          <AnalyticsTracker />
-          <GtmLoader />
+          <ClientRuntimeMount />
           {gaId || hasGtm ? (
             <>
               <script
@@ -286,8 +282,6 @@ gtag('config', ${JSON.stringify(gaId)}, {
             dangerouslySetInnerHTML={{ __html: JSON.stringify(globalStructuredData) }}
           />
           <DesignTokensRuntime />
-          <CookieConsent />
-          <DeferredEnhancements />
           <Navbar cmsContent={navbarCms} />
           {children}
           <Footer cmsContent={footerCms} siteSettings={siteSettings as unknown} />
