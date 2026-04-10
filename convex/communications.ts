@@ -52,11 +52,17 @@ async function resolveFromAddress(ctx: ActionCtx): Promise<string> {
 
   const settings: Doc<"settings"> | null = await ctx.runQuery(internal.settings.getInternal, {});
   const senderName = settings?.emailConfig?.senderName?.trim();
-  const senderEmail = settings?.emailConfig?.senderEmail?.trim();
+  let senderEmail = settings?.emailConfig?.senderEmail?.trim();
+  
+  // Safety guard for transition
+  if (senderEmail?.includes("lrdene.dev")) {
+    senderEmail = "notifications@lordenryque.com";
+  }
+
   if (senderEmail) {
     return `${senderName || "Portfolio OS"} <${senderEmail}>`;
   }
-  return "Portfolio OS <notifications@lrdene.dev>";
+  return "Portfolio OS <notifications@lordenryque.com>";
 }
 
 function renderTemplate(

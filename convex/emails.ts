@@ -20,7 +20,13 @@ export const sendEmail = action({
     // Resolve sender address from settings
     const settings: Doc<"settings"> | null = await ctx.runQuery(internal.settings.getInternal, {});
     const senderName: string = settings?.emailConfig?.senderName || "Portfolio OS";
-    const senderEmail: string = settings?.emailConfig?.senderEmail || "notifications@lrdene.dev";
+    let senderEmail: string = settings?.emailConfig?.senderEmail || "notifications@lordenryque.com";
+    
+    // Safety guard for transition
+    if (senderEmail.includes("lrdene.dev")) {
+      senderEmail = "notifications@lordenryque.com";
+    }
+    
     const from: string = `${senderName} <${senderEmail}>`;
 
     const response: Response = await fetch("https://api.resend.com/emails", {
