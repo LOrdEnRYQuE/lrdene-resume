@@ -283,3 +283,49 @@
   font-size: 1.2rem;
   color: var(--accent-gold);
 }
+
+.inputWithAction {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.inputWithAction input {
+  flex: 1;
+}
+
+.miniBtn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: #fff;
+  padding: 0 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.miniBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.testBtn {
+  background: rgba(212, 175, 55, 0.1) !important;
+  border: 1px solid rgba(212, 175, 55, 0.3) !important;
+  color: #D4AF37 !important;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.testBtn:hover:not(:disabled) {
+  background: rgba(212, 175, 55, 0.2) !important;
+  border-color: #D4AF37 !important;
+}
+
+.testBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -21,12 +21,15 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useAdminMutation } from "@/hooks/useAdminMutation";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
+import { useAction } from "convex/react";
 
 export const SettingsManager = () => {
   const currentSettings = useAdminQuery(api.settings.getAdmin);
   const updateSettings = useAdminMutation(api.settings.update);
+  const triggerTestEmail = useAction(api.emails.sendTestEmail);
   const [activeTab, setActiveTab] = useState("general");
   const [isSaving, setIsSaving] = useState(false);
+  const [isTestingEmail, setIsTestingEmail] = useState(false);
   const [showSavedToast, setShowSavedToast] = useState(false);
 
   const [formData, setFormData] = useState<any>(null);
@@ -68,6 +71,26 @@ export const SettingsManager = () => {
       alert("Error saving settings.");
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleTestEmail = async () => {
+    if (!formData.emailConfig?.receiver) {
+      alert("Please enter a Notification Receiver email first.");
+      return;
+    }
+    setIsTestingEmail(true);
+    try {
+      const result = await triggerTestEmail({ to: formData.emailConfig.receiver });
+      if (result.success) {
+        alert(`Test email sent to ${formData.emailConfig.receiver}. Check your inbox (and spam).`);
+      } else {
+        alert(`Error: ${result.error}`);
+      }
+    } catch (err: any) {
+      alert(`Failed to trigger test: ${err.message}`);
+    } finally {
+      setIsTestingEmail(false);
     }
   };
 
@@ -292,14 +315,33 @@ export const SettingsManager = () => {
                   </div>
                   <div className={styles.formGroup}>
                     <label><Search size={14} /> Resend Webhook Endpoint</label>
-                    <input value="/webhooks/resend" readOnly />
+                    <div className={styles.inputWithAction}>
+                      <input 
+                        value={`${process.env.NEXT_PUBLIC_CONVEX_SITE_URL || "https://your-project.convex.site"}/webhooks/resend`} 
+                        readOnly 
+                      />
+                      <button 
+                        type="button" 
+                        className={styles.miniBtn}
+                        onClick={() => {
+                          navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_CONVEX_SITE_URL}/webhooks/resend`);
+                          alert("Webhook URL copied to clipboard");
+                        }}
+                      >
+                        Copy
+                      </button>
+                    </div>
                   </div>
                   <div className={styles.formGroup}>
-                    <label><Database size={14} /> Notes</label>
-                    <input
-                      value="Set RESEND_API_KEY in env; sender/webhook settings here are runtime fallbacks."
-                      readOnly
-                    />
+                    <label><Database size={14} /> Connectivity Diagnostics</label>
+                    <button 
+                      type="button" 
+                      className={styles.testBtn}
+                      onClick={handleTestEmail}
+                      disabled={isTestingEmail}
+                    >
+                      {isTestingEmail ? "Sending..." : "Send Test Email"}
+                    </button>
                   </div>
                 </div>
               </motion.div>

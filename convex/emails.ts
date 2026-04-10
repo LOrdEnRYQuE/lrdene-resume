@@ -1,5 +1,7 @@
 import { action } from "./_generated/server";
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
+import { Doc } from "./_generated/dataModel";
 
 export const sendEmail = action({
   args: {
@@ -8,21 +10,27 @@ export const sendEmail = action({
     text: v.string(),
     html: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args): Promise<{ success: boolean; id?: string; error?: string }> => {
     const resendApiKey = process.env.RESEND_API_KEY;
     if (!resendApiKey) {
       console.error("RESEND_API_KEY is not set");
       return { success: false, error: "RESEND_API_KEY not found" };
     }
 
-    const response = await fetch("https://api.resend.com/emails", {
+    // Resolve sender address from settings
+    const settings: Doc<"settings"> | null = await ctx.runQuery(internal.settings.getInternal, {});
+    const senderName: string = settings?.emailConfig?.senderName || "Portfolio OS";
+    const senderEmail: string = settings?.emailConfig?.senderEmail || "notifications@lrdene.dev";
+    const from: string = `${senderName} <${senderEmail}>`;
+
+    const response: Response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${resendApiKey}`,
       },
       body: JSON.stringify({
-        from: "Portoflio OS <notifications@lrdene.dev>", // This should be a verified domain
+        from,
         to: [args.to],
         subject: args.subject,
         text: args.text,
@@ -31,12 +39,27 @@ export const sendEmail = action({
     });
 
     if (!response.ok) {
-      const error = await response.text();
-      console.error("Resend error:", error);
-      return { success: false, error };
+      const errorStr: string = await response.text();
+      console.error("Resend error:", errorStr);
+      return { success: false, error: errorStr };
     }
 
-    return { success: true };
+    const data = (await response.json()) as { id: string };
+    return { success: true, id: data.id };
+  },
+});
+
+export const sendTestEmail = action({
+  args: {
+    to: v.string(),
+  },
+  handler: async (ctx, args): Promise<{ success: boolean; id?: string; error?: string }> => {
+    return await ctx.runAction((internal as any).emails.sendEmail, {
+      to: args.to,
+      subject: "Connection Test: Portfolio OS x Resend",
+      text: "Your Resend and Cloudflare connection is active and synchronized. Webhooks are ready to ingest events.",
+      html: "<strong>Your Resend and Cloudflare connection is active and synchronized.</strong><br/><br/>Webhooks are ready to ingest events.",
+    });
   },
 });
 

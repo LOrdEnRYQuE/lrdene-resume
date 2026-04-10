@@ -3,6 +3,7 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
+import { notFound } from "next/navigation";
 import DemoDetailClient from "./DemoDetailClient";
 
 type PageProps = {
@@ -55,5 +56,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function DemoDetailPage({ params }: PageProps) {
   const { slug } = await params;
+  const demo = await fetchQuery(api.demos.getBySlug, { slug });
+  if (!demo) notFound();
   return <DemoDetailClient slug={slug} />;
 }

@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import LocaleLink from "@/components/I18n/LocaleLink";
+import { useLocale } from "@/lib/i18n/useLocale";
+import { localizePath } from "@/lib/i18n/path";
 import {
   ArrowLeft,
   ExternalLink,
@@ -26,6 +28,7 @@ const PRIVACY_CONSENT_VERSION = "demo_request_form_v1";
 
 export default function DemoDetailClient({ slug }: Props) {
   const router = useRouter();
+  const locale = useLocale();
   const demo = useQuery(api.demos.getBySlug, { slug });
   const createLead = useMutation(api.leads.create);
 
@@ -51,7 +54,7 @@ export default function DemoDetailClient({ slug }: Props) {
     return (
       <div className={styles.notFound}>
         <h1>Case Study Not Found</h1>
-        <button onClick={() => router.push("/demos")}>Return to Showcase</button>
+        <button onClick={() => router.push(localizePath("/demos", locale))}>Return to Showcase</button>
       </div>
     );
   }
@@ -88,7 +91,7 @@ export default function DemoDetailClient({ slug }: Props) {
 
   return (
     <div className={styles.container}>
-      <button className={styles.backBtn} onClick={() => router.push("/demos")}>
+      <button className={styles.backBtn} onClick={() => router.push(localizePath("/demos", locale))}>
         <ArrowLeft size={18} /> Back to Showcase
       </button>
 

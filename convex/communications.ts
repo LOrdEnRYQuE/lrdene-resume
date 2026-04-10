@@ -346,7 +346,13 @@ export const markThreadRead = mutation({
 
 function normalizeProviderStatus(eventType: string) {
   const type = eventType.toLowerCase();
-  if (type.includes("bounce") || type.includes("failed")) {
+  if (
+    type.includes("bounce") || 
+    type.includes("failed") || 
+    type.includes("complaint") || 
+    type.includes("unsubscribe") ||
+    type.includes("suppress")
+  ) {
     return "failed";
   }
   if (type.includes("open")) {
@@ -501,6 +507,13 @@ export const ingestProviderWebhookEvent = mutation({
       await ctx.db.patch(thread._id, {
         status: nextStatus === "failed" ? "open" : "waiting",
       });
+
+      // If it's a hard failure, potentially flag the lead
+      if (nextStatus === "failed" && thread.leadId) {
+        await ctx.db.patch(thread.leadId, {
+          status: "bounced",
+        });
+      }
     }
 
     return { ok: true, kind: "status" as const, status: nextStatus };
