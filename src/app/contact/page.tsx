@@ -13,10 +13,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const canonical = toLocaleCanonical("/contact", locale);
   const isDe = locale === "de";
-  const title = isDe ? "Projekt starten" : "Start Your Project";
+  const title = isDe ? "Projekt starten" : "Start a Project";
   const description = isDe
-    ? `Sprich mit ${BUSINESS_PROFILE.name} über KI-Systeme, Web-Architektur und wachstumsorientierte digitale Lösungen.`
-    : `Talk with ${BUSINESS_PROFILE.name} about AI systems, web architecture, and growth-focused digital solutions. Remote-first from Germany (${BUSINESS_PROFILE.timezone}).`;
+    ? `Kontaktiere ${BUSINESS_PROFILE.name}, um über deine Website, Web-Plattform oder dein Business-Produkt zu sprechen. Standort Deutschland, Zusammenarbeit in ganz Europa.`
+    : `Contact ${BUSINESS_PROFILE.name} to discuss your website, web platform, or business product project. Based in Germany, working with clients across Europe.`;
   const socialTitle = `${title} | LOrdEnRYQuE`;
 
   return {
@@ -24,10 +24,11 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     keywords: [
       "contact AI engineer",
-      "hire Next.js developer",
-      "software architect consultation",
-      "web development Germany",
-      "digital solutions contact",
+      "hire web developer Germany",
+      "website project inquiry",
+      "custom web app consultation",
+      "business website contact",
+      "web platform project",
     ],
     alternates: {
       canonical,

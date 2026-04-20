@@ -2,17 +2,12 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { headers } from "next/headers";
 
-import { Hero, type HeroData } from "@/components/Hero/Hero";
-import StartupOfferPopup from "@/components/Home/StartupOfferPopup";
+import { Hero } from "@/components/Hero/Hero";
 import { TrustStrip } from "@/components/TrustStrip/TrustStrip";
-import { Promotions } from "@/components/Promotions/Promotions";
-import { DemoBranches } from "@/components/DemoBranches/DemoBranches";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { LOCALE_HEADER_NAME, type Locale, isLocale } from "@/lib/i18n/config";
 import {
   getFeaturedProjectsCached,
-  getPageContentCached,
-  getPublishedPostsCached,
 } from "@/lib/server/cachedQueries";
 
 const ServicesGrid = dynamic(
@@ -27,12 +22,6 @@ const About = dynamic(
 const ProcessSection = dynamic(
   () => import("@/components/ProcessSection/ProcessSection").then((m) => m.ProcessSection),
 );
-const BlogPreview = dynamic(
-  () => import("@/components/Blog/BlogPreview").then((m) => m.BlogPreview),
-);
-const Contact = dynamic(
-  () => import("@/components/Contact/Contact").then((m) => m.Contact),
-);
 const FinalCTA = dynamic(
   () => import("@/components/FinalCTA/FinalCTA").then((m) => m.FinalCTA),
 );
@@ -43,22 +32,22 @@ export async function generateMetadata(): Promise<Metadata> {
   const localeHeader = requestHeaders.get(LOCALE_HEADER_NAME);
   const locale: Locale = isLocale(localeHeader) ? localeHeader : "en";
   const isDe = locale === "de";
-  const title = "LOrdEnRYQuE | Advanced Digital Solution";
+  const title = "Custom Websites and Web Products";
   const description = isDe
-    ? "Baue performante Websites, KI-Workflows und skalierbare digitale Produkte mit messbaren Business-Ergebnissen."
-    : "Build high-performance websites, AI workflows, and scalable digital products with measurable business outcomes.";
-  const socialTitle = title;
+    ? "LOrdEnRYQuE entwickelt performante Websites und individuelle Web-Produkte für Unternehmen, die einen professionellen digitalen Auftritt, mehr Vertrauen und bessere Conversion brauchen."
+    : "LOrdEnRYQuE builds high-performance websites and custom web products for businesses that need a premium digital presence, stronger trust, and better conversion.";
+  const socialTitle = `${title} | LOrdEnRYQuE`;
 
   return {
     title,
     description,
     keywords: [
-      "AI engineer Germany",
-      "Next.js developer Germany",
-      "full-stack engineer",
-      "software architecture consulting",
-      "web development Landshut",
-      "digital solutions",
+      "custom websites",
+      "web products for businesses",
+      "business website developer Germany",
+      "custom web app development",
+      "client portals",
+      "AI integration",
     ],
     alternates: {
       canonical: "/",
@@ -86,9 +75,9 @@ const homeJsonLd = {
   "@type": "Person",
   name: "Attila Lazar",
   url: "https://lordenryque.com",
-  jobTitle: "Senior Full-Stack Engineer",
+  jobTitle: "Web Developer",
   description:
-    "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",
+    "Builds custom websites and web-based business products with a focus on performance, clarity, and conversion.",
   sameAs: [
     "https://www.linkedin.com/in/LOrdEnRQuE",
     "https://www.facebook.com/LOrdEnRYQuEit",
@@ -100,24 +89,7 @@ export default async function Home() {
   const requestHeaders = await headers();
   const localeHeader = requestHeaders.get(LOCALE_HEADER_NAME);
   const locale: Locale = isLocale(localeHeader) ? localeHeader : "en";
-  const [heroContent, promotionsContent, featuredProjects, posts] = await Promise.all([
-    getPageContentCached("home_hero", locale, true),
-    getPageContentCached("home_promotions", locale, true),
-    getFeaturedProjectsCached(),
-    getPublishedPostsCached(),
-  ]);
-  const heroData = (heroContent?.data ?? null) as Partial<HeroData> | null;
-  const promotionsData = (promotionsContent?.data ?? null) as
-    | {
-        eyebrow?: string;
-        titleA?: string;
-        titleB?: string;
-        subtitle?: string;
-        note?: string;
-        cta?: string;
-        tiers?: Array<{ off?: string; stage?: string }>;
-      }
-    | null;
+  const featuredProjects = await getFeaturedProjectsCached();
 
   return (
     <main>
@@ -125,26 +97,19 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}
       />
-      <StartupOfferPopup locale={locale} />
-      <Hero locale={locale} content={heroData} />
-      <Promotions locale={locale} content={promotionsData} />
-      <TrustStrip locale={locale} />
-      <DemoBranches locale={locale} />
+      <Hero locale={locale} />
       <ServicesGrid locale={locale} />
       <FeaturedProjects locale={locale} featuredProjects={featuredProjects ?? []} />
       <section style={{ contentVisibility: "auto", containIntrinsicSize: "1400px" }}>
-        <About />
-      </section>
-      <section style={{ contentVisibility: "auto", containIntrinsicSize: "900px" }}>
         <ProcessSection locale={locale} />
       </section>
-      <section style={{ contentVisibility: "auto", containIntrinsicSize: "1200px" }}>
-        <BlogPreview locale={locale} posts={posts ?? []} />
+      <section style={{ contentVisibility: "auto", containIntrinsicSize: "960px" }}>
+        <TrustStrip locale={locale} />
       </section>
-      <section style={{ contentVisibility: "auto", containIntrinsicSize: "1600px" }}>
-        <Contact />
+      <section style={{ contentVisibility: "auto", containIntrinsicSize: "1400px" }}>
+        <About />
       </section>
-      <section style={{ contentVisibility: "auto", containIntrinsicSize: "420px" }}>
+      <section style={{ contentVisibility: "auto", containIntrinsicSize: "520px" }}>
         <FinalCTA locale={locale} />
       </section>
     </main>

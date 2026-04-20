@@ -20,6 +20,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
+    robots: {
+      index: false,
+      follow: true,
+    },
     keywords: [
       "partner program",
       "referral partnership",

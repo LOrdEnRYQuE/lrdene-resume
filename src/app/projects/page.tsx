@@ -12,10 +12,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const canonical = toLocaleCanonical("/projects", locale);
   const isDe = locale === "de";
-  const title = isDe ? "KI- & Web-Fallstudien" : "AI & Web Case Studies";
+  const title = isDe ? "Ausgewählte Web-Projekte und Fallstudien" : "Selected Web Projects and Case Studies";
   const description = isDe
-    ? "Reale Projektergebnisse in KI-Produkten, performanten Web-Plattformen und conversion-orientierter Umsetzung."
-    : "Real project outcomes across AI products, high-performance web platforms, and conversion-focused digital delivery.";
+    ? "Entdecke ausgewählte Website- und Web-Produkt-Projekte von LOrdEnRYQuE, darunter Business-Websites, individuelle Plattformen und conversion-orientierte Umsetzungen."
+    : "Explore selected website and web product projects by LOrdEnRYQuE, including business websites, custom platforms, and conversion-focused digital work.";
   const socialTitle = `${title} | LOrdEnRYQuE`;
 
   return {

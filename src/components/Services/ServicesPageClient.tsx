@@ -41,21 +41,33 @@ export function ServicesPageClient({ services }: { services: ServiceItem[] }) {
   };
   const normalizedFocusSlug = focusAlias[focusParam] ?? focusParam;
   const hasFocusedService = services.some((service) => service.slug === normalizedFocusSlug);
+  const normalizedServices = services.map((service) => {
+    if (service.slug !== "ui-ux-design") return service;
+
+    return {
+      ...service,
+      title: locale === "de" ? "Web-Produkte" : "Web Products",
+      description:
+        locale === "de"
+          ? "Kundenportale, Dashboards und individuelle Web-Tools für reale Prozesse, klare Nutzerführung und saubere Skalierung."
+          : "Client portals, dashboards, and custom web tools built around real workflows, clear UX, and clean long-term scalability.",
+    };
+  });
   const orderedServices = hasFocusedService
-    ? [...services].sort((left, right) => {
+    ? [...normalizedServices].sort((left, right) => {
         if (left.slug === normalizedFocusSlug) return -1;
         if (right.slug === normalizedFocusSlug) return 1;
         return 0;
       })
-    : services;
+    : normalizedServices;
   const copy =
     locale === "de"
       ? {
-          badge: "Strategische Angebote",
-          titlePrefix: "Premium",
-          titleAccent: "Lösungspakete",
+          badge: "Leistungen",
+          titlePrefix: "Klare",
+          titleAccent: "Leistungsbereiche",
           subtitle:
-            "Klar definierte Services mit hohem Impact, um deine digitale Entwicklung zu beschleunigen.",
+            "Drei fokussierte Leistungsbereiche für Unternehmen, die eine professionelle Website oder ein belastbares Web-Produkt brauchen.",
           from: "Ab",
           custom: "Individuell",
           delivery: "Lieferung",
@@ -69,10 +81,10 @@ export function ServicesPageClient({ services }: { services: ServiceItem[] }) {
           focusedLabel: "Fokus",
         }
       : {
-          badge: "Strategic Offerings",
-          titlePrefix: "Premium",
-          titleAccent: "Solution Packs",
-          subtitle: "Fixed-scope, high-impact services designed to accelerate your digital evolution.",
+          badge: "Services",
+          titlePrefix: "Focused",
+          titleAccent: "service areas",
+          subtitle: "Three clear service areas for businesses that need a professional website or a reliable web product.",
           from: "Starting from",
           custom: "Custom",
           delivery: "Delivery",

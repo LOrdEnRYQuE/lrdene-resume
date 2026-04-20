@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getServiceSlugCandidates, resolveServiceLocationSlug } from "@/utils/serviceLocations";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
+import { shouldIndexServicePage } from "@/lib/seo/indexing";
 import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
 import { TOPIC_CLUSTERS } from "@/lib/seo/topicClusters";
 import { findFallbackServiceBySlug } from "@/lib/servicesFallback";
@@ -69,6 +70,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? `/services/${service.slug}-${locationResolution.location.slug}`
     : `/services/${service.slug}`;
   const localeCanonical = toLocaleCanonical(canonical, locale);
+  const shouldIndex = shouldIndexServicePage({
+    slug: service.slug,
+    hasLocationVariant: Boolean(locationResolution),
+  });
 
   const keywordSet = [
     service.category,
@@ -85,6 +90,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description,
     keywords: keywordSet,
+    robots: {
+      index: shouldIndex,
+      follow: true,
+    },
     alternates: {
       canonical: localeCanonical,
       languages: getLanguageAlternates(canonical),

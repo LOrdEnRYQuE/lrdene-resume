@@ -2,44 +2,26 @@ import React from "react";
 import styles from "./ServicesGrid.module.css";
 import {
   Code2,
-  Palette,
   BrainCircuit,
-  Layers,
-  Trophy,
   LayoutDashboard
 } from "lucide-react";
 import type { Locale } from "@/lib/i18n/config";
 
 const services = [
   {
-    title: "Web Development",
-    description: "High-performance, scalable web applications built with modern frameworks like Next.js and Convex.",
+    title: "Websites",
+    description: "Fast, premium business websites designed to build trust, explain your offer clearly, and turn visitors into qualified inquiries.",
     icon: <Code2 size={26} />,
   },
   {
-    title: "AI Integration",
-    description: "Embedding intelligent workflows and LLM-powered features into your existing or new products.",
-    icon: <BrainCircuit size={26} />,
-  },
-  {
-    title: "Graphic Design",
-    description: "Cinematic visual identities and premium branding systems that command attention.",
-    icon: <Palette size={26} />,
-  },
-  {
-    title: "UI/UX Architecture",
-    description: "User-centric design systems focused on conversion, accessibility, and high-end aesthetics.",
-    icon: <Layers size={26} />,
-  },
-  {
-    title: "Branding Systems",
-    description: "Complete identity design from logos to full brand guidelines for modern businesses.",
-    icon: <Trophy size={26} />,
-  },
-  {
-    title: "Dashboard & Admin",
-    description: "Powerful custom control centers for managing your business data and operations.",
+    title: "Web Products",
+    description: "Client portals, internal tools, booking flows, and custom web platforms built around real business processes and growth goals.",
     icon: <LayoutDashboard size={26} />,
+  },
+  {
+    title: "AI Integration",
+    description: "Practical AI features and workflow automation added where they improve service quality, speed, and operational efficiency.",
+    icon: <BrainCircuit size={26} />,
   },
 ];
 
@@ -51,18 +33,18 @@ export const ServicesGrid = ({ locale }: ServicesGridProps) => {
   const copy =
     locale === "de"
       ? {
-          eyebrow: "Was ich mache",
-          title: "Premium",
-          titleAccent: "Leistungen",
+          eyebrow: "Leistungen",
+          title: "Was ich",
+          titleAccent: "baue",
           subtitle:
-            "Eine Mischung aus Engineering-Präzision und kreativem Anspruch, für Unternehmen mit höchsten Standards.",
+            "Drei klare Leistungsbereiche, damit Website, Produkt und technische Umsetzung als ein fokussiertes System zusammenarbeiten.",
         }
       : {
-          eyebrow: "What I do",
-          title: "Premium",
-          titleAccent: "Services",
+          eyebrow: "Services",
+          title: "What I",
+          titleAccent: "build",
           subtitle:
-            "A unique blend of engineering precision and artistic vision, tailored for businesses that demand the highest standards.",
+            "Three focused service areas built to support one goal: a stronger digital presence that looks credible and performs in the real world.",
         };
 
   const localizedServices =
@@ -70,33 +52,21 @@ export const ServicesGrid = ({ locale }: ServicesGridProps) => {
       ? services.map((service) => ({
           ...service,
           title:
-            service.title === "Web Development"
-              ? "Webentwicklung"
-              : service.title === "AI Integration"
-                ? "KI Integration"
-                : service.title === "Graphic Design"
-                  ? "Grafikdesign"
-                  : service.title === "UI/UX Architecture"
-                    ? "UI/UX Architektur"
-                    : service.title === "Branding Systems"
-                      ? "Branding Systeme"
-                      : service.title === "Dashboard & Admin"
-                        ? "Dashboard & Admin"
-                        : service.title,
+            service.title === "Websites"
+              ? "Websites"
+              : service.title === "Web Products"
+                ? "Web-Produkte"
+                : service.title === "AI Integration"
+                  ? "KI Integration"
+                  : service.title,
           description:
-            service.title === "Web Development"
-              ? "High-Performance Web-Apps mit modernen Frameworks wie Next.js und Convex."
-              : service.title === "AI Integration"
-                ? "Intelligente Workflows und LLM-Features in bestehende oder neue Produkte integrieren."
-                : service.title === "Graphic Design"
-                  ? "Cinematic Visual Identities und Premium-Branding-Systeme mit starker Präsenz."
-                  : service.title === "UI/UX Architecture"
-                    ? "Nutzerzentrierte Designsysteme mit Fokus auf Conversion, Accessibility und Ästhetik."
-                    : service.title === "Branding Systems"
-                      ? "Komplettes Identity Design von Logo bis zu klaren Brand Guidelines."
-                      : service.title === "Dashboard & Admin"
-                        ? "Leistungsstarke Control Center zur Verwaltung von Daten und Prozessen."
-                        : service.description,
+            service.title === "Websites"
+              ? "Performante Business-Websites, die Vertrauen aufbauen, Angebote klar erklären und aus Besuchern echte Anfragen machen."
+              : service.title === "Web Products"
+                ? "Kundenportale, interne Tools, Buchungsflows und individuelle Plattformen rund um reale Geschäftsprozesse."
+                : service.title === "AI Integration"
+                  ? "Praxisnahe KI-Funktionen und Automationen dort, wo sie Qualität, Geschwindigkeit und Effizienz wirklich verbessern."
+                  : service.description,
         }))
       : services;
 

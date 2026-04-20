@@ -12,14 +12,16 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const canonical = toLocaleCanonical("/about", locale);
   const isDe = locale === "de";
-  const title = isDe ? "Über Attila Lazar" : "About Attila Lazar";
+  const title = isDe ? "Über Attila Lazar | Webentwickler hinter LOrdEnRYQuE" : "About Attila Lazar | Web Developer Behind LOrdEnRYQuE";
   const description = isDe
-    ? "Lerne den Engineer hinter LOrdEnRYQuE kennen: KI-Systeme, Full-Stack-Architektur und hochwertige Produktumsetzung."
-    : "Meet the engineer behind LOrdEnRYQuE: AI systems, full-stack architecture, and premium digital product delivery.";
-  const socialTitle = `${title} | LOrdEnRYQuE`;
+    ? "Lerne Attila Lazar kennen, den Gründer von LOrdEnRYQuE. Ich entwickle individuelle Websites und Web-Produkte mit Fokus auf Performance, Klarheit und Conversion."
+    : "Meet Attila Lazar, the founder of LOrdEnRYQuE. I build custom websites and web-based business products with a focus on performance, clarity, and conversion.";
+  const socialTitle = title;
 
   return {
-    title,
+    title: {
+      absolute: title,
+    },
     description,
     keywords: [
       "Attila Lazar",

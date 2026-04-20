@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ProcessSection.module.css";
-import { Search, Paintbrush, Code2, Rocket, BarChart3 } from "lucide-react";
+import { Search, LayoutTemplate, Code2, Rocket, BarChart3 } from "lucide-react";
 import type { Locale } from "@/lib/i18n/config";
 
 const steps = [
@@ -12,20 +12,20 @@ const steps = [
   },
   {
     number: "02",
-    title: "Design",
-    description: "Crafting a premium visual direction and a seamless user experience.",
-    icon: <Paintbrush size={18} />,
+    title: "Plan",
+    description: "Define page structure, conversion path, and the right feature scope before build starts.",
+    icon: <LayoutTemplate size={18} />,
   },
   {
     number: "03",
     title: "Build",
-    description: "Clean, performant code using Next.js and high-end backend microservices.",
+    description: "Build a fast, reliable website or web product with clean implementation and strong UX fundamentals.",
     icon: <Code2 size={18} />,
   },
   {
     number: "04",
     title: "Launch",
-    description: "SEO optimization, GEO metadata, and deployment to a secure global edge.",
+    description: "Deploy with clear metadata, polished content, and the technical foundations needed for search and conversion.",
     icon: <Rocket size={18} />,
   },
   {
@@ -48,23 +48,23 @@ export const ProcessSection = ({ locale }: ProcessSectionProps) => {
           title: "Der",
           titleAccent: "Prozess",
           subtitle:
-            "Ein disziplinierter 5-Phasen-Ansatz, der aus deiner Idee ein hochwertiges Live-Produkt macht.",
+            "Ein klarer Ablauf, der Scope reduziert, saubere Entscheidungen möglich macht und zuverlässig zu einem starken Ergebnis führt.",
         }
       : {
           eyebrow: "How it works",
           title: "The",
           titleAccent: "Process",
           subtitle:
-            "A disciplined, five-stage framework that turns your idea into a polished, live product.",
+            "A clear workflow built to reduce noise, make better decisions early, and ship a stronger final product.",
         };
 
   const localizedSteps =
     locale === "de"
       ? [
           { ...steps[0], title: "Verstehen", description: "Tiefer Einblick in Ziele, Zielgruppe und Herausforderungen." },
-          { ...steps[1], title: "Design", description: "Premium Designrichtung und nahtlose User Experience." },
-          { ...steps[2], title: "Build", description: "Sauberer, performanter Code mit Next.js und robustem Backend." },
-          { ...steps[3], title: "Launch", description: "SEO-Optimierung, Metadaten und sicheres Global-Edge Deployment." },
+          { ...steps[1], title: "Planen", description: "Seitenstruktur, Conversion-Pfad und sinnvoller Feature-Scope werden vor dem Build festgelegt." },
+          { ...steps[2], title: "Umsetzen", description: "Sauberer, performanter Code für Websites und Web-Produkte mit stabiler Basis." },
+          { ...steps[3], title: "Launchen", description: "Deployment mit klaren Metadaten, sauberen Inhalten und solider technischer Grundlage." },
           { ...steps[4], title: "Optimieren", description: "Kontinuierliche Performance-Audits, Tracking und Iterationen." },
         ]
       : steps;

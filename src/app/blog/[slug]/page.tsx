@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getLanguageAlternates } from "@/lib/seo/alternates";
 import { getRequestLocale, toLocaleCanonical } from "@/lib/seo/localeCanonical";
+import { shouldIndexBlogPost } from "@/lib/seo/indexing";
 import { FALLBACK_POSTS, findFallbackPostBySlug } from "@/lib/postsFallback";
 
 export const runtime = "edge";
@@ -22,17 +23,22 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const basePath = `/blog/${post.slug}`;
   const locale = await getRequestLocale();
   const canonical = toLocaleCanonical(basePath, locale);
+  const shouldIndex = shouldIndexBlogPost(post.slug);
 
   return {
-    title: `${post.title} | AI & Product Insights`,
+    title: `${post.title} | Web Product Insights`,
     description: post.excerpt,
-    keywords: [post.category, ...(post.tags ?? []), `${post.title} article`, "AI and software insights"],
+    keywords: [post.category, ...(post.tags ?? []), `${post.title} article`, "web product insights"],
+    robots: {
+      index: shouldIndex,
+      follow: true,
+    },
     alternates: {
       canonical,
       languages: getLanguageAlternates(basePath),
     },
     openGraph: {
-      title: `${post.title} | AI & Product Insights`,
+      title: `${post.title} | Web Product Insights`,
       description: post.excerpt,
       type: "article",
       url: `https://lordenryque.com${canonical}`,
@@ -44,7 +50,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     },
     twitter: {
       card: "summary_large_image",
-      title: `${post.title} | AI & Product Insights`,
+      title: `${post.title} | Web Product Insights`,
       description: post.excerpt,
       images: [post.coverImage],
       creator: post.author,

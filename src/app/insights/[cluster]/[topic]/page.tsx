@@ -43,6 +43,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${data.topic.title} Guide | ${data.cluster.title}`,
     description: data.topic.summary,
+    robots: {
+      index: false,
+      follow: true,
+    },
     keywords: [
       ...data.topic.intentKeywords,
       ...data.topic.supportQueries,

@@ -40,16 +40,16 @@ export const metadata: Metadata = {
   applicationName: "LOrdEnRYQuE",
   title: {
     template: "%s | LOrdEnRYQuE",
-    default: "LOrdEnRYQuE | Advanced Digital Solution",
+    default: "Custom Websites and Web Products | LOrdEnRYQuE",
   },
-  description: "Senior Full-Stack Engineer specializing in AI workflows, Next.js architecture, and high-performance systems.",
-  keywords: ["AI Engineer", "Software Architect", "Next.js Developer", "React", "TypeScript", "Startups"],
+  description: "LOrdEnRYQuE builds high-performance websites and custom web products for businesses that need a premium digital presence, stronger trust, and better conversion.",
+  keywords: ["custom websites", "web products", "client portals", "business websites", "AI integration", "web development"],
   authors: [{ name: "Attila Lazar", url: "https://lordenryque.com" }],
   creator: "Attila Lazar",
   openGraph: {
-    title: "LOrdEnRYQuE | Advanced Digital Solution",
-    description: "Premium Portfolio & Insights. Engineering AI products and highly scalable systems.",
-    siteName: "LOrdEnRYQuE Portfolio",
+    title: "Custom Websites and Web Products | LOrdEnRYQuE",
+    description: "High-performance websites and custom web products for businesses that need stronger trust and better conversion.",
+    siteName: "LOrdEnRYQuE",
     locale: "en_US",
     type: "website",
     images: [
@@ -63,8 +63,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "LOrdEnRYQuE | Advanced Digital Solution",
-    description: "Engineering AI products and highly scalable systems.",
+    title: "Custom Websites and Web Products | LOrdEnRYQuE",
+    description: "High-performance websites and custom web products for businesses that need stronger trust and better conversion.",
     images: ["/assets/LOGO.png"],
   },
   icons: {

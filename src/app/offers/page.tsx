@@ -17,6 +17,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
+    robots: {
+      index: false,
+      follow: true,
+    },
     keywords: [
       "startup website offer",
       "business website package",

@@ -43,6 +43,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${data.title} Playbooks | SEO & AI`,
     description: data.description,
+    robots: {
+      index: false,
+      follow: true,
+    },
     keywords: [
       data.title,
       ...data.topics.flatMap((topic) => topic.intentKeywords.slice(0, 2)),

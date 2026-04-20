@@ -23,6 +23,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
+    robots: {
+      index: false,
+      follow: true,
+    },
     keywords: [
       "topic clusters",
       "programmatic SEO content",

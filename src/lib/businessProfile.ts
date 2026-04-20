@@ -1,7 +1,7 @@
 export const BUSINESS_PROFILE = {
   name: "LOrdEnRYQuE",
   brandLine: "Advanced Digital Solution",
-  description: "AI Engineering, Full-Stack Development, Premium Web Development",
+  description: "Custom websites, web products, and practical AI integration for businesses.",
   location: "Germany",
   remoteFirst: true,
   timezone: "Europe/Berlin",
@@ -11,13 +11,11 @@ export const BUSINESS_PROFILE = {
     closes: "18:00",
   },
   services: [
-    "Business websites",
+    "Custom business websites",
+    "Client portals and internal tools",
     "Custom web apps",
-    "AI-powered business tools",
-    "Automation systems",
-    "MVP design and development",
-    "UX/UI-focused premium digital experiences",
-    "Technical consulting",
+    "AI integration for business workflows",
+    "Web product strategy and delivery",
   ],
   typicalClients: [
     "Small businesses",

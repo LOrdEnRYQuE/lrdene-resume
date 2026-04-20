@@ -32,9 +32,9 @@ export const Hero = ({ locale, content }: HeroProps) => {
   const LEGACY_SUBTITLE_EN_ALT =
     "I'm LOrdEnRYQuE — building websites, web apps, AI workflows, and interactive business MVPs that clients can test immediately.";
   const UPDATED_SUBTITLE_DE =
-    "Ich bin LOrdEnRYQuE — ich entwickle Websites, Web-Apps, KI-Workflows und interaktive Business-MVPs, die Kunden direkt testen können.";
+    "Ich entwickle performante Websites, Kundenportale und Web-Produkte für Unternehmen, die online professioneller auftreten und besser konvertieren wollen.";
   const UPDATED_SUBTITLE_EN =
-    "I'm Attila Lazar, founder of LOrdEnRYQuE | Advanced Digital Solution — building websites, web apps, AI workflows, and interactive business MVPs that clients can test immediately.";
+    "I design and build high-performance websites, client portals, and web-based business tools for companies that need a professional digital presence that actually converts.";
 
   const data = React.useMemo<HeroData>(() => {
     if (content?.headline && content?.subtitle && content?.ctaPrimary && content?.ctaSecondary && Array.isArray(content?.stats)) {
@@ -48,10 +48,10 @@ export const Hero = ({ locale, content }: HeroProps) => {
     }
     if (locale === "de") {
       return {
-        headline: "Premium Websites, KI-Produkte und Designsysteme.",
+        headline: "Websites und Web-Produkte mit echtem Business-Fokus.",
         subtitle: UPDATED_SUBTITLE_DE,
-        ctaPrimary: "Demos Ansehen",
-        ctaSecondary: "Projekte Ansehen",
+        ctaPrimary: "Projekt Starten",
+        ctaSecondary: "Leistungen Ansehen",
         stats: [
           { label: "Verfügbar", value: "Für neue Projekte", icon: "Zap" },
           { label: "14+ Jahre", value: "IT Erfahrung", icon: "Code" },
@@ -59,10 +59,10 @@ export const Hero = ({ locale, content }: HeroProps) => {
       };
     }
     return {
-      headline: "Premium Websites, AI Products, and Design Systems.",
+      headline: "Websites and Web Products Built for Real Business Growth.",
       subtitle: UPDATED_SUBTITLE_EN,
-      ctaPrimary: "View Demos",
-      ctaSecondary: "View Projects",
+      ctaPrimary: "Start a Project",
+      ctaSecondary: "View Services",
       stats: [
         { label: "Available", value: "For new builds", icon: "Zap" },
         { label: "14+ Years", value: "IT Experience", icon: "Code" }
@@ -142,10 +142,10 @@ export const Hero = ({ locale, content }: HeroProps) => {
 
 
           <div className={styles.ctaRow}>
-            <Link href="/demos" className={styles.primaryCta}>
+            <Link href="/contact" className={styles.primaryCta}>
               {data.ctaPrimary} <ArrowRight size={18} style={{ marginLeft: "8px", display: "inline" }} />
             </Link>
-            <Link href="/projects" className={styles.heroSecondaryAction}>
+            <Link href="/services" className={styles.heroSecondaryAction}>
               {data.ctaSecondary}
             </Link>
           </div>

@@ -13,23 +13,23 @@ export const FinalCTA = ({ locale }: FinalCTAProps) => {
     locale === "de"
       ? {
           eyebrow: "Bereit zu bauen?",
-          titleLine1: "Lass uns etwas bauen, dem deine Kunden",
-          titleTrust: "vertrauen",
-          titleLine2: "und das deine Konkurrenz",
-          titleHate: "hassen",
+          titleLine1: "Lass uns eine Website oder ein Web-Produkt bauen,",
+          titleTrust: "dem Kunden vertrauen",
+          titleLine2: "und das dein Geschäft",
+          titleHate: "klarer macht",
           subtitle:
-            "Von KI-Plattformen bis zu ausgereiften SaaS-Produkten: Ich bringe den kompletten Stack mit.",
+            "Wenn du eine professionelle Website, ein Kundenportal oder ein individuelles Web-Tool brauchst, lass uns den richtigen Scope sauber festlegen.",
           ctaPrimary: "Projekt Starten",
           ctaSecondary: "Leistungen Ansehen",
         }
       : {
           eyebrow: "Ready to build?",
-          titleLine1: "Let's build something your clients can",
+          titleLine1: "Let’s build a website or web product your clients can",
           titleTrust: "trust",
-          titleLine2: "and your competitors will",
-          titleHate: "hate",
+          titleLine2: "and your business can",
+          titleHate: "grow with",
           subtitle:
-            "From AI-powered platforms to polished SaaS products — I bring the full stack to the table. Let's make it happen.",
+            "If you need a professional website, client portal, or custom business tool, we can define the right scope and build it properly.",
           ctaPrimary: "Start a Project",
           ctaSecondary: "View Services",
         };
