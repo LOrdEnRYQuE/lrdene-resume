@@ -43,6 +43,7 @@ export const Navbar = ({ cmsContent }: NavbarProps) => {
         { name: "QR Solutions", href: "/qr-solutions" },
         { name: "About", href: "/about" },
         { name: "Blog", href: "/blog" },
+        { name: "FAQ", href: "/faq" },
         { name: "Contact", href: "/contact" },
       ],
       ...(localeCmsData ? localeCmsData : {}),
@@ -127,6 +128,12 @@ export const Navbar = ({ cmsContent }: NavbarProps) => {
   const hasOffers = navLinks.some((link) => link?.href === "/offers" || /^offers?$/i.test(link?.name ?? ""));
   if (!hasOffers) {
     navLinks.splice(Math.min(3, navLinks.length), 0, { name: "Offers", href: "/offers" });
+  }
+  const hasFaq = navLinks.some((link) => link?.href === "/faq" || /^faq$/i.test(link?.name ?? ""));
+  if (!hasFaq) {
+    const contactIndex = navLinks.findIndex((link) => link?.href === "/contact");
+    const insertIndex = contactIndex === -1 ? navLinks.length : contactIndex;
+    navLinks.splice(insertIndex, 0, { name: "FAQ", href: "/faq" });
   }
 
   const localizedLinks: NavLink[] = navLinks.map((link: { name: string; href: string; hasMega?: boolean }) => ({

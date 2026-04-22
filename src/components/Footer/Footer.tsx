@@ -50,6 +50,7 @@ export const Footer = ({ cmsContent, siteSettings }: FooterProps) => {
             { label: "Partners", href: "/partners" },
             { label: "Journal", href: "/blog" },
             { label: "About", href: "/about" },
+            { label: "FAQ", href: "/faq" },
             { label: "Contact", href: "/contact" }
           ]
         },
@@ -101,7 +102,10 @@ export const Footer = ({ cmsContent, siteSettings }: FooterProps) => {
     const hasOffers = pillar.links.some(
       (link: any) => link?.href === "/offers" || /^offers?$/i.test(String(link?.label ?? "")),
     );
-    if (hasPartners && hasOffers) return pillar;
+    const hasFaq = pillar.links.some(
+      (link: any) => link?.href === "/faq" || /^faq$/i.test(String(link?.label ?? "")),
+    );
+    if (hasPartners && hasOffers && hasFaq) return pillar;
 
     const nextLinks = [...pillar.links];
     if (!hasOffers) {
@@ -109,6 +113,11 @@ export const Footer = ({ cmsContent, siteSettings }: FooterProps) => {
     }
     if (!hasPartners) {
       nextLinks.splice(Math.min(2, nextLinks.length), 0, { label: "Partners", href: "/partners" });
+    }
+    if (!hasFaq) {
+      const contactIndex = nextLinks.findIndex((link: any) => link?.href === "/contact");
+      const insertIndex = contactIndex === -1 ? nextLinks.length : contactIndex;
+      nextLinks.splice(insertIndex, 0, { label: "FAQ", href: "/faq" });
     }
     return { ...pillar, links: nextLinks };
   });
