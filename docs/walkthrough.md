@@ -7,6 +7,7 @@ The Portfolio OS has been successfully finalized, moving from a static shell to 
 ### 1. Unified Content Ecosystem
 - **Journal System**: Full CRUD capabilities via the Admin Suite, with premium editorial layouts for public consumption.
 - **Service & Demo Engines**: Dynamic landing pages designed for high conversion, including niche MVP breakdowns (SaaS, AI Assistant, E-commerce).
+
 ### 4. Premium Project Archive
 - **Adaptive View Modes**: Seamless toggle between a dense **Grid** for visual browsing and a structured **List** for quick scanning.
 - **Advanced Controls**: Instant filtering by category and real-time search with smooth Framer Motion transitions.
@@ -15,7 +16,7 @@ The Portfolio OS has been successfully finalized, moving from a static shell to 
 ## Premium Experience Refinements
 - **Universal Footer**: Ensured the global footer is present on all public subpages (Blog, Projects, Demos, Services, About, Contact) for brand consistency.
 - **Dynamic SEO**: Implemented `generateMetadata` for all dynamic routes, providing unique titles and descriptions for every project, post, and service.
-- **Deployment Strategy**: Successfully transitioned to Cloudflare Pages with Next.js 15, bypassing local environment restrictions via a direct GitHub integration.
+- **Deployment Strategy**: Production frontend is deployed through Cloudflare Pages from the GitHub `main` branch.
 
 ### 5. Editorial Case Studies
 - **Cinematic Headers**: High-impact hero sections with large-scale typography and parallax-ready image wrappers.
@@ -36,12 +37,11 @@ The Portfolio OS has been successfully finalized, moving from a static shell to 
 - **Visual Excellence**: A global premium Footer, refined Navbar with better glassmorphism, and optimized logo sizing for a professional layout.
 
 ## 📁 Critical Files & Assets
-- **Admin Guide**: [ADMIN_HANDOVER.md](file:///Users/leads/dev/Porfolio/lrdene-portfolio/docs/ADMIN_HANDOVER.md)
-- **Task Log**: [task.md](file:///Users/leads/.gemini/antigravity/brain/e0f674ca-847b-4b89-8afe-fb7776929039/task.md)
+- **Admin Guide**: `docs/ADMIN_HANDOVER.md`
+- **Task Log**: `docs/tasks.md`
+- **Deployment Guide**: `DEPLOYMENT.md`
 
 ## 📺 Final Verification
-Every core flow—User Inquiries, Blog Navigation, and Admin Management—has been architected for scalability and ease of use. 
+Every core flow—User Inquiries, Blog Navigation, and Admin Management—has been architected for scalability and ease of use.
 
-![Portfolio OS Logo](/Users/leads/dev/Porfolio/lrdene-portfolio/public/assets/logo.png)
-
-*Deployment is recommended via Vercel or Cloudflare Pages for optimal edge performance.*
+Production deployment target: **Cloudflare Pages**, backed by the GitHub `main` branch.

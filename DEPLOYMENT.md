@@ -6,10 +6,11 @@
 - npm 10+
 - Convex project configured
 - Production environment variables configured (see `.env.production.example`)
+- Cloudflare Pages project connected to this GitHub repository and the `main` branch
 
 ## 2) Required Environment Variables
 
-Set these in your hosting provider (not in git):
+Set these in the production hosting environment (not in git):
 
 - `CONVEX_DEPLOYMENT`
 - `NEXT_PUBLIC_CONVEX_URL`
@@ -38,7 +39,7 @@ npm run preflight:prod
 
 This runs:
 
-- env validation
+- environment validation
 - lint + typecheck
 - clean production build
 
@@ -48,21 +49,18 @@ This runs:
 npm run deploy:convex
 ```
 
-## 5) Deploy Frontend
+## 5) Deploy Frontend to Cloudflare Pages
 
-### Option A: Vercel (recommended for Next.js)
-
-- Import repository in Vercel
-- Add env vars from step 2
-- Build command: `npm run build`
-- Output: default Next.js output
-
-### Option B: Cloudflare Pages (already wired)
+Cloudflare Pages is the single production frontend target for this repository.
 
 ```bash
 npm run pages:build
 npm run pages:deploy
 ```
+
+The project currently uses `@cloudflare/next-on-pages`. That adapter creates a generated compatibility bundle which Wrangler then deploys to Cloudflare Pages. Do not remove or rename the adapter's generated-output path unless the deployment stack is intentionally migrated and verified end to end.
+
+Do not connect this repository to a second frontend deployment provider. Keeping one production deployment authority avoids duplicate builds, diverging environment variables, and conflicting domain ownership.
 
 ## 6) Post-Deploy Validation
 
@@ -71,12 +69,13 @@ npm run pages:deploy
 - Submit a contact lead and verify Convex write
 - Verify `robots.txt` and `sitemap.xml` return 200
 - Verify GA4:
-  - Ensure `NEXT_PUBLIC_GA_ID` is set in hosting env, or configure GA ID in `/admin/settings`.
+  - Ensure `NEXT_PUBLIC_GA_ID` is set in the Cloudflare environment, or configure GA ID in `/admin/settings`.
   - Accept analytics consent in the cookie banner on the live site.
   - Open GA4 DebugView and confirm `page_view` and custom events appear.
   - Confirm no analytics events fire before consent is granted.
 
 ## 7) Rollback Strategy
 
-- Frontend: rollback to previous deployment in host dashboard
-- Convex: redeploy previous backend revision if needed
+- Frontend: roll back to the previous known-good Cloudflare Pages deployment.
+- Convex: redeploy the previous backend revision if needed.
+- After rollback, re-run the post-deploy validation checklist before promoting any new revision.

@@ -25,13 +25,15 @@ npm run build
 
 See the full guide in [DEPLOYMENT.md](./DEPLOYMENT.md).
 
-Quick path:
+Production frontend target: **Cloudflare Pages only**.
 
 ```bash
 npm run preflight:prod
 npm run deploy:convex
+npm run pages:build
+npm run pages:deploy
 ```
 
-Then deploy frontend on Vercel (recommended) or Cloudflare Pages (`npm run pages:build && npm run pages:deploy`).
+The Cloudflare Pages adapter generates an internal compatibility bundle consumed by Wrangler. Keep the configured generated-output path unchanged until a verified migration to the newer Cloudflare Workers deployment path is completed.
 
 Use `.env.production.example` as the variable checklist.

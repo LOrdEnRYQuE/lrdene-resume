@@ -22,7 +22,7 @@ export const getSystemStats = query({
       lastLead: leads[0]?._creationTime || 0,
       dbStatus: "Connected",
       environment: process.env.NODE_ENV || "production",
-      runtime: "Edge Runtime (Vercel)",
+      runtime: "Cloudflare Pages / Convex",
       sampled: [leads, projects, services, demos, posts].some((rows) => rows.length > COUNT_CAP),
     };
   },
