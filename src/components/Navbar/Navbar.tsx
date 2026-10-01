@@ -205,7 +205,7 @@ export const Navbar = ({ cmsContent }: NavbarProps) => {
             <Suspense fallback={null}>
               <LocaleSwitcher />
             </Suspense>
-            <LocaleLink href="/#contact" className={styles.ctaAction}>
+            <LocaleLink href="/contact" className={styles.ctaAction}>
               {localizedCtaText}
             </LocaleLink>
           </div>
@@ -235,7 +235,7 @@ export const Navbar = ({ cmsContent }: NavbarProps) => {
               <Suspense fallback={null}>
                 <LocaleSwitcher />
               </Suspense>
-              <LocaleLink href="/#contact" className={styles.mobileCta}>
+              <LocaleLink href="/contact" className={styles.mobileCta}>
                 {localizedCtaText}
               </LocaleLink>
             </div>
