@@ -142,15 +142,14 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <ProjectDetail slug={slug} />
+      <ProjectDetail slug={slug} initialProject={project} />
       <section className="container" style={{ marginBottom: "5rem" }}>
         <h2 style={{ marginBottom: "1rem" }}>Case Study Snapshot</h2>
         <div style={{ display: "grid", gap: "0.75rem", marginBottom: "2rem" }}>
           <p><strong>Problem:</strong> {project.challenge || project.summary}</p>
           <p><strong>Stack:</strong> {project.stack.join(", ")}</p>
           <p><strong>Timeline:</strong> {project.year || "Milestone-driven delivery"}</p>
-          <p><strong>Measurable Result:</strong> {project.solution || "Improved delivery velocity, content quality, and conversion readiness."}</p>
-          <p><strong>Client Testimonial:</strong> {"\"Execution was fast, structured, and built for growth.\""} </p>
+          <p><strong>Outcome:</strong> {project.solution || project.summary}</p>
         </div>
 
         <h3 style={{ marginBottom: "0.75rem" }}>Frequently Asked Questions</h3>
