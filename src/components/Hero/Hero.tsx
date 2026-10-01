@@ -32,9 +32,9 @@ export const Hero = ({ locale, content }: HeroProps) => {
   const LEGACY_SUBTITLE_EN_ALT =
     "I'm LOrdEnRYQuE — building websites, web apps, AI workflows, and interactive business MVPs that clients can test immediately.";
   const UPDATED_SUBTITLE_DE =
-    "Ich entwickle performante Websites, Kundenportale und Web-Produkte für Unternehmen, die online professioneller auftreten und besser konvertieren wollen.";
+    "Ich entwickle in Landshut performante Websites, Web-Apps und digitale Business-Produkte für Unternehmen, die professioneller auftreten, mehr Vertrauen schaffen und besser konvertieren wollen.";
   const UPDATED_SUBTITLE_EN =
-    "I design and build high-performance websites, client portals, and web-based business tools for companies that need a professional digital presence that actually converts.";
+    "I design and build high-performance websites, web apps, and digital business products in Landshut for companies that need a professional presence that converts.";
 
   const data = React.useMemo<HeroData>(() => {
     if (content?.headline && content?.subtitle && content?.ctaPrimary && content?.ctaSecondary && Array.isArray(content?.stats)) {
@@ -48,7 +48,7 @@ export const Hero = ({ locale, content }: HeroProps) => {
     }
     if (locale === "de") {
       return {
-        headline: "Websites und Web-Produkte mit echtem Business-Fokus.",
+        headline: "Webdesign & Webentwicklung in Landshut, mit echtem Business-Fokus.",
         subtitle: UPDATED_SUBTITLE_DE,
         ctaPrimary: "Projekt Starten",
         ctaSecondary: "Leistungen Ansehen",
@@ -59,7 +59,7 @@ export const Hero = ({ locale, content }: HeroProps) => {
       };
     }
     return {
-      headline: "Websites and Web Products Built for Real Business Growth.",
+      headline: "Web Design & Web Development in Landshut, Built for Real Business Growth.",
       subtitle: UPDATED_SUBTITLE_EN,
       ctaPrimary: "Start a Project",
       ctaSecondary: "View Services",
