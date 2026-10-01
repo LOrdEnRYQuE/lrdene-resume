@@ -130,6 +130,11 @@ export default async function TopicPage({ params }: PageProps) {
     publisher: {
       "@type": "Organization",
       name: "LOrdEnRYQuE",
+      url: "https://lordenryque.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://lordenryque.com/assets/LOGO.png",
+      },
     },
     dateModified: data.topic.updatedAt,
     keywords: data.topic.intentKeywords.join(", "),
