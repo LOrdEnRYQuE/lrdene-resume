@@ -11,30 +11,44 @@ export const runtime = "edge";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const canonical = toLocaleCanonical("/store", locale);
+  const isDe = locale === "de";
+
+  const title = isDe
+    ? "Digitale Content Kits für lokale Unternehmen"
+    : "Digital Content Kits for Local Businesses";
+  const description = isDe
+    ? "Entdecke LOrdEnRYQuE Digital Content Kits für Reinigungsfirmen, Salons & Barbershops und Fahrzeugaufbereitung. Verkauf und Downloads laufen zentral über Shopify."
+    : "Discover LOrdEnRYQuE Digital content kits for cleaning companies, salons and barbershops, and vehicle detailing. Commerce and downloads are managed through Shopify.";
 
   return {
-    title: "Digital Store",
-    description:
-      "Premium digital assets: templates, UI kits, and engineering blueprints for modern product teams.",
-    keywords: [
-      "digital assets store",
-      "Next.js templates",
-      "UI kits",
-      "engineering blueprints",
-      "premium design systems",
-    ],
+    title,
+    description,
+    keywords: isDe
+      ? [
+          "Content Kits lokale Unternehmen",
+          "Social Media Vorlagen Unternehmen",
+          "Content Kit Reinigungsfirma",
+          "Content Kit Barbershop",
+          "Content Kit Fahrzeugaufbereitung",
+        ]
+      : [
+          "content kits local businesses",
+          "social media content templates",
+          "cleaning company content kit",
+          "barbershop content kit",
+          "vehicle detailing content kit",
+        ],
     alternates: {
       canonical,
       languages: getLanguageAlternates("/store"),
     },
     robots: {
-      index: false,
-      follow: false,
+      index: true,
+      follow: true,
     },
     openGraph: {
-      title: "Digital Store | LOrdEnRYQuE",
-      description:
-        "Premium digital assets: templates, UI kits, and engineering blueprints for modern product teams.",
+      title: `${title} | LOrdEnRYQuE`,
+      description,
       url: `https://lordenryque.com${canonical}`,
       type: "website",
       siteName: "LOrdEnRYQuE",
@@ -42,9 +56,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: "Digital Store | LOrdEnRYQuE",
-      description:
-        "Premium digital assets: templates, UI kits, and engineering blueprints for modern product teams.",
+      title: `${title} | LOrdEnRYQuE`,
+      description,
       images: ["/assets/LOGO.png"],
     },
   };
