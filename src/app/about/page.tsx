@@ -69,6 +69,10 @@ export default function AboutPage() {
       "@type": "Organization",
       name: "LOrdEnRYQuE | Advanced Digital Solution",
       url: "https://lordenryque.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://lordenryque.com/assets/LOGO.png",
+      },
     },
     sameAs: [
       "https://www.linkedin.com/in/LOrdEnRQuE",
