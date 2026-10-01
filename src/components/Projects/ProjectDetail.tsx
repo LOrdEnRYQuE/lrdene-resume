@@ -4,6 +4,7 @@ import React from "react";
 import styles from "./ProjectDetail.module.css";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import type { Doc } from "../../../convex/_generated/dataModel";
 import { motion } from "framer-motion";
 import { ArrowLeft, ExternalLink, Github, Code2, Trophy, Target, Calendar, Briefcase } from "lucide-react";
 import LocaleLink from "@/components/I18n/LocaleLink";
@@ -13,9 +14,15 @@ import Image from "next/image";
 import { resolveProjectCover } from "@/lib/projects/covers";
 
 
-export const ProjectDetail = ({ slug }: { slug: string }) => {
+type ProjectDetailProps = {
+  slug: string;
+  initialProject: Doc<"projects">;
+};
+
+export const ProjectDetail = ({ slug, initialProject }: ProjectDetailProps) => {
   const locale = useLocale();
-  const project = useQuery(api.projects.getBySlug, { slug });
+  const liveProject = useQuery(api.projects.getBySlug, { slug });
+  const project = liveProject === undefined ? initialProject : liveProject;
   const copy =
     locale === "de"
       ? {
