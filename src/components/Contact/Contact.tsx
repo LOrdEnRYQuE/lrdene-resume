@@ -682,7 +682,7 @@ export const Contact = () => {
     <section className={styles.contact} id="contact">
       <div className={`${styles.content} container`}>
         <div className={styles.intro}>
-          <h2 className="premium-title">{titleValue || copy.title}</h2>
+          <h1 className="premium-title">{titleValue || copy.title}</h1>
           <p className={styles.introText}>
             {subtitleValue || copy.subtitle}
           </p>
