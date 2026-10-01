@@ -99,6 +99,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     publisher: {
       "@type": "Organization",
       name: "LOrdEnRYQuE",
+      url: "https://lordenryque.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://lordenryque.com/assets/LOGO.png",
+      },
     },
     datePublished: new Date(post.date).toISOString(),
     mainEntityOfPage: `https://lordenryque.com/blog/${post.slug}`,
