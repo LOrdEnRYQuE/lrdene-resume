@@ -1,136 +1,180 @@
 "use client";
 
 import React from "react";
-import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-import styles from "./Store.module.css";
 import { motion } from "framer-motion";
-import { 
-  ShoppingBag, 
-  Tag, 
-  Star, 
-  Download, 
-  ExternalLink,
-  Search,
-  Code2
-} from "lucide-react";
-import Image from "next/image";
-import LocaleLink from "@/components/I18n/LocaleLink";
+import { ArrowRight, BookOpen, Layers3, ShoppingBag, ShieldCheck } from "lucide-react";
+import styles from "./Store.module.css";
+import { useLocale } from "@/lib/i18n/useLocale";
 
-const MOCK_PRODUCTS = [
-  {
-    _id: "p1",
-    name: "Astra Design System",
-    slug: "astra-design-system",
-    description: "A comprehensive Figma & React design system with token architecture and glassmorphism components.",
-    category: "UI Kits",
-    price: 49,
-    imageUrl: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=2070",
-    techStack: ["Figma", "React", "Storybook"],
-    downloadUrl: ""
-  },
-  {
-    _id: "p2",
-    name: "Nexus SaaS Blueprint",
-    slug: "nexus-saas-blueprint",
-    description: "Production-ready Next.js boilerplate with integrated auth, billing, and AI workflow patterns.",
-    category: "Templates",
-    price: 99,
-    imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2026",
-    techStack: ["Next.js", "Stripe", "Clerk"],
-    downloadUrl: ""
-  }
-];
+const SHOP_URL =
+  process.env.NEXT_PUBLIC_SHOPIFY_STORE_URL?.trim().replace(/\/$/, "") ||
+  "https://m11xd1-pq.myshopify.com";
+
+const SHOP_LINKS = {
+  all: `${SHOP_URL}/collections/content-kits-fur-lokale-unternehmen`,
+  compare: `${SHOP_URL}/pages/content-kits-vergleichen`,
+  guide: `${SHOP_URL}/blogs/ratgeber`,
+};
 
 export default function StorePage() {
-  const productsFromDb = useQuery(api.products.listActive);
-  const products = (productsFromDb && productsFromDb.length > 0) ? productsFromDb : MOCK_PRODUCTS;
-  const isValidDownloadUrl = (value?: string) =>
-    Boolean(value && value.trim() && value !== "#");
+  const locale = useLocale();
+  const isDe = locale === "de";
+
+  const copy = isDe
+    ? {
+        eyebrow: "LOrdEnRYQuE Digital",
+        title: "Digitale Content Kits für lokale Unternehmen.",
+        subtitle:
+          "Unser Produktkatalog wird zentral über Shopify verwaltet. So bleiben Preise, Downloads, Produktinformationen und Checkout an einem einzigen Ort aktuell.",
+        primary: "Zum Online-Shop",
+        compare: "Content Kits vergleichen",
+        guide: "Ratgeber öffnen",
+        trust: [
+          "Digitale Downloads über Shopify",
+          "Kein physischer Versand",
+          "Einmaliger Kauf pro Kit",
+        ],
+        cards: [
+          {
+            title: "Alle Content Kits",
+            text: "Reinigung, Salon & Barbershop und Fahrzeugaufbereitung in einer gemeinsamen Übersicht.",
+            href: SHOP_LINKS.all,
+            label: "Katalog öffnen",
+            icon: Layers3,
+          },
+          {
+            title: "Kits vergleichen",
+            text: "Vergleiche Inhalt, Einsatzbereich und Preis der verfügbaren Branchen-Kits direkt miteinander.",
+            href: SHOP_LINKS.compare,
+            label: "Vergleich öffnen",
+            icon: ShieldCheck,
+          },
+          {
+            title: "Ratgeber",
+            text: "Praktische Artikel zu Social Media, Content-Planung, Google Unternehmensprofil und Content-Batching.",
+            href: SHOP_LINKS.guide,
+            label: "Ratgeber lesen",
+            icon: BookOpen,
+          },
+        ],
+      }
+    : {
+        eyebrow: "LOrdEnRYQuE Digital",
+        title: "Digital content kits for local businesses.",
+        subtitle:
+          "Our product catalog is managed centrally in Shopify so prices, downloads, product information, and checkout stay consistent in one place.",
+        primary: "Open online store",
+        compare: "Compare content kits",
+        guide: "Open guide",
+        trust: [
+          "Digital downloads via Shopify",
+          "No physical shipping",
+          "One-time purchase per kit",
+        ],
+        cards: [
+          {
+            title: "All Content Kits",
+            text: "Cleaning, Salon & Barbershop, and Vehicle Detailing in one catalog.",
+            href: SHOP_LINKS.all,
+            label: "Open catalog",
+            icon: Layers3,
+          },
+          {
+            title: "Compare Kits",
+            text: "Compare package contents, use cases, and pricing across the available industry kits.",
+            href: SHOP_LINKS.compare,
+            label: "Open comparison",
+            icon: ShieldCheck,
+          },
+          {
+            title: "Guides",
+            text: "Practical articles about social media, content planning, Google Business Profile, and content batching.",
+            href: SHOP_LINKS.guide,
+            label: "Read guides",
+            icon: BookOpen,
+          },
+        ],
+      };
 
   return (
     <main className={styles.container}>
-      <header className={styles.header}>
+      <section className={styles.hero}>
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
+          className={styles.heroInner}
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55 }}
         >
-          <div className={styles.headerIcon}>
-            <ShoppingBag size={48} />
+          <div className={styles.iconWrap} aria-hidden="true">
+            <ShoppingBag size={34} />
           </div>
-          <h1 className={styles.title}>Digital <span className="platinum-text">Assets</span></h1>
-          <p className={styles.subtitle}>
-            Premium templates, UI kits, and architectural blueprints for the modern engineer.
-          </p>
+          <span className={styles.eyebrow}>{copy.eyebrow}</span>
+          <h1 className={styles.title}>{copy.title}</h1>
+          <p className={styles.subtitle}>{copy.subtitle}</p>
+
+          <div className={styles.actions}>
+            <a
+              href={SHOP_URL}
+              className={styles.primary}
+              data-track-event="external_shop_click"
+              data-track-label="Store bridge -> Shopify"
+            >
+              {copy.primary} <ArrowRight size={18} />
+            </a>
+            <a
+              href={SHOP_LINKS.compare}
+              className={styles.secondary}
+              data-track-event="external_shop_click"
+              data-track-label="Store bridge -> Compare kits"
+            >
+              {copy.compare}
+            </a>
+          </div>
+
+          <div className={styles.trust} aria-label={isDe ? "Shop-Vorteile" : "Store benefits"}>
+            {copy.trust.map((item) => (
+              <span key={item}>
+                <ShieldCheck size={14} aria-hidden="true" />
+                {item}
+              </span>
+            ))}
+          </div>
         </motion.div>
-      </header>
+      </section>
 
-      <div className={styles.filterBar}>
-        <div className={styles.searchBox}>
-          <Search size={18} />
-          <input type="text" placeholder="Search assets..." />
-        </div>
-        <div className={styles.categories}>
-          <button className={styles.activeCat}>All</button>
-          <button>Templates</button>
-          <button>UI Kits</button>
-          <button>Blueprints</button>
-        </div>
-      </div>
+      <section className={styles.grid} aria-label={isDe ? "Shop-Navigation" : "Store navigation"}>
+        {copy.cards.map((card, index) => {
+          const Icon = card.icon;
+          return (
+            <motion.a
+              key={card.title}
+              href={card.href}
+              className={styles.card}
+              data-track-event="external_shop_click"
+              data-track-label={`Store bridge -> ${card.title}`}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: index * 0.06 }}
+            >
+              <div className={styles.cardIcon} aria-hidden="true">
+                <Icon size={22} />
+              </div>
+              <h2>{card.title}</h2>
+              <p>{card.text}</p>
+              <span>
+                {card.label} <ArrowRight size={15} />
+              </span>
+            </motion.a>
+          );
+        })}
+      </section>
 
-      <div className={styles.productGrid}>
-        {products.map((product, idx) => (
-          <motion.div 
-            key={product._id}
-            className={styles.productCard}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: idx * 0.1 }}
-          >
-            <div className={styles.preview}>
-              <Image
-                src={product.imageUrl || "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=2070"}
-                alt={product.name}
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-              />
-              <div className={styles.priceBadge}>${product.price}</div>
-            </div>
-            
-            <div className={styles.content}>
-              <div className={styles.topRow}>
-                <span className={styles.categoryBadge}><Tag size={12} /> {product.category}</span>
-                <div className={styles.rating}><Star size={12} fill="var(--accent-platinum)" /> 5.0</div>
-              </div>
-              
-              <h3 className={styles.productName}>{product.name}</h3>
-              <p className={styles.productDesc}>{product.description}</p>
-              
-              <div className={styles.techTags}>
-                {(product.techStack as string[])?.slice(0, 3).map((tech, i) => (
-                  <span key={i} className={styles.techTag}><Code2 size={10} /> {tech}</span>
-                ))}
-              </div>
-
-              <div className={styles.actions}>
-                {isValidDownloadUrl(product.downloadUrl) ? (
-                  <LocaleLink href={product.downloadUrl as string} className={styles.buyBtn}>
-                    Purchase Asset <Download size={18} />
-                  </LocaleLink>
-                ) : (
-                  <LocaleLink href="/contact" className={styles.buyBtn}>
-                    Request Access <Download size={18} />
-                  </LocaleLink>
-                )}
-                <LocaleLink href="/contact" className={styles.detailsBtn} aria-label={`Ask about ${product.name}`}>
-                  <ExternalLink size={18} />
-                </LocaleLink>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+      <p className={styles.note}>
+        {isDe
+          ? "Produkte, Preise und Downloads werden nicht auf dieser Website dupliziert. Shopify ist die Quelle der Wahrheit für den Verkauf."
+          : "Products, prices, and downloads are not duplicated on this website. Shopify is the source of truth for commerce."}
+      </p>
     </main>
   );
 }
