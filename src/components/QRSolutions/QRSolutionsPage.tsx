@@ -540,7 +540,7 @@ export default function QRSolutionsPage() {
                 ))}
               </div>
               <div className={styles.actions}>
-                <LocaleLink href="/#contact" className="magnetic-button">
+                <LocaleLink href="/contact" className="magnetic-button">
                   {copy.ctaPrimary}
                 </LocaleLink>
                 <LocaleLink href="/contact" className="magnetic-button">
@@ -831,7 +831,7 @@ export default function QRSolutionsPage() {
       <div className={styles.stickyCtaBar}>
         <p>{copy.stickyCta}</p>
         <div className={styles.stickyActions}>
-          <LocaleLink href="/#contact" className="magnetic-button">
+          <LocaleLink href="/contact" className="magnetic-button">
             {copy.stickyPrimary}
           </LocaleLink>
           <LocaleLink href="/contact" className={styles.stickyGhost}>
