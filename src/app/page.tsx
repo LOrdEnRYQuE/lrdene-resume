@@ -32,23 +32,32 @@ export async function generateMetadata(): Promise<Metadata> {
   const localeHeader = requestHeaders.get(LOCALE_HEADER_NAME);
   const locale: Locale = isLocale(localeHeader) ? localeHeader : "en";
   const isDe = locale === "de";
-  const title = "Custom Websites and Web Products";
+  const title = isDe ? "Webdesign & Webentwicklung in Landshut" : "Custom Websites and Web Products";
   const description = isDe
-    ? "LOrdEnRYQuE entwickelt performante Websites und individuelle Web-Produkte für Unternehmen, die einen professionellen digitalen Auftritt, mehr Vertrauen und bessere Conversion brauchen."
+    ? "LOrdEnRYQuE entwickelt in Landshut performante Websites, Web-Apps und individuelle Web-Produkte für Unternehmen, die professioneller auftreten, mehr Vertrauen schaffen und besser konvertieren wollen."
     : "LOrdEnRYQuE builds high-performance websites and custom web products for businesses that need a premium digital presence, stronger trust, and better conversion.";
   const socialTitle = `${title} | LOrdEnRYQuE`;
 
   return {
     title,
     description,
-    keywords: [
-      "custom websites",
-      "web products for businesses",
-      "business website developer Germany",
-      "custom web app development",
-      "client portals",
-      "AI integration",
-    ],
+    keywords: isDe
+      ? [
+          "Webdesign Landshut",
+          "Webentwicklung Landshut",
+          "Website Landshut",
+          "Webentwickler Landshut",
+          "Web Apps Landshut",
+          "digitale Lösungen Landshut",
+        ]
+      : [
+          "custom websites",
+          "web products for businesses",
+          "business website developer Germany",
+          "custom web app development",
+          "client portals",
+          "AI integration",
+        ],
     alternates: {
       canonical: "/",
       languages: getLanguageAlternates("/"),
