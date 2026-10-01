@@ -231,6 +231,10 @@ export default async function ServicePage({ params }: PageProps) {
       "@type": "Organization",
       name: "LOrdEnRYQuE",
       url: "https://lordenryque.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://lordenryque.com/assets/LOGO.png",
+      },
     },
     areaServed: locationResolution
       ? {
