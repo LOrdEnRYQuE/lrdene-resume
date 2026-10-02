@@ -1,4 +1,4 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
 import { notFound } from "next/navigation";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
@@ -61,13 +61,12 @@ export default async function SmartContactCardPage({ params }: PageProps) {
         ) : (
           <>
             <div style={{ display: "flex", gap: 20, alignItems: "center", flexWrap: "wrap" }}>
-              {profile.photoUrl ? (
-                <Image
-                  src={profile.photoUrl}
+              {safeExternalUrl(profile.photoUrl) ? (
+                <img
+                  src={safeExternalUrl(profile.photoUrl)}
                   alt={profile.displayName ?? "Kontakt"}
                   width={112}
                   height={112}
-                  unoptimized
                   style={{ borderRadius: 24, objectFit: "cover" }}
                 />
               ) : null}
