@@ -140,7 +140,7 @@ export const getCustomerHub = internalQuery({
       )
       .unique();
 
-    if (!workspace) {
+    if (!workspace || workspace.status !== "active") {
       return { workspace: null, entitlements: [], profiles: [], devices: [] };
     }
 
@@ -366,7 +366,10 @@ export const redactShopBatch = internalMutation({
       .take(20);
     const batch = [...active, ...suspended].slice(0, 20);
 
-    if (batch.length === 0) return { done: true };
+    if (batch.length === 0) {
+      await ctx.scheduler.runAfter(0, internal.smartHub.redactWebhookReceiptsBatch, {});
+      return { done: true };
+    }
 
     for (const workspace of batch) {
       await ctx.db.patch("smartWorkspaces", workspace._id, {
@@ -380,5 +383,23 @@ export const redactShopBatch = internalMutation({
 
     await ctx.scheduler.runAfter(50, internal.smartHub.redactShopBatch, {});
     return { done: false, scheduled: batch.length };
+  },
+});
+
+
+export const redactWebhookReceiptsBatch = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const receipts = await ctx.db.query("smartWebhookReceipts").take(100);
+    for (const receipt of receipts) {
+      await ctx.db.delete("smartWebhookReceipts", receipt._id);
+    }
+
+    if (receipts.length === 100) {
+      await ctx.scheduler.runAfter(0, internal.smartHub.redactWebhookReceiptsBatch, {});
+      return { done: false };
+    }
+
+    return { done: true };
   },
 });
