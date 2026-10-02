@@ -164,7 +164,7 @@ function SmartBusinessPage() {
           <s-stack direction="block" gap="base">
             <s-text type="strong">Meine Smart Produkte</s-text>
             {entitlements.map((item) => (
-              <s-stack key={item._id} direction="block" gap="tight">
+              <s-stack key={item._id} direction="block" gap="small-200">
                 <s-text type="strong">{labelForKind(item.kind)}</s-text>
                 <s-text>{statusLabel(item.status)}</s-text>
                 <s-text>SKU: {item.sku} · Menge: {item.quantity}</s-text>
@@ -179,7 +179,7 @@ function SmartBusinessPage() {
             {contactProfiles.map((profile, index) => {
               const device = devices.find((candidate) => candidate.profileId === profile._id);
               return (
-                <s-stack key={profile._id} direction="block" gap="tight">
+                <s-stack key={profile._id} direction="block" gap="small-200">
                   <s-text type="strong">
                     {profile.displayName || `Kontaktkarte ${index + 1}`}
                   </s-text>
@@ -213,6 +213,7 @@ function SmartBusinessPage() {
                 {state.saving ? 'Wird gespeichert…' : 'Änderungen speichern'}
               </s-button>
               <s-button
+                type="button"
                 onClick={() => {
                   setSelectedProfileId(null);
                   setDraft({});
