@@ -1,0 +1,22 @@
+# LOrdEnRYQuE Smart Hub
+# Run `shopify app config link` after creating/linking the app in Shopify Dev Dashboard.
+# Shopify CLI will populate the real client_id. Never commit the app secret.
+
+client_id = ""
+name = "LOrdEnRYQuE Smart Hub"
+application_url = "https://lordenryque.com"
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = false
+include_config_on_deploy = true
+
+[access_scopes]
+scopes = "read_orders"
+
+[webhooks]
+api_version = "2026-07"
+
+[[webhooks.subscriptions]]
+topics = ["orders/paid"]
+uri = "https://spotted-tapir-517.eu-west-1.convex.site/webhooks/shopify/orders-paid"
