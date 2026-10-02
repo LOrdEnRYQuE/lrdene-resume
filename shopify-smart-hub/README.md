@@ -20,6 +20,7 @@ Required environment variables:
 
 - `SHOPIFY_API_KEY` — Shopify app client ID
 - `SHOPIFY_API_SECRET` — Shopify app client secret
+- `SHOPIFY_SHOP_DOMAIN` — expected `.myshopify.com` tenant (production: `m11xd1-pq.myshopify.com`)
 - `SMART_LINK_SECRET` — separate secret used to derive permanent public codes (recommended)
 
 HTTP endpoints:
