@@ -146,21 +146,15 @@ export const getCustomerHub = internalQuery({
     const [entitlements, profiles, devices] = await Promise.all([
       ctx.db
         .query("smartEntitlements")
-        .withIndex("by_workspaceId_and_status", (q) =>
-          q.eq("workspaceId", workspace._id).eq("status", "active"),
-        )
+        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspace._id))
         .take(100),
       ctx.db
         .query("smartProfiles")
-        .withIndex("by_workspaceId_and_kind", (q) =>
-          q.eq("workspaceId", workspace._id).eq("kind", "contact_card"),
-        )
+        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspace._id))
         .take(100),
       ctx.db
         .query("smartDevices")
-        .withIndex("by_workspaceId_and_status", (q) =>
-          q.eq("workspaceId", workspace._id).eq("status", "provisioned"),
-        )
+        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspace._id))
         .take(100),
     ]);
 
