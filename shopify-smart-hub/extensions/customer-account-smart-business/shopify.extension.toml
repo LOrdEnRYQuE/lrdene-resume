@@ -1,0 +1,22 @@
+api_version = "2026-07"
+
+[[extensions]]
+type = "ui_extension"
+name = "LOrdEnRYQuE Smart Business"
+handle = "lordenryque-smart-business"
+
+[[extensions.targeting]]
+target = "customer-account.page.render"
+module = "./src/SmartBusinessPage.jsx"
+
+[extensions.capabilities]
+api_access = true
+network_access = true
+
+[extensions.settings]
+
+[[extensions.settings.fields]]
+key = "backend_url"
+type = "single_line_text_field"
+name = "Smart Hub backend URL"
+description = "HTTPS base URL of the LOrdEnRYQuE Smart Hub backend."
