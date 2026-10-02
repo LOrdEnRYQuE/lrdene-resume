@@ -1,0 +1,34 @@
+name: Smart Hub CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  production-stack:
+    name: Production stack checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_CONVEX_URL: https://spotted-tapir-517.eu-west-1.convex.cloud
+      NEXT_PUBLIC_CONVEX_SITE_URL: https://spotted-tapir-517.eu-west-1.convex.site
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint and typecheck
+        run: npm run check
+
+      - name: Production build
+        run: npm run build
