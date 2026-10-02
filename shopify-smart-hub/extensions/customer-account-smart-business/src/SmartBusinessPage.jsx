@@ -2,8 +2,6 @@ import '@shopify/ui-extensions/preact';
 import {render} from 'preact';
 import {useEffect, useMemo, useState} from 'preact/hooks';
 
-const DEFAULT_BACKEND_URL = 'https://spotted-tapir-517.eu-west-1.convex.site';
-
 export default async () => {
   render(<SmartBusinessPage />, document.body);
 };
@@ -14,11 +12,12 @@ function SmartBusinessPage() {
   const [draft, setDraft] = useState({});
   const [state, setState] = useState({loading: true, saving: false, error: '', saved: false});
 
-  const backendUrl = String(
-    shopify.settings.value?.backend_url || DEFAULT_BACKEND_URL,
-  ).replace(/\/$/, '');
+  const backendUrl = String(shopify.settings.value?.backend_url || '').replace(/\/$/, '');
 
   async function apiFetch(path, options = {}) {
+    if (!backendUrl) {
+      throw new Error('Smart Hub backend URL ist noch nicht konfiguriert.');
+    }
     const token = await shopify.sessionToken.get();
     const response = await fetch(`${backendUrl}${path}`, {
       ...options,
