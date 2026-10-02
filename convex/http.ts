@@ -2,7 +2,7 @@ import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
-import { createSmartPublicCode, verifyShopifySessionToken, verifyShopifyWebhook } from "./shopifyAuth";
+import { createSmartPublicCode, isExpectedShopDomain, verifyShopifySessionToken, verifyShopifyWebhook } from "./shopifyAuth";
 
 const http = httpRouter();
 
@@ -265,6 +265,9 @@ http.route({
 
     if (!signature || !deliveryId || !shopDomain) {
       return new Response("Missing Shopify webhook headers", { status: 400 });
+    }
+    if (!isExpectedShopDomain(shopDomain)) {
+      return new Response("Unexpected Shopify shop", { status: 401 });
     }
 
     const rawBody = await req.text();
