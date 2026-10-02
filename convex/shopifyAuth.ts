@@ -9,6 +9,18 @@ type ShopifySessionClaims = {
 };
 
 const encoder = new TextEncoder();
+const DEFAULT_SHOPIFY_SHOP_DOMAIN = "m11xd1-pq.myshopify.com";
+
+function expectedShopDomain(): string {
+  return (process.env.SHOPIFY_SHOP_DOMAIN ?? DEFAULT_SHOPIFY_SHOP_DOMAIN)
+    .replace(/^https?:\/\//i, "")
+    .replace(/\/$/, "")
+    .toLowerCase();
+}
+
+export function isExpectedShopDomain(value: string): boolean {
+  return value.replace(/^https?:\/\//i, "").replace(/\/$/, "").toLowerCase() === expectedShopDomain();
+}
 
 function base64ToBytes(input: string): Uint8Array {
   const raw = atob(input);
@@ -82,6 +94,10 @@ export async function verifyShopifySessionToken(token: string): Promise<ShopifyS
 
   const audiences = Array.isArray(claims.aud) ? claims.aud : [claims.aud];
   if (!audiences.includes(clientId)) throw new Error("Invalid Shopify session token audience");
+
+  if (!claims.dest || !isExpectedShopDomain(claims.dest)) {
+    throw new Error("Invalid Shopify session token destination");
+  }
 
   if (!claims.sub?.startsWith("gid://shopify/Customer/")) {
     throw new Error("Authenticated Shopify customer is required");
