@@ -348,4 +348,110 @@ http.route({
   }),
 });
 
+
+async function verifiedShopifyLifecycleRequest(
+  req: Request,
+  expectedTopic: string,
+): Promise<{ deliveryId: string; shopDomain: string; payload: Record<string, unknown> }> {
+  const signature = req.headers.get("x-shopify-hmac-sha256");
+  const deliveryId = req.headers.get("x-shopify-webhook-id");
+  const topic = req.headers.get("x-shopify-topic") ?? "";
+  const shopDomain = req.headers.get("x-shopify-shop-domain") ?? "";
+
+  if (!signature || !deliveryId || !shopDomain) throw new Error("Missing Shopify webhook headers");
+  if (topic !== expectedTopic) throw new Error("Unexpected Shopify webhook topic");
+  if (!isExpectedShopDomain(shopDomain)) throw new Error("Unexpected Shopify shop");
+
+  const rawBody = await req.text();
+  if (!(await verifyShopifyWebhook(rawBody, signature))) throw new Error("Invalid Shopify webhook signature");
+
+  let payload: Record<string, unknown> = {};
+  if (rawBody.trim()) {
+    payload = JSON.parse(rawBody) as Record<string, unknown>;
+  }
+
+  return { deliveryId, shopDomain, payload };
+}
+
+function lifecycleCustomerGid(payload: Record<string, unknown>): string | undefined {
+  const customer = payload.customer;
+  if (!customer || typeof customer !== "object") return undefined;
+  const record = customer as Record<string, unknown>;
+  return shopifyGid("Customer", record.admin_graphql_api_id ?? record.id);
+}
+
+http.route({
+  path: "/webhooks/shopify/customers-data-request",
+  method: "POST",
+  handler: httpAction(async (ctx, req) => {
+    try {
+      const verified = await verifiedShopifyLifecycleRequest(req, "customers/data_request");
+      const result = await ctx.runMutation(internal.smartHub.processLifecycleWebhook, {
+        deliveryId: verified.deliveryId,
+        topic: "customers/data_request",
+        shopDomain: verified.shopDomain,
+        shopifyCustomerGid: lifecycleCustomerGid(verified.payload),
+      });
+      return jsonResponse({ ok: true, result });
+    } catch (error) {
+      return new Response(error instanceof Error ? error.message : "Invalid webhook", { status: 401 });
+    }
+  }),
+});
+
+http.route({
+  path: "/webhooks/shopify/customers-redact",
+  method: "POST",
+  handler: httpAction(async (ctx, req) => {
+    try {
+      const verified = await verifiedShopifyLifecycleRequest(req, "customers/redact");
+      const result = await ctx.runMutation(internal.smartHub.processLifecycleWebhook, {
+        deliveryId: verified.deliveryId,
+        topic: "customers/redact",
+        shopDomain: verified.shopDomain,
+        shopifyCustomerGid: lifecycleCustomerGid(verified.payload),
+      });
+      return jsonResponse({ ok: true, result });
+    } catch (error) {
+      return new Response(error instanceof Error ? error.message : "Invalid webhook", { status: 401 });
+    }
+  }),
+});
+
+http.route({
+  path: "/webhooks/shopify/shop-redact",
+  method: "POST",
+  handler: httpAction(async (ctx, req) => {
+    try {
+      const verified = await verifiedShopifyLifecycleRequest(req, "shop/redact");
+      const result = await ctx.runMutation(internal.smartHub.processLifecycleWebhook, {
+        deliveryId: verified.deliveryId,
+        topic: "shop/redact",
+        shopDomain: verified.shopDomain,
+      });
+      return jsonResponse({ ok: true, result });
+    } catch (error) {
+      return new Response(error instanceof Error ? error.message : "Invalid webhook", { status: 401 });
+    }
+  }),
+});
+
+http.route({
+  path: "/webhooks/shopify/app-uninstalled",
+  method: "POST",
+  handler: httpAction(async (ctx, req) => {
+    try {
+      const verified = await verifiedShopifyLifecycleRequest(req, "app/uninstalled");
+      const result = await ctx.runMutation(internal.smartHub.processLifecycleWebhook, {
+        deliveryId: verified.deliveryId,
+        topic: "app/uninstalled",
+        shopDomain: verified.shopDomain,
+      });
+      return jsonResponse({ ok: true, result });
+    } catch (error) {
+      return new Response(error instanceof Error ? error.message : "Invalid webhook", { status: 401 });
+    }
+  }),
+});
+
 export default http;
