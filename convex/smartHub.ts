@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { internalMutation, internalQuery, query } from "./_generated/server";
+import { internal } from "./_generated/api";
 
 const paidOrderLineItemValidator = v.object({
   shopifyLineItemGid: v.string(),
@@ -246,5 +247,138 @@ export const getPublicContactCard = query({
         bookingUrl: profile.bookingUrl,
       },
     };
+  },
+});
+
+
+export const processLifecycleWebhook = internalMutation({
+  args: {
+    deliveryId: v.string(),
+    topic: v.string(),
+    shopDomain: v.string(),
+    shopifyCustomerGid: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("smartWebhookReceipts")
+      .withIndex("by_deliveryId", (q) => q.eq("deliveryId", args.deliveryId))
+      .unique();
+
+    if (existing) return { duplicate: true, action: existing.status };
+
+    let status = "processed";
+    if (args.topic === "customers/redact" && args.shopifyCustomerGid) {
+      const workspace = await ctx.db
+        .query("smartWorkspaces")
+        .withIndex("by_shopifyCustomerGid", (q) =>
+          q.eq("shopifyCustomerGid", args.shopifyCustomerGid!),
+        )
+        .unique();
+
+      if (workspace) {
+        await ctx.db.patch("smartWorkspaces", workspace._id, {
+          status: "deleting",
+          updatedAt: Date.now(),
+        });
+        await ctx.scheduler.runAfter(0, internal.smartHub.redactWorkspaceBatch, {
+          workspaceId: workspace._id,
+        });
+        status = "redaction_scheduled";
+      }
+    }
+
+    if (args.topic === "shop/redact") {
+      await ctx.scheduler.runAfter(0, internal.smartHub.redactShopBatch, {});
+      status = "redaction_scheduled";
+    }
+
+    await ctx.db.insert("smartWebhookReceipts", {
+      deliveryId: args.deliveryId,
+      topic: args.topic,
+      shopDomain: args.shopDomain,
+      shopifyCustomerGid: args.shopifyCustomerGid,
+      status,
+      createdAt: Date.now(),
+    });
+
+    return { duplicate: false, action: status };
+  },
+});
+
+export const redactWorkspaceBatch = internalMutation({
+  args: { workspaceId: v.id("smartWorkspaces") },
+  handler: async (ctx, args) => {
+    const workspace = await ctx.db.get("smartWorkspaces", args.workspaceId);
+    if (!workspace) return { done: true };
+
+    const [events, devices, profiles, entitlements] = await Promise.all([
+      ctx.db
+        .query("smartEvents")
+        .withIndex("by_workspaceId_and_timestamp", (q) => q.eq("workspaceId", args.workspaceId))
+        .take(50),
+      ctx.db
+        .query("smartDevices")
+        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", args.workspaceId))
+        .take(50),
+      ctx.db
+        .query("smartProfiles")
+        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", args.workspaceId))
+        .take(50),
+      ctx.db
+        .query("smartEntitlements")
+        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", args.workspaceId))
+        .take(50),
+    ]);
+
+    for (const row of events) await ctx.db.delete("smartEvents", row._id);
+    for (const row of devices) await ctx.db.delete("smartDevices", row._id);
+    for (const row of profiles) await ctx.db.delete("smartProfiles", row._id);
+    for (const row of entitlements) await ctx.db.delete("smartEntitlements", row._id);
+
+    const more =
+      events.length === 50 ||
+      devices.length === 50 ||
+      profiles.length === 50 ||
+      entitlements.length === 50;
+
+    if (more) {
+      await ctx.scheduler.runAfter(0, internal.smartHub.redactWorkspaceBatch, {
+        workspaceId: args.workspaceId,
+      });
+      return { done: false };
+    }
+
+    await ctx.db.delete("smartWorkspaces", args.workspaceId);
+    return { done: true };
+  },
+});
+
+export const redactShopBatch = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const active = await ctx.db
+      .query("smartWorkspaces")
+      .withIndex("by_status", (q) => q.eq("status", "active"))
+      .take(20);
+    const suspended = await ctx.db
+      .query("smartWorkspaces")
+      .withIndex("by_status", (q) => q.eq("status", "suspended"))
+      .take(20);
+    const batch = [...active, ...suspended].slice(0, 20);
+
+    if (batch.length === 0) return { done: true };
+
+    for (const workspace of batch) {
+      await ctx.db.patch("smartWorkspaces", workspace._id, {
+        status: "deleting",
+        updatedAt: Date.now(),
+      });
+      await ctx.scheduler.runAfter(0, internal.smartHub.redactWorkspaceBatch, {
+        workspaceId: workspace._id,
+      });
+    }
+
+    await ctx.scheduler.runAfter(50, internal.smartHub.redactShopBatch, {});
+    return { done: false, scheduled: batch.length };
   },
 });
