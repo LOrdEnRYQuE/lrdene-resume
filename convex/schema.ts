@@ -429,6 +429,7 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
+    .index("by_workspaceId", ["workspaceId"])
     .index("by_workspaceId_and_status", ["workspaceId", "status"])
     .index("by_shopifyOrderGid_and_shopifyLineItemGid", ["shopifyOrderGid", "shopifyLineItemGid"]),
   smartProfiles: defineTable({
@@ -453,6 +454,7 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
+    .index("by_workspaceId", ["workspaceId"])
     .index("by_workspaceId_and_kind", ["workspaceId", "kind"])
     .index("by_entitlementId", ["entitlementId"]),
   smartDevices: defineTable({
@@ -470,6 +472,7 @@ export default defineSchema({
     updatedAt: v.number(),
   })
     .index("by_publicCode", ["publicCode"])
+    .index("by_workspaceId", ["workspaceId"])
     .index("by_workspaceId_and_status", ["workspaceId", "status"])
     .index("by_profileId", ["profileId"]),
   smartEvents: defineTable({
