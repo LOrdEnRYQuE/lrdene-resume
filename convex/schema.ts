@@ -414,7 +414,8 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
-    .index("by_shopifyCustomerGid", ["shopifyCustomerGid"]),
+    .index("by_shopifyCustomerGid", ["shopifyCustomerGid"])
+    .index("by_status", ["status"]),
   smartEntitlements: defineTable({
     workspaceId: v.id("smartWorkspaces"),
     shopifyOrderGid: v.string(),
@@ -492,7 +493,8 @@ export default defineSchema({
     topic: v.string(),
     shopDomain: v.string(),
     shopifyOrderGid: v.optional(v.string()),
-    status: v.string(), // processed | ignored
+    shopifyCustomerGid: v.optional(v.string()),
+    status: v.string(), // processed | ignored | redaction_scheduled
     createdAt: v.number(),
   })
     .index("by_deliveryId", ["deliveryId"])
