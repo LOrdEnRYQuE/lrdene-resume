@@ -141,6 +141,38 @@ function shopifyGid(type: "Order" | "Customer" | "LineItem" | "Product" | "Produ
   return undefined;
 }
 
+function isAllowedProfileImage(blob: Blob, bytes: Uint8Array): boolean {
+  if (blob.size === 0 || blob.size > 5 * 1024 * 1024) return false;
+
+  const jpeg =
+    bytes.length >= 3 &&
+    bytes[0] === 0xff &&
+    bytes[1] === 0xd8 &&
+    bytes[2] === 0xff;
+  const png =
+    bytes.length >= 8 &&
+    bytes[0] === 0x89 &&
+    bytes[1] === 0x50 &&
+    bytes[2] === 0x4e &&
+    bytes[3] === 0x47 &&
+    bytes[4] === 0x0d &&
+    bytes[5] === 0x0a &&
+    bytes[6] === 0x1a &&
+    bytes[7] === 0x0a;
+  const webp =
+    bytes.length >= 12 &&
+    bytes[0] === 0x52 &&
+    bytes[1] === 0x49 &&
+    bytes[2] === 0x46 &&
+    bytes[3] === 0x46 &&
+    bytes[8] === 0x57 &&
+    bytes[9] === 0x45 &&
+    bytes[10] === 0x42 &&
+    bytes[11] === 0x50;
+
+  return jpeg || png || webp;
+}
+
 function corsHeaders(): Record<string, string> {
   return {
     "access-control-allow-origin": "*",
@@ -266,6 +298,69 @@ http.route({
   }),
 });
 
+
+
+http.route({
+  path: "/smart-hub/contact/photo",
+  method: "OPTIONS",
+  handler: httpAction(async () => new Response(null, { status: 204, headers: corsHeaders() })),
+});
+
+http.route({
+  path: "/smart-hub/contact/photo",
+  method: "POST",
+  handler: httpAction(async (ctx, req) => {
+    let shopifyCustomerGid: string;
+    try {
+      shopifyCustomerGid = await authenticatedShopifyCustomer(req);
+    } catch (error) {
+      return jsonResponse(
+        { ok: false, error: error instanceof Error ? error.message : "Unauthorized" },
+        401,
+      );
+    }
+
+    const profileId = new URL(req.url).searchParams.get("profileId");
+    if (!profileId) {
+      return jsonResponse({ ok: false, error: "profileId is required" }, 400);
+    }
+
+    const contentType = (req.headers.get("content-type") ?? "").toLowerCase();
+    const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
+    if (!allowedTypes.has(contentType)) {
+      return jsonResponse(
+        { ok: false, error: "Only JPG, PNG, and WebP images are supported" },
+        415,
+      );
+    }
+
+    const blob = await req.blob();
+    const signature = new Uint8Array(await blob.slice(0, 12).arrayBuffer());
+    if (!isAllowedProfileImage(blob, signature)) {
+      return jsonResponse(
+        { ok: false, error: "Invalid image or file is larger than 5 MB" },
+        400,
+      );
+    }
+
+    const storageId = await ctx.storage.store(blob);
+    try {
+      await ctx.runMutation(internal.smartHub.setContactProfilePhoto, {
+        shopifyCustomerGid,
+        profileId: profileId as Id<"smartProfiles">,
+        storageId,
+      });
+      const photoUrl = await ctx.storage.getUrl(storageId);
+      return jsonResponse({ ok: true, photoUrl });
+    } catch (error) {
+      await ctx.storage.delete(storageId);
+      return jsonResponse(
+        { ok: false, error: error instanceof Error ? error.message : "Photo upload failed" },
+        400,
+      );
+    }
+  }),
+});
 
 http.route({
   path: "/smart-hub/contact/approve",
