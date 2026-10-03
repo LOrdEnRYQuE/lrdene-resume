@@ -194,7 +194,7 @@ export const updateContactProfile = internalMutation({
       )
       .unique();
 
-    if (!workspace) throw new Error("Smart Workspace not found");
+    if (!workspace || workspace.status !== "active") throw new Error("Smart Workspace not found");
 
     const profile = await ctx.db.get("smartProfiles", args.profileId);
     if (!profile || profile.workspaceId !== workspace._id || profile.kind !== "contact_card") {
@@ -462,5 +462,60 @@ export const recordPublicInteraction = mutation({
     }
 
     return { recorded: true };
+  },
+});
+
+
+export const approveContactProfile = internalMutation({
+  args: {
+    shopifyCustomerGid: v.string(),
+    profileId: v.id("smartProfiles"),
+  },
+  handler: async (ctx, args) => {
+    const workspace = await ctx.db
+      .query("smartWorkspaces")
+      .withIndex("by_shopifyCustomerGid", (q) =>
+        q.eq("shopifyCustomerGid", args.shopifyCustomerGid),
+      )
+      .unique();
+
+    if (!workspace || workspace.status !== "active") {
+      throw new Error("Smart Workspace not found");
+    }
+
+    const profile = await ctx.db.get("smartProfiles", args.profileId);
+    if (
+      !profile ||
+      profile.workspaceId !== workspace._id ||
+      profile.kind !== "contact_card"
+    ) {
+      throw new Error("Contact profile not found");
+    }
+
+    if (profile.status !== "configured" && profile.status !== "approved") {
+      throw new Error("Complete the contact-card configuration before approval");
+    }
+
+    const devices = await ctx.db
+      .query("smartDevices")
+      .withIndex("by_profileId", (q) => q.eq("profileId", args.profileId))
+      .take(20);
+
+    const now = Date.now();
+    await ctx.db.patch("smartProfiles", args.profileId, {
+      status: "approved",
+      updatedAt: now,
+    });
+
+    for (const device of devices) {
+      if (device.status === "provisioned" || device.status === "approved") {
+        await ctx.db.patch("smartDevices", device._id, {
+          status: "approved",
+          updatedAt: now,
+        });
+      }
+    }
+
+    return { profileId: args.profileId, approved: true, deviceCount: devices.length };
   },
 });
