@@ -212,6 +212,8 @@ export const updateContactProfile = internalMutation({
       profileId: _profileId,
       ...patch
     } = args;
+    void _customer;
+    void _profileId;
 
     const now = Date.now();
     await ctx.db.patch("smartProfiles", args.profileId, {
