@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { internalMutation, internalQuery, query } from "./_generated/server";
+import { internalMutation, internalQuery, mutation, query } from "./_generated/server";
 import { internal } from "./_generated/api";
 
 const paidOrderLineItemValidator = v.object({
@@ -141,10 +141,10 @@ export const getCustomerHub = internalQuery({
       .unique();
 
     if (!workspace || workspace.status !== "active") {
-      return { workspace: null, entitlements: [], profiles: [], devices: [] };
+      return { workspace: null, entitlements: [], profiles: [], devices: [], stats: [] };
     }
 
-    const [entitlements, profiles, devices] = await Promise.all([
+    const [entitlements, profiles, devices, stats] = await Promise.all([
       ctx.db
         .query("smartEntitlements")
         .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspace._id))
@@ -157,9 +157,13 @@ export const getCustomerHub = internalQuery({
         .query("smartDevices")
         .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspace._id))
         .take(100),
+      ctx.db
+        .query("smartDeviceStats")
+        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspace._id))
+        .take(100),
     ]);
 
-    return { workspace, entitlements, profiles, devices };
+    return { workspace, entitlements, profiles, devices, stats };
   },
 });
 
@@ -311,10 +315,14 @@ export const redactWorkspaceBatch = internalMutation({
     const workspace = await ctx.db.get("smartWorkspaces", args.workspaceId);
     if (!workspace) return { done: true };
 
-    const [events, devices, profiles, entitlements] = await Promise.all([
+    const [events, stats, devices, profiles, entitlements] = await Promise.all([
       ctx.db
         .query("smartEvents")
         .withIndex("by_workspaceId_and_timestamp", (q) => q.eq("workspaceId", args.workspaceId))
+        .take(50),
+      ctx.db
+        .query("smartDeviceStats")
+        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", args.workspaceId))
         .take(50),
       ctx.db
         .query("smartDevices")
@@ -331,12 +339,14 @@ export const redactWorkspaceBatch = internalMutation({
     ]);
 
     for (const row of events) await ctx.db.delete("smartEvents", row._id);
+    for (const row of stats) await ctx.db.delete("smartDeviceStats", row._id);
     for (const row of devices) await ctx.db.delete("smartDevices", row._id);
     for (const row of profiles) await ctx.db.delete("smartProfiles", row._id);
     for (const row of entitlements) await ctx.db.delete("smartEntitlements", row._id);
 
     const more =
       events.length === 50 ||
+      stats.length === 50 ||
       devices.length === 50 ||
       profiles.length === 50 ||
       entitlements.length === 50;
@@ -401,5 +411,56 @@ export const redactWebhookReceiptsBatch = internalMutation({
     }
 
     return { done: true };
+  },
+});
+
+
+export const recordPublicInteraction = mutation({
+  args: {
+    publicCode: v.string(),
+    type: v.union(v.literal("tap"), v.literal("vcard_download")),
+    referrer: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const device = await ctx.db
+      .query("smartDevices")
+      .withIndex("by_publicCode", (q) => q.eq("publicCode", args.publicCode))
+      .unique();
+
+    if (!device || device.status === "disabled") return { recorded: false };
+
+    const now = Date.now();
+    await ctx.db.insert("smartEvents", {
+      workspaceId: device.workspaceId,
+      deviceId: device._id,
+      publicCode: device.publicCode,
+      type: args.type,
+      timestamp: now,
+      referrer: args.referrer?.slice(0, 500),
+    });
+
+    const stats = await ctx.db
+      .query("smartDeviceStats")
+      .withIndex("by_deviceId", (q) => q.eq("deviceId", device._id))
+      .unique();
+
+    if (stats) {
+      await ctx.db.patch("smartDeviceStats", stats._id, {
+        taps: stats.taps + (args.type === "tap" ? 1 : 0),
+        vcardDownloads:
+          stats.vcardDownloads + (args.type === "vcard_download" ? 1 : 0),
+        lastInteractionAt: now,
+      });
+    } else {
+      await ctx.db.insert("smartDeviceStats", {
+        workspaceId: device.workspaceId,
+        deviceId: device._id,
+        taps: args.type === "tap" ? 1 : 0,
+        vcardDownloads: args.type === "vcard_download" ? 1 : 0,
+        lastInteractionAt: now,
+      });
+    }
+
+    return { recorded: true };
   },
 });
