@@ -188,6 +188,15 @@ function SmartBusinessPage() {
                   </s-text>
                   <s-text>{profileStatusLabel(profile.status)}</s-text>
                   {device ? <s-text>Smart Code: {device.publicCode}</s-text> : null}
+                  {device?.publicUrl ? (
+                    <s-stack direction="block" gap="small-200">
+                      <s-qr-code
+                        content={device.publicUrl}
+                        accessibilityLabel="Smart Contact Card QR-Code"
+                      />
+                      <s-link href={device.publicUrl}>{device.publicUrl}</s-link>
+                    </s-stack>
+                  ) : null}
                   {deviceStats ? (
                     <s-text>
                       NFC/QR Aufrufe: {deviceStats.taps} · Kontakt gespeichert: {deviceStats.vcardDownloads}
