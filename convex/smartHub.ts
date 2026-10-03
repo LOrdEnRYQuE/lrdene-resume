@@ -169,7 +169,19 @@ export const getCustomerHub = internalQuery({
         .take(100),
     ]);
 
-    return { workspace, entitlements, profiles, devices, stats };
+    const profilesWithMedia = await Promise.all(
+      profiles.map(async (profile) => {
+        const storedPhotoUrl = profile.photoStorageId
+          ? await ctx.storage.getUrl(profile.photoStorageId)
+          : null;
+        return {
+          ...profile,
+          photoUrl: storedPhotoUrl ?? profile.photoUrl,
+        };
+      }),
+    );
+
+    return { workspace, entitlements, profiles: profilesWithMedia, devices, stats };
   },
 });
 
@@ -215,28 +227,94 @@ export const updateContactProfile = internalMutation({
     void _customer;
     void _profileId;
 
+    const devices = await ctx.db
+      .query("smartDevices")
+      .withIndex("by_profileId", (q) => q.eq("profileId", args.profileId))
+      .take(20);
+
+    const productionLocked = devices.some(
+      (device) => device.status === "programmed" || device.status === "shipped",
+    );
+
     const now = Date.now();
     await ctx.db.patch("smartProfiles", args.profileId, {
       ...patch,
-      status: "configured",
+      status: productionLocked ? "approved" : "configured",
       updatedAt: now,
     });
+
+    if (!productionLocked) {
+      for (const device of devices) {
+        if (device.status === "approved") {
+          await ctx.db.patch("smartDevices", device._id, {
+            status: "provisioned",
+            updatedAt: now,
+          });
+        }
+      }
+    }
+
+    return await ctx.db.get("smartProfiles", args.profileId);
+  },
+});
+
+export const setContactProfilePhoto = internalMutation({
+  args: {
+    shopifyCustomerGid: v.string(),
+    profileId: v.id("smartProfiles"),
+    storageId: v.id("_storage"),
+  },
+  handler: async (ctx, args) => {
+    const workspace = await ctx.db
+      .query("smartWorkspaces")
+      .withIndex("by_shopifyCustomerGid", (q) =>
+        q.eq("shopifyCustomerGid", args.shopifyCustomerGid),
+      )
+      .unique();
+
+    if (!workspace || workspace.status !== "active") {
+      throw new Error("Smart Workspace not found");
+    }
+
+    const profile = await ctx.db.get("smartProfiles", args.profileId);
+    if (!profile || profile.workspaceId !== workspace._id || profile.kind !== "contact_card") {
+      throw new Error("Contact profile not found");
+    }
 
     const devices = await ctx.db
       .query("smartDevices")
       .withIndex("by_profileId", (q) => q.eq("profileId", args.profileId))
       .take(20);
 
-    for (const device of devices) {
-      if (device.status === "approved") {
-        await ctx.db.patch("smartDevices", device._id, {
-          status: "provisioned",
-          updatedAt: now,
-        });
+    const productionLocked = devices.some(
+      (device) => device.status === "programmed" || device.status === "shipped",
+    );
+    const oldStorageId = profile.photoStorageId;
+    const now = Date.now();
+
+    await ctx.db.patch("smartProfiles", args.profileId, {
+      photoStorageId: args.storageId,
+      photoUrl: undefined,
+      status: productionLocked ? "approved" : "configured",
+      updatedAt: now,
+    });
+
+    if (!productionLocked) {
+      for (const device of devices) {
+        if (device.status === "approved") {
+          await ctx.db.patch("smartDevices", device._id, {
+            status: "provisioned",
+            updatedAt: now,
+          });
+        }
       }
     }
 
-    return await ctx.db.get("smartProfiles", args.profileId);
+    if (oldStorageId && oldStorageId !== args.storageId) {
+      await ctx.storage.delete(oldStorageId);
+    }
+
+    return { profileId: args.profileId, storageId: args.storageId };
   },
 });
 
@@ -253,6 +331,10 @@ export const getPublicContactCard = query({
     const profile = await ctx.db.get("smartProfiles", device.profileId);
     if (!profile || profile.kind !== "contact_card") return null;
 
+    const storedPhotoUrl = profile.photoStorageId
+      ? await ctx.storage.getUrl(profile.photoStorageId)
+      : null;
+
     return {
       publicCode: device.publicCode,
       deviceStatus: device.status,
@@ -266,7 +348,7 @@ export const getPublicContactCard = query({
         whatsapp: profile.whatsapp,
         website: profile.website,
         address: profile.address,
-        photoUrl: profile.photoUrl,
+        photoUrl: storedPhotoUrl ?? profile.photoUrl,
         instagram: profile.instagram,
         facebook: profile.facebook,
         tiktok: profile.tiktok,
@@ -370,7 +452,10 @@ export const redactWorkspaceBatch = internalMutation({
     for (const row of events) await ctx.db.delete("smartEvents", row._id);
     for (const row of stats) await ctx.db.delete("smartDeviceStats", row._id);
     for (const row of devices) await ctx.db.delete("smartDevices", row._id);
-    for (const row of profiles) await ctx.db.delete("smartProfiles", row._id);
+    for (const row of profiles) {
+      if (row.photoStorageId) await ctx.storage.delete(row.photoStorageId);
+      await ctx.db.delete("smartProfiles", row._id);
+    }
     for (const row of entitlements) await ctx.db.delete("smartEntitlements", row._id);
 
     const more =
