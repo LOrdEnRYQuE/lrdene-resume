@@ -10,6 +10,8 @@ Target: `customer-account.page.render`
 
 The merchant adds the full-page extension to New Customer Accounts. The customer stays inside the same Shopify account and authenticates with a short-lived Shopify session token.
 
+The app requests `read_orders` for paid-order fulfillment and `read_customers` so Shopify includes the signed-in Customer GID in the session-token `sub` claim. Protected Customer Data approval remains a deployment gate.
+
 The extension calls the Smart Hub backend with `Authorization: Bearer <session token>`. The backend verifies signature, expiry, audience, and the Shopify Customer GID before returning or mutating customer data.
 
 ## Backend
