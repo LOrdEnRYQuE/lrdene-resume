@@ -1,4 +1,4 @@
-import { fetchQuery } from "convex/nextjs";
+import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { api } from "../../../../../convex/_generated/api";
 import { buildVCard } from "@/lib/smartHub/contactCard";
 
@@ -13,6 +13,15 @@ export async function GET(
 
   if (!card || card.profile.status === "configuration_required") {
     return new Response("Contact card is not configured", { status: 404 });
+  }
+
+  try {
+    await fetchMutation(api.smartHub.recordPublicInteraction, {
+      publicCode,
+      type: "vcard_download",
+    });
+  } catch {
+    // A metrics failure must not prevent the customer from saving the contact.
   }
 
   const body = buildVCard(card.profile);
