@@ -10,7 +10,7 @@ function SmartBusinessPage() {
   const [hub, setHub] = useState(null);
   const [selectedProfileId, setSelectedProfileId] = useState(null);
   const [draft, setDraft] = useState({});
-  const [state, setState] = useState({loading: true, saving: false, error: '', saved: false});
+  const [state, setState] = useState({loading: true, saving: false, error: '', notice: ''});
 
   const backendUrl = String(shopify.settings.value?.backend_url || '').replace(/\/$/, '');
 
@@ -76,7 +76,7 @@ function SmartBusinessPage() {
       linkedin: profile.linkedin || '',
       bookingUrl: profile.bookingUrl || '',
     });
-    setState((current) => ({...current, error: '', saved: false}));
+    setState((current) => ({...current, error: '', notice: ''}));
   }
 
   function field(name) {
@@ -85,23 +85,45 @@ function SmartBusinessPage() {
       onChange: (event) => {
         const value = event.currentTarget.value;
         setDraft((current) => ({...current, [name]: value}));
-        setState((current) => ({...current, saved: false}));
+        setState((current) => ({...current, notice: ''}));
       },
     };
+  }
+
+  async function approveProfile(profileId) {
+    setState((current) => ({...current, saving: true, error: '', notice: ''}));
+    try {
+      await apiFetch('/smart-hub/contact/approve', {
+        method: 'POST',
+        body: JSON.stringify({profileId}),
+      });
+      await loadHub();
+      setState((current) => ({
+        ...current,
+        saving: false,
+        notice: 'Inhalte freigegeben. Die Karte ist bereit für den nächsten Produktionsschritt.',
+      }));
+    } catch (error) {
+      setState((current) => ({
+        ...current,
+        saving: false,
+        error: error instanceof Error ? error.message : 'Freigabe fehlgeschlagen.',
+      }));
+    }
   }
 
   async function saveProfile(event) {
     event.preventDefault();
     if (!selectedProfileId) return;
 
-    setState((current) => ({...current, saving: true, error: '', saved: false}));
+    setState((current) => ({...current, saving: true, error: '', notice: ''}));
     try {
       await apiFetch('/smart-hub/contact', {
         method: 'PATCH',
         body: JSON.stringify({profileId: selectedProfileId, ...draft}),
       });
       await loadHub();
-      setState((current) => ({...current, saving: false, saved: true}));
+      setState((current) => ({...current, saving: false, notice: 'Die Smart Contact Card wurde gespeichert.'}));
     } catch (error) {
       setState((current) => ({
         ...current,
@@ -148,9 +170,9 @@ function SmartBusinessPage() {
           </s-banner>
         ) : null}
 
-        {state.saved ? (
-          <s-banner tone="success" title="Gespeichert">
-            <s-text>Die Smart Contact Card wurde aktualisiert. NFC und QR müssen nicht neu gedruckt werden.</s-text>
+        {state.notice ? (
+          <s-banner tone="success" title="Aktualisiert">
+            <s-text>{state.notice}</s-text>
           </s-banner>
         ) : null}
 
@@ -205,6 +227,15 @@ function SmartBusinessPage() {
                     <s-text>Noch keine Interaktionen</s-text>
                   )}
                   <s-button onClick={() => editProfile(profile)}>Bearbeiten</s-button>
+                  {profile.status === 'configured' ? (
+                    <s-button
+                      variant="primary"
+                      disabled={state.saving}
+                      onClick={() => approveProfile(profile._id)}
+                    >
+                      Inhalte freigeben
+                    </s-button>
+                  ) : null}
                 </s-stack>
               );
             })}
@@ -236,7 +267,7 @@ function SmartBusinessPage() {
                 onClick={() => {
                   setSelectedProfileId(null);
                   setDraft({});
-                  setState((current) => ({...current, saved: false, error: ''}));
+                  setState((current) => ({...current, notice: '', error: ''}));
                 }}
               >
                 Abbrechen
