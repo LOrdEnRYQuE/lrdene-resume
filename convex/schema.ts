@@ -476,11 +476,20 @@ export default defineSchema({
     .index("by_workspaceId", ["workspaceId"])
     .index("by_workspaceId_and_status", ["workspaceId", "status"])
     .index("by_profileId", ["profileId"]),
+  smartDeviceStats: defineTable({
+    workspaceId: v.id("smartWorkspaces"),
+    deviceId: v.id("smartDevices"),
+    taps: v.number(),
+    vcardDownloads: v.number(),
+    lastInteractionAt: v.optional(v.number()),
+  })
+    .index("by_deviceId", ["deviceId"])
+    .index("by_workspaceId", ["workspaceId"]),
   smartEvents: defineTable({
     workspaceId: v.optional(v.id("smartWorkspaces")),
     deviceId: v.optional(v.id("smartDevices")),
     publicCode: v.optional(v.string()),
-    type: v.string(), // tap | scan | vcard_download
+    type: v.string(), // tap | vcard_download
     timestamp: v.number(),
     anonymizedSession: v.optional(v.string()),
     referrer: v.optional(v.string()),
