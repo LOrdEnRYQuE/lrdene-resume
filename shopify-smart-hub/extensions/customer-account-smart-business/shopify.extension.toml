@@ -10,7 +10,6 @@ target = "customer-account.page.render"
 module = "./src/SmartBusinessPage.jsx"
 
 [extensions.capabilities]
-api_access = true
 network_access = true
 
 [extensions.settings]
