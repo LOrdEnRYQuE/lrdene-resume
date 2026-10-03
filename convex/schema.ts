@@ -504,9 +504,10 @@ export default defineSchema({
     shopDomain: v.string(),
     shopifyOrderGid: v.optional(v.string()),
     shopifyCustomerGid: v.optional(v.string()),
-    status: v.string(), // processed | ignored | redaction_scheduled
+    status: v.string(), // processed | ignored | redaction_scheduled | redacted
     createdAt: v.number(),
   })
     .index("by_deliveryId", ["deliveryId"])
-    .index("by_shopifyOrderGid", ["shopifyOrderGid"]),
+    .index("by_shopifyOrderGid", ["shopifyOrderGid"])
+    .index("by_shopifyCustomerGid", ["shopifyCustomerGid"]),
 });
