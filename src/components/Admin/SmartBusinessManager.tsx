@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { CheckCircle2, ExternalLink, Nfc, PackageCheck, Truck } from "lucide-react";
+import { CheckCircle2, Download, ExternalLink, Nfc, PackageCheck, Truck } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
 import { useAdminMutation } from "@/hooks/useAdminMutation";
@@ -49,6 +49,11 @@ function deviceStatusLabel(status: string) {
   return status;
 }
 
+function csvCell(value: unknown) {
+  const text = value == null ? "" : String(value);
+  return `"${text.replace(/"/g, '""')}"`;
+}
+
 function profileStatusLabel(status?: string) {
   if (status === "configuration_required") return "Einrichtung erforderlich";
   if (status === "configured") return "Konfiguriert";
@@ -82,6 +87,50 @@ export function SmartBusinessManager() {
     }
   };
 
+  const exportProductionCsv = () => {
+    const header = [
+      "device_id",
+      "status",
+      "public_code",
+      "public_url",
+      "profile_name",
+      "company",
+      "sku",
+      "shopify_order",
+      "nfc_uid",
+      "taps",
+      "vcard_downloads",
+    ];
+
+    const body = rows.map((row) =>
+      [
+        row.device._id,
+        row.device.status,
+        row.device.publicCode,
+        row.publicUrl,
+        row.profile?.displayName,
+        row.profile?.company,
+        row.entitlement?.sku,
+        row.entitlement?.shopifyOrderGid,
+        row.device.nfcUid,
+        row.stats?.taps || 0,
+        row.stats?.vcardDownloads || 0,
+      ]
+        .map(csvCell)
+        .join(","),
+    );
+
+    const blob = new Blob([[header.join(","), ...body].join("\n")], {
+      type: "text/csv;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `lordenryque-smart-business-${new Date().toISOString().slice(0, 10)}.csv`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
+
   const counts = rows.reduce(
     (acc, row) => {
       acc[row.device.status] = (acc[row.device.status] || 0) + 1;
@@ -100,6 +149,13 @@ export function SmartBusinessManager() {
             Kundenkonfiguration, Freigabe, NFC-Programmierung und Versand in einer
             einzigen operativen Warteschlange.
           </p>
+        </div>
+
+        <div className={styles.summaryActions}>
+          <button type="button" onClick={exportProductionCsv} disabled={rows.length === 0}>
+            <Download size={16} />
+            Produktions-CSV exportieren
+          </button>
         </div>
 
         <div className={styles.metrics}>
