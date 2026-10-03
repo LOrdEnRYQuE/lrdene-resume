@@ -1,10 +1,12 @@
 import '@shopify/ui-extensions/preact';
 import {render} from 'preact';
-import {useEffect, useMemo, useState} from 'preact/hooks';
+import {useCallback, useEffect, useMemo, useState} from 'preact/hooks';
 
-export default async () => {
+const extension = async () => {
   render(<SmartBusinessPage />, document.body);
 };
+
+export default extension;
 
 function SmartBusinessPage() {
   const [hub, setHub] = useState(null);
@@ -14,7 +16,7 @@ function SmartBusinessPage() {
 
   const backendUrl = String(shopify.settings.value?.backend_url || '').replace(/\/$/, '');
 
-  async function apiFetch(path, options = {}) {
+  const apiFetch = useCallback(async (path, options = {}) => {
     if (!backendUrl) {
       throw new Error('Smart Hub backend URL ist noch nicht konfiguriert.');
     }
@@ -33,9 +35,9 @@ function SmartBusinessPage() {
       throw new Error(payload.error || `Smart Hub request failed (${response.status})`);
     }
     return payload;
-  }
+  }, [backendUrl]);
 
-  async function loadHub() {
+  const loadHub = useCallback(async () => {
     setState((current) => ({...current, loading: true, error: ''}));
     try {
       const payload = await apiFetch('/smart-hub/customer');
@@ -48,11 +50,11 @@ function SmartBusinessPage() {
         error: error instanceof Error ? error.message : 'Smart Hub konnte nicht geladen werden.',
       }));
     }
-  }
+  }, [apiFetch]);
 
   useEffect(() => {
-    loadHub();
-  }, []);
+    void loadHub();
+  }, [loadHub]);
 
   const selectedProfile = useMemo(
     () => hub?.profiles?.find((profile) => profile._id === selectedProfileId) || null,
