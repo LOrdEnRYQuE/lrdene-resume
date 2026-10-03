@@ -472,6 +472,7 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
+    .index("by_status", ["status"])
     .index("by_publicCode", ["publicCode"])
     .index("by_workspaceId", ["workspaceId"])
     .index("by_workspaceId_and_status", ["workspaceId", "status"])
