@@ -23,6 +23,7 @@ const PAGE_LABELS: Record<string, { title: string; subtitle: string }> = {
   "/admin/journal": { title: "Journal", subtitle: "Editorial production and publication operations." },
   "/admin/services": { title: "Services", subtitle: "Service catalog, offers, and positioning." },
   "/admin/store": { title: "Digital Store", subtitle: "Productized offers, assets, and pricing flow." },
+  "/admin/smart-business": { title: "Smart Business", subtitle: "Customer setup, NFC programming, and fulfillment operations." },
   "/admin/site": { title: "Site Control", subtitle: "Global CMS controls and presentation governance." },
   "/admin/settings": { title: "Settings", subtitle: "Environment-level controls and platform defaults." },
 };

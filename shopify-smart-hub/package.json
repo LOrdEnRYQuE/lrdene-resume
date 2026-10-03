@@ -1,0 +1,16 @@
+{
+  "name": "lordenryque-smart-hub-shopify",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "extensions/*"
+  ],
+  "scripts": {
+    "dev": "shopify app dev",
+    "deploy": "shopify app deploy",
+    "info": "shopify app info"
+  },
+  "devDependencies": {
+    "@shopify/cli": "4.8.3"
+  }
+}

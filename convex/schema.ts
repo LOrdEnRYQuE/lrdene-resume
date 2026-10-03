@@ -408,4 +408,107 @@ export default defineSchema({
     .index("by_thread_and_createdAt", ["threadId", "createdAt"])
     .index("by_messageId", ["messageId"])
     .index("by_createdAt", ["createdAt"]),
+  smartWorkspaces: defineTable({
+    shopifyCustomerGid: v.string(),
+    status: v.string(), // active | suspended
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_shopifyCustomerGid", ["shopifyCustomerGid"])
+    .index("by_status", ["status"]),
+  smartEntitlements: defineTable({
+    workspaceId: v.id("smartWorkspaces"),
+    shopifyOrderGid: v.string(),
+    shopifyLineItemGid: v.string(),
+    shopifyProductGid: v.optional(v.string()),
+    shopifyVariantGid: v.optional(v.string()),
+    sku: v.string(),
+    kind: v.string(),
+    quantity: v.number(),
+    deviceCount: v.number(),
+    status: v.string(), // active | pending_implementation | revoked
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspaceId", ["workspaceId"])
+    .index("by_workspaceId_and_status", ["workspaceId", "status"])
+    .index("by_shopifyOrderGid_and_shopifyLineItemGid", ["shopifyOrderGid", "shopifyLineItemGid"]),
+  smartProfiles: defineTable({
+    workspaceId: v.id("smartWorkspaces"),
+    entitlementId: v.id("smartEntitlements"),
+    kind: v.string(), // contact_card (first vertical slice)
+    status: v.string(), // configuration_required | configured | approved | suspended
+    displayName: v.optional(v.string()),
+    company: v.optional(v.string()),
+    role: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    email: v.optional(v.string()),
+    whatsapp: v.optional(v.string()),
+    website: v.optional(v.string()),
+    address: v.optional(v.string()),
+    photoUrl: v.optional(v.string()),
+    photoStorageId: v.optional(v.id("_storage")),
+    instagram: v.optional(v.string()),
+    facebook: v.optional(v.string()),
+    tiktok: v.optional(v.string()),
+    linkedin: v.optional(v.string()),
+    bookingUrl: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspaceId", ["workspaceId"])
+    .index("by_workspaceId_and_kind", ["workspaceId", "kind"])
+    .index("by_entitlementId", ["entitlementId"]),
+  smartDevices: defineTable({
+    workspaceId: v.id("smartWorkspaces"),
+    entitlementId: v.id("smartEntitlements"),
+    profileId: v.id("smartProfiles"),
+    kind: v.string(), // nfc_card
+    publicCode: v.string(),
+    status: v.string(), // provisioned | approved | programmed | shipped | disabled
+    shopifyOrderGid: v.string(),
+    shopifyProductGid: v.optional(v.string()),
+    shopifyVariantGid: v.optional(v.string()),
+    nfcUid: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_status", ["status"])
+    .index("by_publicCode", ["publicCode"])
+    .index("by_workspaceId", ["workspaceId"])
+    .index("by_workspaceId_and_status", ["workspaceId", "status"])
+    .index("by_profileId", ["profileId"]),
+  smartDeviceStats: defineTable({
+    workspaceId: v.id("smartWorkspaces"),
+    deviceId: v.id("smartDevices"),
+    taps: v.number(),
+    vcardDownloads: v.number(),
+    lastInteractionAt: v.optional(v.number()),
+  })
+    .index("by_deviceId", ["deviceId"])
+    .index("by_workspaceId", ["workspaceId"]),
+  smartEvents: defineTable({
+    workspaceId: v.optional(v.id("smartWorkspaces")),
+    deviceId: v.optional(v.id("smartDevices")),
+    publicCode: v.optional(v.string()),
+    type: v.string(), // tap | vcard_download
+    timestamp: v.number(),
+    anonymizedSession: v.optional(v.string()),
+    referrer: v.optional(v.string()),
+  })
+    .index("by_deviceId_and_timestamp", ["deviceId", "timestamp"])
+    .index("by_workspaceId_and_timestamp", ["workspaceId", "timestamp"])
+    .index("by_timestamp", ["timestamp"]),
+  smartWebhookReceipts: defineTable({
+    deliveryId: v.string(),
+    topic: v.string(),
+    shopDomain: v.string(),
+    shopifyOrderGid: v.optional(v.string()),
+    shopifyCustomerGid: v.optional(v.string()),
+    status: v.string(), // processed | ignored | redaction_scheduled | redacted
+    createdAt: v.number(),
+  })
+    .index("by_deliveryId", ["deliveryId"])
+    .index("by_shopifyOrderGid", ["shopifyOrderGid"])
+    .index("by_shopifyCustomerGid", ["shopifyCustomerGid"]),
 });

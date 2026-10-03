@@ -23,6 +23,7 @@ import {
   Sliders,
   Image as ImageIcon,
   FolderLock,
+  Nfc,
   X,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -47,6 +48,7 @@ const NAV_ITEMS = [
   { section: "Content", label: "Blog", href: "/admin/journal", icon: FileText },
   { section: "Offerings", label: "Services", href: "/admin/services", icon: Zap },
   { section: "Offerings", label: "Digital Store", href: "/admin/store", icon: ShoppingBag },
+  { section: "Offerings", label: "Smart Business", href: "/admin/smart-business", icon: Nfc },
   { section: "Platform", label: "Site Control", href: "/admin/site", icon: Globe },
   { section: "Platform", label: "Settings", href: "/admin/settings", icon: Sliders },
 ];
@@ -84,6 +86,7 @@ export default function AdminSidebar({
           Blog: "Blog",
           Services: "Leistungen",
           "Digital Store": "Digital Store",
+          "Smart Business": "Smart Business",
           "Site Control": "Site Control",
           Settings: "Einstellungen",
           adminControl: "Admin Steuerung",
@@ -111,6 +114,7 @@ export default function AdminSidebar({
           Blog: "Blog",
           Services: "Services",
           "Digital Store": "Digital Store",
+          "Smart Business": "Smart Business",
           "Site Control": "Site Control",
           Settings: "Settings",
           adminControl: "Control Center",

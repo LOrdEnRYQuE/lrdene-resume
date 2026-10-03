@@ -1,0 +1,10 @@
+{
+  "name": "lordenryque-smart-business-customer-account",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@shopify/ui-extensions": "2026.7.4",
+    "preact": "10.29.8"
+  }
+}
