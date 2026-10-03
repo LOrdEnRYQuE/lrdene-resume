@@ -326,6 +326,12 @@ export const processLifecycleWebhook = internalMutation({
       createdAt: Date.now(),
     });
 
+    if (args.topic === "customers/redact" && args.shopifyCustomerGid) {
+      await ctx.scheduler.runAfter(0, internal.smartHub.redactCustomerReceiptsBatch, {
+        shopifyCustomerGid: args.shopifyCustomerGid,
+      });
+    }
+
     return { duplicate: false, action: status };
   },
 });
@@ -631,5 +637,35 @@ export const updateDeviceProduction = mutation({
 
     await ctx.db.patch("smartDevices", args.deviceId, patch);
     return await ctx.db.get("smartDevices", args.deviceId);
+  },
+});
+
+
+export const redactCustomerReceiptsBatch = internalMutation({
+  args: { shopifyCustomerGid: v.string() },
+  handler: async (ctx, args) => {
+    const receipts = await ctx.db
+      .query("smartWebhookReceipts")
+      .withIndex("by_shopifyCustomerGid", (q) =>
+        q.eq("shopifyCustomerGid", args.shopifyCustomerGid),
+      )
+      .take(100);
+
+    for (const receipt of receipts) {
+      await ctx.db.patch("smartWebhookReceipts", receipt._id, {
+        shopifyCustomerGid: undefined,
+        shopifyOrderGid: undefined,
+        status: "redacted",
+      });
+    }
+
+    if (receipts.length === 100) {
+      await ctx.scheduler.runAfter(0, internal.smartHub.redactCustomerReceiptsBatch, {
+        shopifyCustomerGid: args.shopifyCustomerGid,
+      });
+      return { done: false };
+    }
+
+    return { done: true };
   },
 });
