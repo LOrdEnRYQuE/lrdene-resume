@@ -29,6 +29,29 @@
   font-size: 12px;
 }
 
+.summaryActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.summaryActions button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+
+.summaryActions button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .metrics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
