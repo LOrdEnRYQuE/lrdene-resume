@@ -447,6 +447,7 @@ export default defineSchema({
     website: v.optional(v.string()),
     address: v.optional(v.string()),
     photoUrl: v.optional(v.string()),
+    photoStorageId: v.optional(v.id("_storage")),
     instagram: v.optional(v.string()),
     facebook: v.optional(v.string()),
     tiktok: v.optional(v.string()),
