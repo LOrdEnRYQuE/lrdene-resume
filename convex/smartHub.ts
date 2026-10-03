@@ -43,11 +43,16 @@ export const processPaidOrder = internalMutation({
 
     let workspaceId;
     if (workspace) {
+      if (workspace.status === "deleting") {
+        throw new Error("Smart Workspace is being deleted; retry later");
+      }
       workspaceId = workspace._id;
-      await ctx.db.patch("smartWorkspaces", workspaceId, {
-        status: "active",
-        updatedAt: now,
-      });
+      if (workspace.status !== "active") {
+        await ctx.db.patch("smartWorkspaces", workspaceId, {
+          status: "active",
+          updatedAt: now,
+        });
+      }
     } else {
       workspaceId = await ctx.db.insert("smartWorkspaces", {
         shopifyCustomerGid: args.shopifyCustomerGid,
@@ -208,11 +213,26 @@ export const updateContactProfile = internalMutation({
       ...patch
     } = args;
 
+    const now = Date.now();
     await ctx.db.patch("smartProfiles", args.profileId, {
       ...patch,
       status: "configured",
-      updatedAt: Date.now(),
+      updatedAt: now,
     });
+
+    const devices = await ctx.db
+      .query("smartDevices")
+      .withIndex("by_profileId", (q) => q.eq("profileId", args.profileId))
+      .take(20);
+
+    for (const device of devices) {
+      if (device.status === "approved") {
+        await ctx.db.patch("smartDevices", device._id, {
+          status: "provisioned",
+          updatedAt: now,
+        });
+      }
+    }
 
     return await ctx.db.get("smartProfiles", args.profileId);
   },
