@@ -69,3 +69,50 @@ Payments for Smart Business remain OFF until all of the following are verified a
 10. vCard downloads correctly.
 11. QR and an actual NFC tag both resolve to the permanent Smart Link.
 12. Build, lint, typecheck, and relevant integration tests are green.
+
+
+## Implemented beyond the initial customer slice
+
+The current feature branch also includes:
+
+- native Shopify QR rendering in Customer Accounts
+- permanent Smart Link analytics for taps and vCard downloads
+- customer approval gate before production
+- admin production queue under `/admin/smart-business`
+- controlled production transitions: `approved → programmed → shipped`
+- optional NFC UID capture
+- provider-neutral production CSV export
+- Shopify privacy/uninstall webhook handling
+- batched customer/shop data redaction
+- CI verification for the production Next.js + Convex stack
+
+## One required Shopify identity handoff
+
+Shopify manages two identifiers that must not be invented or committed manually:
+
+- app `client_id`
+- extension `uid`
+
+Create/link the real app with Shopify CLI from the `shopify-smart-hub` directory:
+
+```bash
+npm install
+npx shopify app config link
+npx shopify app generate extension
+```
+
+For the generated extension choose **Customer account UI** and retain the generated `uid`. Then reconcile the generated extension directory with `extensions/customer-account-smart-business` rather than creating a second customer-facing page.
+
+The app should use **custom distribution** for the connected LOrdEnRYQuE store. The current architecture is an extension-only Shopify app whose UI is hosted by Shopify while its network calls use the existing Convex Smart Hub backend.
+
+After linking:
+
+1. copy the real Shopify client ID into `SHOPIFY_API_KEY` in the Convex production environment
+2. copy the app client secret into `SHOPIFY_API_SECRET`
+3. set `SHOPIFY_SHOP_DOMAIN=m11xd1-pq.myshopify.com`
+4. set a strong independent `SMART_LINK_SECRET`
+5. set `SMART_LINK_BASE_URL=https://lordenryque.com/go` until the dedicated `go.lordenryque.de` routing is activated
+6. configure the Customer Account extension setting `backend_url=https://spotted-tapir-517.eu-west-1.convex.site`
+7. deploy the Convex backend before deploying the Shopify app version
+
+Do not enable Smart Business payments merely because the app links successfully. The real paid-order walkthrough remains the final activation gate.
