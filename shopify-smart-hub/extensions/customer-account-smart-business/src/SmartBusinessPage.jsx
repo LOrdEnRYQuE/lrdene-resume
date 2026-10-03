@@ -133,6 +133,7 @@ function SmartBusinessPage() {
   const entitlements = hub?.entitlements || [];
   const contactProfiles = (hub?.profiles || []).filter((profile) => profile.kind === 'contact_card');
   const devices = hub?.devices || [];
+  const stats = hub?.stats || [];
 
   return (
     <s-page heading="Smart Business">
@@ -177,6 +178,9 @@ function SmartBusinessPage() {
             <s-text type="strong">Smart Contact Cards</s-text>
             {contactProfiles.map((profile, index) => {
               const device = devices.find((candidate) => candidate.profileId === profile._id);
+              const deviceStats = device
+                ? stats.find((candidate) => candidate.deviceId === device._id)
+                : null;
               return (
                 <s-stack key={profile._id} direction="block" gap="small-200">
                   <s-text type="strong">
@@ -184,6 +188,13 @@ function SmartBusinessPage() {
                   </s-text>
                   <s-text>{profileStatusLabel(profile.status)}</s-text>
                   {device ? <s-text>Smart Code: {device.publicCode}</s-text> : null}
+                  {deviceStats ? (
+                    <s-text>
+                      NFC/QR Aufrufe: {deviceStats.taps} · Kontakt gespeichert: {deviceStats.vcardDownloads}
+                    </s-text>
+                  ) : (
+                    <s-text>Noch keine Interaktionen</s-text>
+                  )}
                   <s-button onClick={() => editProfile(profile)}>Bearbeiten</s-button>
                 </s-stack>
               );
