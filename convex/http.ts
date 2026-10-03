@@ -175,7 +175,19 @@ http.route({
     try {
       const shopifyCustomerGid = await authenticatedShopifyCustomer(req);
       const hub = await ctx.runQuery(internal.smartHub.getCustomerHub, { shopifyCustomerGid });
-      return jsonResponse({ ok: true, hub });
+      const smartLinkBaseUrl = (
+        process.env.SMART_LINK_BASE_URL ?? "https://lordenryque.com/go"
+      ).replace(/\/$/, "");
+      return jsonResponse({
+        ok: true,
+        hub: {
+          ...hub,
+          devices: hub.devices.map((device) => ({
+            ...device,
+            publicUrl: `${smartLinkBaseUrl}/${encodeURIComponent(device.publicCode)}`,
+          })),
+        },
+      });
     } catch (error) {
       return jsonResponse(
         { ok: false, error: error instanceof Error ? error.message : "Unauthorized" },
