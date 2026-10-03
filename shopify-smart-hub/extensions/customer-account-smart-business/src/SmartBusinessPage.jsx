@@ -92,6 +92,72 @@ function SmartBusinessPage() {
     };
   }
 
+  async function uploadProfilePhoto(event) {
+    if (!selectedProfileId) return;
+
+    const file = Array.from(event.currentTarget.files ?? [])[0];
+    if (!file) return;
+
+    const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
+    if (!allowedTypes.has(file.type)) {
+      setState((current) => ({
+        ...current,
+        error: 'Bitte laden Sie ein JPG-, PNG- oder WebP-Bild hoch.',
+        notice: '',
+      }));
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setState((current) => ({
+        ...current,
+        error: 'Das Bild darf maximal 5 MB groß sein.',
+        notice: '',
+      }));
+      return;
+    }
+    if (!backendUrl) {
+      setState((current) => ({
+        ...current,
+        error: 'Smart Hub backend URL ist noch nicht konfiguriert.',
+        notice: '',
+      }));
+      return;
+    }
+
+    setState((current) => ({...current, saving: true, error: '', notice: ''}));
+    try {
+      const token = await shopify.sessionToken.get();
+      const response = await fetch(
+        `${backendUrl}/smart-hub/contact/photo?profileId=${encodeURIComponent(selectedProfileId)}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': file.type,
+          },
+          body: file,
+        },
+      );
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || payload.ok === false) {
+        throw new Error(payload.error || `Foto-Upload fehlgeschlagen (${response.status})`);
+      }
+
+      await loadHub();
+      setState((current) => ({
+        ...current,
+        saving: false,
+        notice: 'Foto / Logo wurde aktualisiert.',
+      }));
+    } catch (error) {
+      setState((current) => ({
+        ...current,
+        saving: false,
+        error: error instanceof Error ? error.message : 'Foto / Logo konnte nicht hochgeladen werden.',
+      }));
+    }
+  }
+
   async function approveProfile(profileId) {
     setState((current) => ({...current, saving: true, error: '', notice: ''}));
     try {
@@ -248,6 +314,28 @@ function SmartBusinessPage() {
           <s-form onSubmit={saveProfile}>
             <s-stack direction="block" gap="base">
               <s-text type="strong">Kontaktkarte bearbeiten</s-text>
+              {selectedProfile.photoUrl ? (
+                <s-box
+                  inlineSize="96px"
+                  blockSize="96px"
+                  borderRadius="large-100"
+                  overflow="hidden"
+                >
+                  <s-image
+                    src={selectedProfile.photoUrl}
+                    alt={selectedProfile.displayName || 'Kontaktfoto'}
+                    aspectRatio="1/1"
+                    objectFit="cover"
+                  />
+                </s-box>
+              ) : null}
+              <s-drop-zone
+                name="profilePhoto"
+                label="Foto / Logo (JPG, PNG oder WebP · max. 5 MB)"
+                accept="image/jpeg,image/png,image/webp"
+                disabled={state.saving}
+                onInput={uploadProfilePhoto}
+              />
               <s-text-field label="Name" name="displayName" {...field('displayName')} />
               <s-text-field label="Unternehmen" name="company" {...field('company')} />
               <s-text-field label="Position / Funktion" name="role" {...field('role')} />
