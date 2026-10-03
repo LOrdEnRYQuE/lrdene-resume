@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { internalMutation, internalQuery, mutation, query } from "./_generated/server";
 import { internal } from "./_generated/api";
+import { ADMIN_TOKEN, requireAdminToken } from "./adminAuth";
 
 const paidOrderLineItemValidator = v.object({
   shopifyLineItemGid: v.string(),
@@ -517,5 +518,98 @@ export const approveContactProfile = internalMutation({
     }
 
     return { profileId: args.profileId, approved: true, deviceCount: devices.length };
+  },
+});
+
+
+export const listProductionQueue = query({
+  args: { adminToken: ADMIN_TOKEN },
+  handler: async (ctx, args) => {
+    await requireAdminToken(args.adminToken);
+
+    const statuses = ["provisioned", "approved", "programmed", "shipped"] as const;
+    const batches = await Promise.all(
+      statuses.map((status) =>
+        ctx.db
+          .query("smartDevices")
+          .withIndex("by_status", (q) => q.eq("status", status))
+          .order("desc")
+          .take(25),
+      ),
+    );
+
+    const devices = batches.flat();
+    const smartLinkBaseUrl = (
+      process.env.SMART_LINK_BASE_URL ?? "https://lordenryque.com/go"
+    ).replace(/\/$/, "");
+
+    const rows = [];
+    for (const device of devices) {
+      const [profile, entitlement, workspace, stats] = await Promise.all([
+        ctx.db.get("smartProfiles", device.profileId),
+        ctx.db.get("smartEntitlements", device.entitlementId),
+        ctx.db.get("smartWorkspaces", device.workspaceId),
+        ctx.db
+          .query("smartDeviceStats")
+          .withIndex("by_deviceId", (q) => q.eq("deviceId", device._id))
+          .unique(),
+      ]);
+
+      rows.push({
+        device,
+        profile,
+        entitlement,
+        workspace,
+        stats,
+        publicUrl: `${smartLinkBaseUrl}/${encodeURIComponent(device.publicCode)}`,
+      });
+    }
+
+    rows.sort((a, b) => b.device.updatedAt - a.device.updatedAt);
+    return rows;
+  },
+});
+
+export const updateDeviceProduction = mutation({
+  args: {
+    adminToken: ADMIN_TOKEN,
+    deviceId: v.id("smartDevices"),
+    status: v.union(
+      v.literal("programmed"),
+      v.literal("shipped"),
+      v.literal("disabled"),
+    ),
+    nfcUid: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    await requireAdminToken(args.adminToken);
+
+    const device = await ctx.db.get("smartDevices", args.deviceId);
+    if (!device) throw new Error("Smart device not found");
+
+    if (args.status === "programmed" && device.status !== "approved") {
+      throw new Error("Only an approved device can be marked as programmed");
+    }
+    if (args.status === "shipped" && device.status !== "programmed") {
+      throw new Error("Only a programmed device can be marked as shipped");
+    }
+
+    const patch: {
+      status: string;
+      updatedAt: number;
+      nfcUid?: string;
+    } = {
+      status: args.status,
+      updatedAt: Date.now(),
+    };
+
+    if (args.nfcUid !== undefined) {
+      const normalized = args.nfcUid.trim();
+      if (normalized.length > 128) throw new Error("NFC UID is too long");
+      patch.nfcUid = normalized || undefined;
+    }
+
+    await ctx.db.patch("smartDevices", args.deviceId, patch);
+    return await ctx.db.get("smartDevices", args.deviceId);
   },
 });
