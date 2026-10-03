@@ -266,6 +266,53 @@ http.route({
   }),
 });
 
+
+http.route({
+  path: "/smart-hub/contact/approve",
+  method: "OPTIONS",
+  handler: httpAction(async () => new Response(null, { status: 204, headers: corsHeaders() })),
+});
+
+http.route({
+  path: "/smart-hub/contact/approve",
+  method: "POST",
+  handler: httpAction(async (ctx, req) => {
+    let shopifyCustomerGid: string;
+    try {
+      shopifyCustomerGid = await authenticatedShopifyCustomer(req);
+    } catch (error) {
+      return jsonResponse(
+        { ok: false, error: error instanceof Error ? error.message : "Unauthorized" },
+        401,
+      );
+    }
+
+    let body: Record<string, unknown>;
+    try {
+      body = (await req.json()) as Record<string, unknown>;
+    } catch {
+      return jsonResponse({ ok: false, error: "Invalid JSON" }, 400);
+    }
+
+    if (typeof body.profileId !== "string") {
+      return jsonResponse({ ok: false, error: "profileId is required" }, 400);
+    }
+
+    try {
+      const result = await ctx.runMutation(internal.smartHub.approveContactProfile, {
+        shopifyCustomerGid,
+        profileId: body.profileId as Id<"smartProfiles">,
+      });
+      return jsonResponse({ ok: true, result });
+    } catch (error) {
+      return jsonResponse(
+        { ok: false, error: error instanceof Error ? error.message : "Approval failed" },
+        400,
+      );
+    }
+  }),
+});
+
 http.route({
   path: "/webhooks/shopify/orders-paid",
   method: "POST",
