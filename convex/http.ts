@@ -3,6 +3,7 @@ import { httpAction } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { createSmartPublicCode, isExpectedShopDomain, verifyShopifySessionToken, verifyShopifyWebhook } from "./shopifyAuth";
+import { parseOrderPersonalization } from "./orderPersonalization";
 
 const http = httpRouter();
 
@@ -482,6 +483,7 @@ http.route({
         quantity,
         deviceCount,
         publicCodes,
+        personalization: parseOrderPersonalization(item.properties),
       });
     }
 
