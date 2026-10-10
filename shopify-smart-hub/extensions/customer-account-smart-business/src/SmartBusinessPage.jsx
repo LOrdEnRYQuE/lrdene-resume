@@ -329,6 +329,22 @@ function SmartBusinessPage() {
                   />
                 </s-box>
               ) : null}
+              {selectedProfile.brandLogoUrl ? (
+                <s-stack direction="block" gap="small-200">
+                  <s-text type="strong">Beim Kauf hochgeladenes Firmenlogo</s-text>
+                  <s-box inlineSize="120px" blockSize="120px" borderRadius="large-100" overflow="hidden">
+                    <s-image
+                      src={selectedProfile.brandLogoUrl}
+                      alt="Beim Kauf hochgeladenes Logo"
+                      aspectRatio="1/1"
+                      objectFit="contain"
+                    />
+                  </s-box>
+                </s-stack>
+              ) : null}
+              {selectedProfile.coverImageUrl ? (
+                <s-link href={selectedProfile.coverImageUrl}>Beim Kauf hochgeladenes Titelbild ansehen</s-link>
+              ) : null}
               <s-drop-zone
                 name="profilePhoto"
                 label="Foto / Logo (JPG, PNG oder WebP · max. 5 MB)"
