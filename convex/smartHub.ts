@@ -3,6 +3,27 @@ import { internalMutation, internalQuery, mutation, query } from "./_generated/s
 import { internal } from "./_generated/api";
 import { ADMIN_TOKEN, requireAdminToken } from "./adminAuth";
 
+const smartOrderPersonalizationValidator = v.object({
+    configurationId: v.optional(v.string()),
+    contactName: v.optional(v.string()),
+    company: v.optional(v.string()),
+    role: v.optional(v.string()),
+    email: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    website: v.optional(v.string()),
+    qrTarget: v.optional(v.string()),
+    address: v.optional(v.string()),
+    instagram: v.optional(v.string()),
+    linkedin: v.optional(v.string()),
+    message: v.optional(v.string()),
+    logoUrl: v.optional(v.string()),
+    coverImageUrl: v.optional(v.string()),
+    designTemplate: v.optional(v.string()),
+    accentColor: v.optional(v.string()),
+    proofRequested: v.optional(v.boolean()),
+    layoutApproved: v.optional(v.boolean()),
+  });
+
 const paidOrderLineItemValidator = v.object({
   shopifyLineItemGid: v.string(),
   shopifyProductGid: v.optional(v.string()),
@@ -12,6 +33,50 @@ const paidOrderLineItemValidator = v.object({
   quantity: v.number(),
   deviceCount: v.number(),
   publicCodes: v.array(v.string()),
+  personalization: v.optional(smartOrderPersonalizationValidator),
+});
+
+// A paid guest Smart Business order must never disappear from the activation queue.
+// An operator can find the original order in Shopify using its GID and safely
+// arrange verified account assignment before releasing production.
+export const recordPendingCustomerOrder = internalMutation({
+  args: {
+    shopifyOrderGid: v.string(),
+    shopDomain: v.string(),
+    deliveryId: v.string(),
+    lineItems: v.array(v.object({
+      sku: v.string(),
+      kind: v.string(),
+      quantity: v.number(),
+    })),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("smartPendingCustomerOrders")
+      .withIndex("by_shopifyOrderGid", (q) => q.eq("shopifyOrderGid", args.shopifyOrderGid))
+      .unique();
+    if (existing) return { recorded: false, status: existing.status };
+    const now = Date.now();
+    await ctx.db.insert("smartPendingCustomerOrders", {
+      ...args,
+      status: "customer_identity_required",
+      createdAt: now,
+      updatedAt: now,
+    });
+    return { recorded: true, status: "customer_identity_required" };
+  },
+});
+
+export const listPendingCustomerOrders = query({
+  args: { adminToken: ADMIN_TOKEN },
+  handler: async (ctx, args) => {
+    await requireAdminToken(args.adminToken);
+    return await ctx.db
+      .query("smartPendingCustomerOrders")
+      .withIndex("by_status", (q) => q.eq("status", "customer_identity_required"))
+      .order("desc")
+      .take(100);
+  },
 });
 
 export const processPaidOrder = internalMutation({
@@ -88,6 +153,7 @@ export const processPaidOrder = internalMutation({
         kind: item.kind,
         quantity: item.quantity,
         deviceCount: item.deviceCount,
+        personalization: item.personalization,
         status: item.kind === "contact_card" ? "active" : "pending_implementation",
         createdAt: now,
         updatedAt: now,
@@ -97,11 +163,26 @@ export const processPaidOrder = internalMutation({
       if (item.kind !== "contact_card") continue;
 
       for (const publicCode of item.publicCodes) {
+        const personalization = item.personalization;
+        const profileConfigured = Boolean(personalization?.contactName && (
+          personalization.company || personalization.email || personalization.phone || personalization.website
+        ));
         const profileId = await ctx.db.insert("smartProfiles", {
           workspaceId,
           entitlementId,
           kind: "contact_card",
-          status: "configuration_required",
+          status: profileConfigured ? "configured" : "configuration_required",
+          displayName: personalization?.contactName,
+          company: personalization?.company,
+          role: personalization?.role,
+          phone: personalization?.phone,
+          email: personalization?.email,
+          website: personalization?.website,
+          address: personalization?.address,
+          instagram: personalization?.instagram,
+          linkedin: personalization?.linkedin,
+          brandLogoUrl: personalization?.logoUrl,
+          coverImageUrl: personalization?.coverImageUrl,
           createdAt: now,
           updatedAt: now,
         });
@@ -121,6 +202,17 @@ export const processPaidOrder = internalMutation({
         });
         devicesCreated += 1;
       }
+    }
+
+    const pending = await ctx.db
+      .query("smartPendingCustomerOrders")
+      .withIndex("by_shopifyOrderGid", (q) => q.eq("shopifyOrderGid", args.shopifyOrderGid))
+      .unique();
+    if (pending && pending.status === "customer_identity_required") {
+      await ctx.db.patch("smartPendingCustomerOrders", pending._id, {
+        status: "resolved",
+        updatedAt: Date.now(),
+      });
     }
 
     await ctx.db.insert("smartWebhookReceipts", {

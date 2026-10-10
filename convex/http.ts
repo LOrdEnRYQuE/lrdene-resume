@@ -3,6 +3,7 @@ import { httpAction } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { createSmartPublicCode, isExpectedShopDomain, verifyShopifySessionToken, verifyShopifyWebhook } from "./shopifyAuth";
+import { parseOrderPersonalization } from "./orderPersonalization";
 
 const http = httpRouter();
 
@@ -445,8 +446,38 @@ http.route({
     const customerGid = shopifyGid("Customer", customer.admin_graphql_api_id ?? customer.id);
     const lineItemsRaw = Array.isArray(payload.line_items) ? payload.line_items : [];
 
-    if (!orderGid || !customerGid) {
-      return new Response("Order has no Shopify customer identity", { status: 200 });
+    if (!orderGid) {
+      return new Response("Order has no Shopify order ID", { status: 400 });
+    }
+
+    // Guest checkout is currently enabled in Shopify. Preserve smart-item
+    // orders for manual account assignment rather than silently acknowledging
+    // payment without creating any entitlement or production record.
+    if (!customerGid) {
+      const smartItems = lineItemsRaw
+        .filter((rawItem): rawItem is Record<string, unknown> =>
+          Boolean(rawItem && typeof rawItem === "object"))
+        .map((item) => {
+          const sku = typeof item.sku === "string" ? item.sku.trim() : "";
+          const kind = smartKindFromSku(sku);
+          return kind ? {
+            sku,
+            kind,
+            quantity: typeof item.quantity === "number" && item.quantity > 0
+              ? Math.floor(item.quantity) : 1,
+          } : null;
+        })
+        .filter((item): item is NonNullable<typeof item> => item !== null);
+      if (smartItems.length === 0) {
+        return new Response("No Smart Business items", { status: 200 });
+      }
+      const pending = await ctx.runMutation(internal.smartHub.recordPendingCustomerOrder, {
+        shopifyOrderGid: orderGid,
+        shopDomain,
+        deliveryId,
+        lineItems: smartItems,
+      });
+      return jsonResponse({ ok: true, customerAssignmentRequired: true, pending });
     }
 
     const lineItems = [];
@@ -482,6 +513,7 @@ http.route({
         quantity,
         deviceCount,
         publicCodes,
+        personalization: parseOrderPersonalization(item.properties),
       });
     }
 

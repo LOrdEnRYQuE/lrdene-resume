@@ -426,6 +426,26 @@ export default defineSchema({
     kind: v.string(),
     quantity: v.number(),
     deviceCount: v.number(),
+    personalization: v.optional(v.object({
+    configurationId: v.optional(v.string()),
+    contactName: v.optional(v.string()),
+    company: v.optional(v.string()),
+    role: v.optional(v.string()),
+    email: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    website: v.optional(v.string()),
+    qrTarget: v.optional(v.string()),
+    address: v.optional(v.string()),
+    instagram: v.optional(v.string()),
+    linkedin: v.optional(v.string()),
+    message: v.optional(v.string()),
+    logoUrl: v.optional(v.string()),
+    coverImageUrl: v.optional(v.string()),
+    designTemplate: v.optional(v.string()),
+    accentColor: v.optional(v.string()),
+    proofRequested: v.optional(v.boolean()),
+    layoutApproved: v.optional(v.boolean()),
+  })),
     status: v.string(), // active | pending_implementation | revoked
     createdAt: v.number(),
     updatedAt: v.number(),
@@ -447,6 +467,8 @@ export default defineSchema({
     website: v.optional(v.string()),
     address: v.optional(v.string()),
     photoUrl: v.optional(v.string()),
+    brandLogoUrl: v.optional(v.string()),
+    coverImageUrl: v.optional(v.string()),
     photoStorageId: v.optional(v.id("_storage")),
     instagram: v.optional(v.string()),
     facebook: v.optional(v.string()),
@@ -499,6 +521,21 @@ export default defineSchema({
     .index("by_deviceId_and_timestamp", ["deviceId", "timestamp"])
     .index("by_workspaceId_and_timestamp", ["workspaceId", "timestamp"])
     .index("by_timestamp", ["timestamp"]),
+  smartPendingCustomerOrders: defineTable({
+    shopifyOrderGid: v.string(),
+    shopDomain: v.string(),
+    deliveryId: v.string(),
+    status: v.string(), // customer_identity_required | resolved
+    lineItems: v.array(v.object({
+      sku: v.string(),
+      kind: v.string(),
+      quantity: v.number(),
+    })),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_shopifyOrderGid", ["shopifyOrderGid"])
+    .index("by_status", ["status"]),
   smartWebhookReceipts: defineTable({
     deliveryId: v.string(),
     topic: v.string(),

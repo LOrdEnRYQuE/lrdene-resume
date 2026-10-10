@@ -7,6 +7,24 @@ import { useAdminQuery } from "@/hooks/useAdminQuery";
 import { useAdminMutation } from "@/hooks/useAdminMutation";
 import styles from "./SmartBusinessManager.module.css";
 
+type OrderPersonalization = {
+  configurationId?: string;
+  contactName?: string;
+  company?: string;
+  role?: string;
+  email?: string;
+  phone?: string;
+  website?: string;
+  qrTarget?: string;
+  message?: string;
+  logoUrl?: string;
+  coverImageUrl?: string;
+  designTemplate?: string;
+  accentColor?: string;
+  proofRequested?: boolean;
+  layoutApproved?: boolean;
+};
+
 type QueueRow = {
   device: {
     _id: string;
@@ -28,6 +46,7 @@ type QueueRow = {
     kind: string;
     quantity: number;
     shopifyOrderGid: string;
+    personalization?: OrderPersonalization;
   } | null;
   workspace: {
     shopifyCustomerGid: string;
@@ -51,7 +70,9 @@ function deviceStatusLabel(status: string) {
 
 function csvCell(value: unknown) {
   const text = value == null ? "" : String(value);
-  return `"${text.replace(/"/g, '""')}"`;
+  // Prevent spreadsheet formula execution when customer-provided names/notes are exported.
+  const safe = /^[\s]*[=+\-@]/.test(text) ? `'${text}` : text;
+  return `"${safe.replace(/"/g, '""')}"`;
 }
 
 function profileStatusLabel(status?: string) {
@@ -97,6 +118,16 @@ export function SmartBusinessManager() {
       "company",
       "sku",
       "shopify_order",
+      "configuration_id",
+      "design_template",
+      "accent_color",
+      "qr_target",
+      "artwork_logo_url",
+      "artwork_cover_url",
+      "contact_email",
+      "contact_phone",
+      "proof_requested",
+      "design_approved",
       "nfc_uid",
       "taps",
       "vcard_downloads",
@@ -112,6 +143,16 @@ export function SmartBusinessManager() {
         row.profile?.company,
         row.entitlement?.sku,
         row.entitlement?.shopifyOrderGid,
+        row.entitlement?.personalization?.configurationId,
+        row.entitlement?.personalization?.designTemplate,
+        row.entitlement?.personalization?.accentColor,
+        row.entitlement?.personalization?.qrTarget,
+        row.entitlement?.personalization?.logoUrl,
+        row.entitlement?.personalization?.coverImageUrl,
+        row.entitlement?.personalization?.email,
+        row.entitlement?.personalization?.phone,
+        row.entitlement?.personalization?.proofRequested ? 'Yes' : 'No',
+        row.entitlement?.personalization?.layoutApproved ? 'Yes' : 'No',
         row.device.nfcUid,
         row.stats?.taps || 0,
         row.stats?.vcardDownloads || 0,
@@ -229,6 +270,29 @@ export function SmartBusinessManager() {
                     </strong>
                   </div>
                 </div>
+
+                {row.entitlement?.personalization ? (
+                  <div className={styles.details}>
+                    <div>
+                      <span>Konfiguration</span>
+                      <strong>{row.entitlement.personalization.configurationId || '—'}</strong>
+                    </div>
+                    <div>
+                      <span>Design</span>
+                      <strong>{row.entitlement.personalization.designTemplate || '—'}</strong>
+                    </div>
+                    <div>
+                      <span>QR-Ziel</span>
+                      <strong>{row.entitlement.personalization.qrTarget || 'Digitale Visitenkarte'}</strong>
+                    </div>
+                    <div>
+                      <span>Logo für Produktion</span>
+                      {row.entitlement.personalization.logoUrl ? (
+                        <a href={row.entitlement.personalization.logoUrl} target="_blank" rel="noopener noreferrer">Kundendatei ansehen</a>
+                      ) : <strong>Kein Logo hochgeladen</strong>}
+                    </div>
+                  </div>
+                ) : null}
 
                 <a
                   className={styles.publicLink}
