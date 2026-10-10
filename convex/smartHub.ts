@@ -36,6 +36,49 @@ const paidOrderLineItemValidator = v.object({
   personalization: v.optional(smartOrderPersonalizationValidator),
 });
 
+// A paid guest Smart Business order must never disappear from the activation queue.
+// An operator can find the original order in Shopify using its GID and safely
+// arrange verified account assignment before releasing production.
+export const recordPendingCustomerOrder = internalMutation({
+  args: {
+    shopifyOrderGid: v.string(),
+    shopDomain: v.string(),
+    deliveryId: v.string(),
+    lineItems: v.array(v.object({
+      sku: v.string(),
+      kind: v.string(),
+      quantity: v.number(),
+    })),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("smartPendingCustomerOrders")
+      .withIndex("by_shopifyOrderGid", (q) => q.eq("shopifyOrderGid", args.shopifyOrderGid))
+      .unique();
+    if (existing) return { recorded: false, status: existing.status };
+    const now = Date.now();
+    await ctx.db.insert("smartPendingCustomerOrders", {
+      ...args,
+      status: "customer_identity_required",
+      createdAt: now,
+      updatedAt: now,
+    });
+    return { recorded: true, status: "customer_identity_required" };
+  },
+});
+
+export const listPendingCustomerOrders = query({
+  args: { adminToken: ADMIN_TOKEN },
+  handler: async (ctx, args) => {
+    await requireAdminToken(args.adminToken);
+    return await ctx.db
+      .query("smartPendingCustomerOrders")
+      .withIndex("by_status", (q) => q.eq("status", "customer_identity_required"))
+      .order("desc")
+      .take(100);
+  },
+});
+
 export const processPaidOrder = internalMutation({
   args: {
     deliveryId: v.string(),
@@ -159,6 +202,17 @@ export const processPaidOrder = internalMutation({
         });
         devicesCreated += 1;
       }
+    }
+
+    const pending = await ctx.db
+      .query("smartPendingCustomerOrders")
+      .withIndex("by_shopifyOrderGid", (q) => q.eq("shopifyOrderGid", args.shopifyOrderGid))
+      .unique();
+    if (pending && pending.status === "customer_identity_required") {
+      await ctx.db.patch("smartPendingCustomerOrders", pending._id, {
+        status: "resolved",
+        updatedAt: Date.now(),
+      });
     }
 
     await ctx.db.insert("smartWebhookReceipts", {
