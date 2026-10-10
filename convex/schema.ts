@@ -521,6 +521,21 @@ export default defineSchema({
     .index("by_deviceId_and_timestamp", ["deviceId", "timestamp"])
     .index("by_workspaceId_and_timestamp", ["workspaceId", "timestamp"])
     .index("by_timestamp", ["timestamp"]),
+  smartPendingCustomerOrders: defineTable({
+    shopifyOrderGid: v.string(),
+    shopDomain: v.string(),
+    deliveryId: v.string(),
+    status: v.string(), // customer_identity_required | resolved
+    lineItems: v.array(v.object({
+      sku: v.string(),
+      kind: v.string(),
+      quantity: v.number(),
+    })),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_shopifyOrderGid", ["shopifyOrderGid"])
+    .index("by_status", ["status"]),
   smartWebhookReceipts: defineTable({
     deliveryId: v.string(),
     topic: v.string(),
