@@ -590,57 +590,6 @@ export default function QRSolutionsPage() {
         </section>
 
         <section className={styles.section}>
-          <h2>{copy.showcaseTitle}</h2>
-          <div className={styles.showcaseGrid}>
-            {copy.showcaseItems.map((item, index) => (
-              <article
-                key={item.title}
-                className={`${styles.showcaseCard} ${index === 0 ? styles.showcaseFeatured : ""}`}
-              >
-                <div className={styles.showcaseImageWrap}>
-                  <Image
-                    src="/assets/uTraLink-icon.png"
-                    alt={item.title}
-                    fill
-                    className={styles.showcaseImage}
-                    sizes="(max-width: 960px) 100vw, 33vw"
-                    loading="lazy"
-                  />
-                  <div className={styles.showcaseOverlay} />
-                  <div className={styles.showcaseLogo}>
-                    <span className={styles.showcaseLogoRing} />
-                    <Image
-                      src="/assets/LOGO.png"
-                      alt="LOrdEnRYQuE"
-                      width={30}
-                      height={30}
-                      className={styles.showcaseNavLogo}
-                      loading="lazy"
-                    />
-                  </div>
-                  <span className={styles.showcaseTag}>{index === 0 ? "Featured" : "Campaign"}</span>
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.section}>
-          <h2>{copy.workflowTitle}</h2>
-          <div className={styles.workflowGrid}>
-            {copy.workflowSteps.map((item) => (
-              <article key={item.step} className={styles.workflowCard}>
-                <span className={styles.workflowStep}>{item.step}</span>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.section}>
           <h2>{de ? "uTraLink Templates – Mobile Preview" : "uTraLink Templates – Mobile Preview"}</h2>
           <p className={styles.subtitle}>{de ? "Alle öffentlichen Vorlagen direkt im Smartphone-Rahmen ansehen." : "Explore every public template inside an interactive mobile frame."}</p>
           {catalogError ? <p role="alert">{de ? "Vorlagen derzeit nicht verfügbar." : "Template catalog is temporarily unavailable."}</p> : (
