@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LocaleLink from "@/components/I18n/LocaleLink";
 import { useLocale } from "@/lib/i18n/useLocale";
 import styles from "./QRSolutionsPage.module.css";
@@ -517,6 +517,22 @@ export default function QRSolutionsPage() {
   const [selectedFrameUrlIndex, setSelectedFrameUrlIndex] = useState<Record<number, number>>({});
   const [loadedFramePreview, setLoadedFramePreview] = useState<Record<number, boolean>>({});
   const [showLeadForm, setShowLeadForm] = useState(false);
+  const [templates, setTemplates] = useState<Array<{id:number; name:string; type:string; preview_url:string|null; screenshot_url:string|null}>>([]);
+  const [catalogError, setCatalogError] = useState(false);
+  const [activeTemplate, setActiveTemplate] = useState<number | null>(null);
+  const [activeType, setActiveType] = useState("all");
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/utralink-templates")
+      .then((response) => { if (!response.ok) throw new Error("Catalog unavailable"); return response.json(); })
+      .then((items) => { if (!cancelled) setTemplates(items); })
+      .catch(() => { if (!cancelled) setCatalogError(true); });
+    return () => { cancelled = true; };
+  }, []);
+  const types = [...new Set(templates.map((template) => template.type))].sort();
+  const visibleTemplates = templates.filter((template) => activeType === "all" || template.type === activeType);
+  const selectedTemplate = visibleTemplates.find((template) => template.id === activeTemplate) ?? visibleTemplates[0];
+
 
   return (
     <main className={styles.page}>
@@ -627,109 +643,43 @@ export default function QRSolutionsPage() {
         </section>
 
         <section className={styles.section}>
-          <h2>{copy.emulatorTitle}</h2>
-          <p className={styles.subtitle}>{copy.emulatorDesc}</p>
-          <div className={styles.emulatorGrid}>
-            {copy.frames.map((frame, index) => (
-              <article
-                key={frame.title}
-                className={`${styles.phoneFrame} ${index === 0 ? styles.frameA : index === 1 ? styles.frameB : styles.frameC}`}
-              >
-                <div className={styles.frameBadge}>
-                  <span>{index === 0 ? "vCard" : index === 1 ? "BioLink" : "Business"}</span>
-                </div>
-                <div className={styles.phoneNotch} />
-                <div className={styles.phoneScreen}>
-                  <div className={styles.phoneHeader}>
-                    <Image src="/assets/uTraLink-icon.png" alt="uTraLink Logo" width={30} height={30} loading="lazy" />
-                    <span className={styles.phoneHeaderLabel}>uTraLink Preview</span>
-                  </div>
-                  <div className={styles.phoneBody}>
-                    <h4>{frame.title}</h4>
-                    <p>{frame.subtitle}</p>
-                    <ul>
-                      {frame.points.map((point) => (
-                        <li key={point}>{point}</li>
-                      ))}
-                    </ul>
-                    <div className={styles.previewControls}>
-                      <label htmlFor={`frame-url-${index}`}>Live URL</label>
-                      <select
-                        id={`frame-url-${index}`}
-                        className={styles.previewSelect}
-                        value={selectedFrameUrlIndex[index] ?? 0}
-                        onChange={(event) =>
-                          setSelectedFrameUrlIndex((prev) => ({
-                            ...prev,
-                            [index]: Number(event.target.value),
-                          }))
-                        }
-                      >
-                        {(frame.urls ?? [frame.sampleUrl]).map((url, optionIndex) => (
-                          <option key={url} value={optionIndex}>
-                            {url.replace("https://utralink.com/", "utralink.com/")}
-                          </option>
-                        ))}
-                      </select>
+          <h2>{de ? "uTraLink Templates – Mobile Preview" : "uTraLink Templates – Mobile Preview"}</h2>
+          <p className={styles.subtitle}>{de ? "Alle öffentlichen Vorlagen direkt im Smartphone-Rahmen ansehen." : "Explore every public template inside an interactive mobile frame."}</p>
+          {catalogError ? <p role="alert">{de ? "Vorlagen derzeit nicht verfügbar." : "Template catalog is temporarily unavailable."}</p> : (
+            <>
+              <p aria-live="polite">{templates.length} {de ? "Vorlagen" : "templates"}</p>
+              <label htmlFor="template-type-filter">{de ? "Kategorie" : "Category"}</label>
+              <select id="template-type-filter" value={activeType} onChange={(event) => { setActiveType(event.target.value); setActiveTemplate(null); }}>
+                <option value="all">{de ? "Alle Kategorien" : "All categories"}</option>
+                {types.map((type) => <option key={type} value={type}>{type}</option>)}
+              </select>
+              <div className={styles.liveGrid}>
+                {visibleTemplates.map((template) => (
+                  <button key={template.id} type="button" onClick={() => setActiveTemplate(template.id)} aria-pressed={selectedTemplate?.id === template.id} className={styles.liveLink}>
+                    {template.name} · {template.type}
+                  </button>
+                ))}
+              </div>
+              {selectedTemplate && (
+                <div className={styles.emulatorGrid}>
+                  <article className={`${styles.phoneFrame} ${styles.frameA}`}>
+                    <div className={styles.phoneNotch} />
+                    <div className={styles.phoneScreen}>
+                      <div className={styles.phoneHeader}>{selectedTemplate.name}</div>
+                      <div className={styles.frameViewport}>
+                        {selectedTemplate.preview_url ? (
+                          <iframe key={selectedTemplate.id} title={selectedTemplate.name} src={selectedTemplate.preview_url} className={styles.liveFrame} loading="lazy" referrerPolicy="no-referrer" sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin" />
+                        ) : selectedTemplate.screenshot_url ? (
+                          <img src={selectedTemplate.screenshot_url} alt={selectedTemplate.name} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                        ) : <p>{de ? "Keine Vorschau verfügbar" : "Preview unavailable"}</p>}
+                      </div>
                     </div>
-                    <div className={styles.frameViewport}>
-                      {loadedFramePreview[index] ? (
-                        <iframe
-                          title={`${frame.title} live preview`}
-                          src={(frame.urls ?? [frame.sampleUrl])[selectedFrameUrlIndex[index] ?? 0]}
-                          className={styles.liveFrame}
-                          loading="lazy"
-                          referrerPolicy="no-referrer"
-                          sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin"
-                        />
-                      ) : (
-                        <button
-                          type="button"
-                          className={styles.frameLoadBtn}
-                          onClick={() =>
-                            setLoadedFramePreview((prev) => ({
-                              ...prev,
-                              [index]: true,
-                            }))
-                          }
-                        >
-                          {copy.emulatorLoadPreview}
-                        </button>
-                      )}
-                    </div>
-                    <p className={styles.frameHint}>
-                      Live preview is embedded where allowed by the destination site.
-                    </p>
-                    <a href={frame.sampleUrl} target="_blank" rel="noopener noreferrer" className={styles.sampleLink}>
-                      Open Live Example
-                    </a>
-                  </div>
+                  </article>
                 </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.section}>
-          <h2>{copy.liveTitle}</h2>
-          <div className={styles.liveGrid}>
-            {copy.liveGroups.map((group, index) => (
-              <article
-                key={group.label}
-                className={`${styles.liveCard} ${index === 0 ? styles.liveFeatured : ""}`}
-              >
-                <h3>{group.label}</h3>
-                <div className={styles.liveLinks}>
-                  {group.links.map((link, linkIndex) => (
-                    <a key={link} href={link} target="_blank" rel="noopener noreferrer" className={styles.liveLink}>
-                      <span className={styles.liveIndex}>{String(linkIndex + 1).padStart(2, "0")}</span>
-                      {link.replace("https://utralink.com/", "utralink.com/")}
-                    </a>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </div>
+              )}
+              <a href="https://utralink.com/dashboard" target="_blank" rel="noopener noreferrer" className={styles.sampleLink}>{de ? "Vorlage auf uTraLink verwenden" : "Use template on uTraLink"}</a>
+            </>
+          )}
         </section>
 
         <section className={styles.section}>
