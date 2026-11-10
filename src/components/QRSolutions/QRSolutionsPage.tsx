@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import LocaleLink from "@/components/I18n/LocaleLink";
 import { useLocale } from "@/lib/i18n/useLocale";
 import styles from "./QRSolutionsPage.module.css";
@@ -517,11 +516,9 @@ export default function QRSolutionsPage() {
       };
   const [showLeadForm, setShowLeadForm] = useState(false);
   const templates: Array<{id:number; name:string; type:string; category:string; preview_url:string|null; screenshot_url:string|null}> = [...UTRALINK_TEMPLATES];
-  const [activeTemplate, setActiveTemplate] = useState<number | null>(null);
   const [activeType, setActiveType] = useState("all");
   const types = [...new Set(templates.map((template) => template.category))].sort();
   const visibleTemplates = templates.filter((template) => activeType === "all" || template.category === activeType);
-  const selectedTemplate = visibleTemplates.find((template) => template.id === activeTemplate) ?? visibleTemplates[0];
 
 
   return (
@@ -588,34 +585,33 @@ export default function QRSolutionsPage() {
             <>
               <p aria-live="polite">{templates.length} {de ? "Vorlagen" : "templates"}</p>
               <label htmlFor="template-type-filter">{de ? "Kategorie" : "Category"}</label>
-              <select id="template-type-filter" value={activeType} onChange={(event) => { setActiveType(event.target.value); setActiveTemplate(null); }}>
+              <select id="template-type-filter" value={activeType} onChange={(event) => setActiveType(event.target.value)}>
                 <option value="all">{de ? "Alle Kategorien" : "All categories"}</option>
                 {types.map((type) => <option key={type} value={type}>{type}</option>)}
               </select>
-              <div className={styles.liveGrid}>
+              <div className={styles.emulatorGrid}>
                 {visibleTemplates.map((template) => (
-                  <button key={template.id} type="button" onClick={() => setActiveTemplate(template.id)} aria-pressed={selectedTemplate?.id === template.id} className={styles.liveLink}>
-                    {template.name} · {template.category}
-                  </button>
-                ))}
-              </div>
-              {selectedTemplate && (
-                <div className={styles.emulatorGrid}>
-                  <article className={`${styles.phoneFrame} ${styles.frameA}`}>
+                  <article key={template.id} className={`${styles.phoneFrame} ${styles.frameA}`}>
                     <div className={styles.phoneNotch} />
                     <div className={styles.phoneScreen}>
-                      <div className={styles.phoneHeader}>{selectedTemplate.name}</div>
+                      <div className={styles.phoneHeader}>{template.name}</div>
                       <div className={styles.frameViewport}>
-                        {selectedTemplate.preview_url ? (
-                          <iframe key={selectedTemplate.id} title={selectedTemplate.name} src={selectedTemplate.preview_url} className={styles.liveFrame} loading="lazy" referrerPolicy="no-referrer" sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin" />
-                        ) : selectedTemplate.screenshot_url ? (
-                          <img src={selectedTemplate.screenshot_url} alt={selectedTemplate.name} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-                        ) : <p>{de ? "Keine Vorschau verfügbar" : "Preview unavailable"}</p>}
+                        <iframe
+                          title={template.name}
+                          src={template.preview_url ?? undefined}
+                          className={styles.liveFrame}
+                          loading="lazy"
+                          referrerPolicy="no-referrer"
+                          sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin"
+                        />
                       </div>
                     </div>
+                    <a href={template.preview_url ?? "https://utralink.com"} target="_blank" rel="noopener noreferrer" className={styles.sampleLink}>
+                      {de ? "Vorlage öffnen" : "Open template"}
+                    </a>
                   </article>
-                </div>
-              )}
+                ))}
+              </div>
               <a href="https://utralink.com/dashboard" target="_blank" rel="noopener noreferrer" className={styles.sampleLink}>{de ? "Vorlage auf uTraLink verwenden" : "Use template on uTraLink"}</a>
             </>
           )}
