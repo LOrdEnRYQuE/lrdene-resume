@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import LocaleLink from "@/components/I18n/LocaleLink";
 import { useLocale } from "@/lib/i18n/useLocale";
 import styles from "./QRSolutionsPage.module.css";
+import { UTRALINK_TEMPLATES } from "./utralinkTemplates";
 import QRSolutionsLeadForm from "./QRSolutionsLeadForm";
 
 export default function QRSolutionsPage() {
@@ -515,18 +516,9 @@ export default function QRSolutionsPage() {
         ],
       };
   const [showLeadForm, setShowLeadForm] = useState(false);
-  const [templates, setTemplates] = useState<Array<{id:number; name:string; type:string; category:string; preview_url:string|null; screenshot_url:string|null}>>([]);
-  const [catalogError, setCatalogError] = useState(false);
+  const templates: Array<{id:number; name:string; type:string; category:string; preview_url:string|null; screenshot_url:string|null}> = [...UTRALINK_TEMPLATES];
   const [activeTemplate, setActiveTemplate] = useState<number | null>(null);
   const [activeType, setActiveType] = useState("all");
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/utralink-templates")
-      .then((response) => { if (!response.ok) throw new Error("Catalog unavailable"); return response.json(); })
-      .then((items) => { if (!cancelled) setTemplates(items); })
-      .catch(() => { if (!cancelled) setCatalogError(true); });
-    return () => { cancelled = true; };
-  }, []);
   const types = [...new Set(templates.map((template) => template.category))].sort();
   const visibleTemplates = templates.filter((template) => activeType === "all" || template.category === activeType);
   const selectedTemplate = visibleTemplates.find((template) => template.id === activeTemplate) ?? visibleTemplates[0];
@@ -592,7 +584,7 @@ export default function QRSolutionsPage() {
         <section className={styles.section}>
           <h2>{de ? "uTraLink Templates – Mobile Preview" : "uTraLink Templates – Mobile Preview"}</h2>
           <p className={styles.subtitle}>{de ? "Alle öffentlichen Vorlagen direkt im Smartphone-Rahmen ansehen." : "Explore every public template inside an interactive mobile frame."}</p>
-          {catalogError ? <p role="alert">{de ? "Vorlagen derzeit nicht verfügbar." : "Template catalog is temporarily unavailable."}</p> : (
+          {(
             <>
               <p aria-live="polite">{templates.length} {de ? "Vorlagen" : "templates"}</p>
               <label htmlFor="template-type-filter">{de ? "Kategorie" : "Category"}</label>
