@@ -1,0 +1,35 @@
+name: QR Solutions verification
+
+on:
+  push:
+    branches:
+      - feature/utralink-template-mobile-gallery
+  pull_request:
+    paths:
+      - 'src/components/QRSolutions/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/qr-solutions-verify.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Validate template catalog
+        run: node scripts/verify-qr-solutions.mjs
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        env:
+          NEXT_PUBLIC_CONVEX_URL: https://spotted-tapir-517.eu-west-1.convex.cloud
+          NEXT_PUBLIC_CONVEX_SITE_URL: https://spotted-tapir-517.eu-west-1.convex.site
+        run: npm run build

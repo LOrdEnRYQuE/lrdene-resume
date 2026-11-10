@@ -4,7 +4,7 @@ import { useState } from "react";
 import LocaleLink from "@/components/I18n/LocaleLink";
 import { useLocale } from "@/lib/i18n/useLocale";
 import styles from "./QRSolutionsPage.module.css";
-import Image from "next/image";
+import { UTRALINK_TEMPLATES } from "./utralinkTemplates";
 import QRSolutionsLeadForm from "./QRSolutionsLeadForm";
 
 export default function QRSolutionsPage() {
@@ -514,9 +514,12 @@ export default function QRSolutionsPage() {
           },
         ],
       };
-  const [selectedFrameUrlIndex, setSelectedFrameUrlIndex] = useState<Record<number, number>>({});
-  const [loadedFramePreview, setLoadedFramePreview] = useState<Record<number, boolean>>({});
   const [showLeadForm, setShowLeadForm] = useState(false);
+  const templates: Array<{id:number; name:string; type:string; category:string; preview_url:string|null; screenshot_url:string|null}> = [...UTRALINK_TEMPLATES];
+  const [activeType, setActiveType] = useState("all");
+  const types = [...new Set(templates.map((template) => template.category))].sort();
+  const visibleTemplates = templates.filter((template) => activeType === "all" || template.category === activeType);
+
 
   return (
     <main className={styles.page}>
@@ -576,160 +579,42 @@ export default function QRSolutionsPage() {
         </section>
 
         <section className={styles.section}>
-          <h2>{copy.showcaseTitle}</h2>
-          <div className={styles.showcaseGrid}>
-            {copy.showcaseItems.map((item, index) => (
-              <article
-                key={item.title}
-                className={`${styles.showcaseCard} ${index === 0 ? styles.showcaseFeatured : ""}`}
-              >
-                <div className={styles.showcaseImageWrap}>
-                  <Image
-                    src="/assets/uTraLink-icon.png"
-                    alt={item.title}
-                    fill
-                    className={styles.showcaseImage}
-                    sizes="(max-width: 960px) 100vw, 33vw"
-                    loading="lazy"
-                  />
-                  <div className={styles.showcaseOverlay} />
-                  <div className={styles.showcaseLogo}>
-                    <span className={styles.showcaseLogoRing} />
-                    <Image
-                      src="/assets/LOGO.png"
-                      alt="LOrdEnRYQuE"
-                      width={30}
-                      height={30}
-                      className={styles.showcaseNavLogo}
-                      loading="lazy"
-                    />
-                  </div>
-                  <span className={styles.showcaseTag}>{index === 0 ? "Featured" : "Campaign"}</span>
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.section}>
-          <h2>{copy.workflowTitle}</h2>
-          <div className={styles.workflowGrid}>
-            {copy.workflowSteps.map((item) => (
-              <article key={item.step} className={styles.workflowCard}>
-                <span className={styles.workflowStep}>{item.step}</span>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.section}>
-          <h2>{copy.emulatorTitle}</h2>
-          <p className={styles.subtitle}>{copy.emulatorDesc}</p>
-          <div className={styles.emulatorGrid}>
-            {copy.frames.map((frame, index) => (
-              <article
-                key={frame.title}
-                className={`${styles.phoneFrame} ${index === 0 ? styles.frameA : index === 1 ? styles.frameB : styles.frameC}`}
-              >
-                <div className={styles.frameBadge}>
-                  <span>{index === 0 ? "vCard" : index === 1 ? "BioLink" : "Business"}</span>
-                </div>
-                <div className={styles.phoneNotch} />
-                <div className={styles.phoneScreen}>
-                  <div className={styles.phoneHeader}>
-                    <Image src="/assets/uTraLink-icon.png" alt="uTraLink Logo" width={30} height={30} loading="lazy" />
-                    <span className={styles.phoneHeaderLabel}>uTraLink Preview</span>
-                  </div>
-                  <div className={styles.phoneBody}>
-                    <h4>{frame.title}</h4>
-                    <p>{frame.subtitle}</p>
-                    <ul>
-                      {frame.points.map((point) => (
-                        <li key={point}>{point}</li>
-                      ))}
-                    </ul>
-                    <div className={styles.previewControls}>
-                      <label htmlFor={`frame-url-${index}`}>Live URL</label>
-                      <select
-                        id={`frame-url-${index}`}
-                        className={styles.previewSelect}
-                        value={selectedFrameUrlIndex[index] ?? 0}
-                        onChange={(event) =>
-                          setSelectedFrameUrlIndex((prev) => ({
-                            ...prev,
-                            [index]: Number(event.target.value),
-                          }))
-                        }
-                      >
-                        {(frame.urls ?? [frame.sampleUrl]).map((url, optionIndex) => (
-                          <option key={url} value={optionIndex}>
-                            {url.replace("https://utralink.com/", "utralink.com/")}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className={styles.frameViewport}>
-                      {loadedFramePreview[index] ? (
+          <h2>{de ? "uTraLink Templates – Mobile Preview" : "uTraLink Templates – Mobile Preview"}</h2>
+          <p className={styles.subtitle}>{de ? "Alle öffentlichen Vorlagen direkt im Smartphone-Rahmen ansehen." : "Explore every public template inside an interactive mobile frame."}</p>
+          {(
+            <>
+              <p aria-live="polite">{templates.length} {de ? "Vorlagen" : "templates"}</p>
+              <label htmlFor="template-type-filter">{de ? "Kategorie" : "Category"}</label>
+              <select id="template-type-filter" value={activeType} onChange={(event) => setActiveType(event.target.value)}>
+                <option value="all">{de ? "Alle Kategorien" : "All categories"}</option>
+                {types.map((type) => <option key={type} value={type}>{type}</option>)}
+              </select>
+              <div className={styles.emulatorGrid}>
+                {visibleTemplates.map((template) => (
+                  <article key={template.id} className={`${styles.phoneFrame} ${styles.frameA}`}>
+                    <div className={styles.phoneNotch} />
+                    <div className={styles.phoneScreen}>
+                      <div className={styles.phoneHeader}>{template.name}</div>
+                      <div className={styles.frameViewport}>
                         <iframe
-                          title={`${frame.title} live preview`}
-                          src={(frame.urls ?? [frame.sampleUrl])[selectedFrameUrlIndex[index] ?? 0]}
+                          title={template.name}
+                          src={template.preview_url ?? undefined}
                           className={styles.liveFrame}
                           loading="lazy"
                           referrerPolicy="no-referrer"
                           sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin"
                         />
-                      ) : (
-                        <button
-                          type="button"
-                          className={styles.frameLoadBtn}
-                          onClick={() =>
-                            setLoadedFramePreview((prev) => ({
-                              ...prev,
-                              [index]: true,
-                            }))
-                          }
-                        >
-                          {copy.emulatorLoadPreview}
-                        </button>
-                      )}
+                      </div>
                     </div>
-                    <p className={styles.frameHint}>
-                      Live preview is embedded where allowed by the destination site.
-                    </p>
-                    <a href={frame.sampleUrl} target="_blank" rel="noopener noreferrer" className={styles.sampleLink}>
-                      Open Live Example
+                    <a href={template.preview_url ?? "https://utralink.com"} target="_blank" rel="noopener noreferrer" className={styles.sampleLink}>
+                      {de ? "Vorlage öffnen" : "Open template"}
                     </a>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.section}>
-          <h2>{copy.liveTitle}</h2>
-          <div className={styles.liveGrid}>
-            {copy.liveGroups.map((group, index) => (
-              <article
-                key={group.label}
-                className={`${styles.liveCard} ${index === 0 ? styles.liveFeatured : ""}`}
-              >
-                <h3>{group.label}</h3>
-                <div className={styles.liveLinks}>
-                  {group.links.map((link, linkIndex) => (
-                    <a key={link} href={link} target="_blank" rel="noopener noreferrer" className={styles.liveLink}>
-                      <span className={styles.liveIndex}>{String(linkIndex + 1).padStart(2, "0")}</span>
-                      {link.replace("https://utralink.com/", "utralink.com/")}
-                    </a>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </div>
+                  </article>
+                ))}
+              </div>
+              <a href="https://utralink.com/dashboard" target="_blank" rel="noopener noreferrer" className={styles.sampleLink}>{de ? "Vorlage auf uTraLink verwenden" : "Use template on uTraLink"}</a>
+            </>
+          )}
         </section>
 
         <section className={styles.section}>
