@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import LocaleLink from "@/components/I18n/LocaleLink";
 import { useLocale } from "@/lib/i18n/useLocale";
 import styles from "./QRSolutionsPage.module.css";
-import Image from "next/image";
 import QRSolutionsLeadForm from "./QRSolutionsLeadForm";
 
 export default function QRSolutionsPage() {
@@ -514,8 +513,6 @@ export default function QRSolutionsPage() {
           },
         ],
       };
-  const [selectedFrameUrlIndex, setSelectedFrameUrlIndex] = useState<Record<number, number>>({});
-  const [loadedFramePreview, setLoadedFramePreview] = useState<Record<number, boolean>>({});
   const [showLeadForm, setShowLeadForm] = useState(false);
   const [templates, setTemplates] = useState<Array<{id:number; name:string; type:string; preview_url:string|null; screenshot_url:string|null}>>([]);
   const [catalogError, setCatalogError] = useState(false);
