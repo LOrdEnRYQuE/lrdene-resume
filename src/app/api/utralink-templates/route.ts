@@ -19,6 +19,7 @@ export async function GET() {
       id: item.id,
       name: item.name,
       type: typeof item.type === "string" ? item.type : "other",
+      category: typeof item.category === "string" ? item.category : "Other",
       screenshot_url: typeof item.screenshot_url === "string" ? item.screenshot_url : null,
       preview_url: typeof item.preview_url === "string" && /^https:\/\/utralink\.com\//.test(item.preview_url) ? item.preview_url : null,
     }));
