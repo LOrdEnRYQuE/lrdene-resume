@@ -515,7 +515,7 @@ export default function QRSolutionsPage() {
         ],
       };
   const [showLeadForm, setShowLeadForm] = useState(false);
-  const [templates, setTemplates] = useState<Array<{id:number; name:string; type:string; preview_url:string|null; screenshot_url:string|null}>>([]);
+  const [templates, setTemplates] = useState<Array<{id:number; name:string; type:string; category:string; preview_url:string|null; screenshot_url:string|null}>>([]);
   const [catalogError, setCatalogError] = useState(false);
   const [activeTemplate, setActiveTemplate] = useState<number | null>(null);
   const [activeType, setActiveType] = useState("all");
@@ -527,8 +527,8 @@ export default function QRSolutionsPage() {
       .catch(() => { if (!cancelled) setCatalogError(true); });
     return () => { cancelled = true; };
   }, []);
-  const types = [...new Set(templates.map((template) => template.type))].sort();
-  const visibleTemplates = templates.filter((template) => activeType === "all" || template.type === activeType);
+  const types = [...new Set(templates.map((template) => template.category))].sort();
+  const visibleTemplates = templates.filter((template) => activeType === "all" || template.category === activeType);
   const selectedTemplate = visibleTemplates.find((template) => template.id === activeTemplate) ?? visibleTemplates[0];
 
 
@@ -654,7 +654,7 @@ export default function QRSolutionsPage() {
               <div className={styles.liveGrid}>
                 {visibleTemplates.map((template) => (
                   <button key={template.id} type="button" onClick={() => setActiveTemplate(template.id)} aria-pressed={selectedTemplate?.id === template.id} className={styles.liveLink}>
-                    {template.name} · {template.type}
+                    {template.name} · {template.category}
                   </button>
                 ))}
               </div>
