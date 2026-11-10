@@ -29,4 +29,7 @@ jobs:
       - name: Lint
         run: npm run lint
       - name: Build
+        env:
+          NEXT_PUBLIC_CONVEX_URL: https://spotted-tapir-517.eu-west-1.convex.cloud
+          NEXT_PUBLIC_CONVEX_SITE_URL: https://spotted-tapir-517.eu-west-1.convex.site
         run: npm run build
